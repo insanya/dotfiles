@@ -1,0 +1,29 @@
+;; Set custom file.
+(setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;; Make all commands of the “package” module present.
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+(package-refresh-contents)
+
+;; use-package configuration.
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+
+;; Always ensures packages are in the system.
+(setq use-package-always-ensure t)
+;; Automatic package update.
+(use-package auto-package-update
+  :defer 10
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
+;; Tangle configuration
+(org-babel-load-file (expand-file-name "README.org" user-emacs-directory))
+(put 'dired-find-alternate-file 'disabled nil)

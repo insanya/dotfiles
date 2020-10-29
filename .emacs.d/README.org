@@ -1,0 +1,377 @@
+#+TITLE: EMACS 27 Configuration
+#+AUTHOR: Lucas Pereira <insanityinc@protonmail.com>
+#+STARTUP: overview
+
+* Misc
+** Emacsclient
+   #+BEGIN_SRC emacs-lisp
+   (use-package server :hook (after-init . server-start))
+   #+END_SRC
+** Diminish
+   #+BEGIN_SRC emacs-lisp
+   (use-package diminish)
+   #+END_SRC
+** Line numbers bar
+   #+BEGIN_SRC emacs-lisp
+   (when (fboundp 'display-line-numbers-mode)
+     (setq-default display-line-numbers-width 3)
+     (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+     (add-hook 'org-mode-hook 'display-line-numbers-mode))
+   #+END_SRC
+** Visible whitespace
+   #+BEGIN_SRC emacs-lisp
+   (use-package whitespace
+     :diminish
+     :hook (after-init . whitespace-turn-on)
+     :custom (whitespace-style '(face empty indentation::space tab trailing)))
+   #+END_SRC
+** Smart parenteses
+   #+BEGIN_SRC emacs-lisp
+   (use-package smartparens
+     :diminish
+     :config (smartparens-global-mode))
+   #+END_SRC
+** Parenteses colourful delimiters
+   #+BEGIN_SRC emacs-lisp
+   (use-package rainbow-delimiters
+     :diminish
+     :hook (prog-mode . rainbow-delimiters-mode)
+     :config
+     (setq show-paren-delay 0)
+     (show-paren-mode t))
+   #+END_SRC
+** Ibuffer
+   #+BEGIN_SRC emacs-lisp
+   (use-package ibuffer :bind ("C-x C-b" . ibuffer))
+   (use-package ibuffer-projectile)
+   #+END_SRC
+** Beacon
+   #+BEGIN_SRC emacs-lisp
+   (use-package beacon
+     :diminish
+     :hook (after-init . beacon-mode)
+     :config
+     (setq-default beacon-lighter ""
+                   beacon-size 40))
+   #+END_SRC
+** Which key helper
+   #+BEGIN_SRC emacs-lisp
+   (use-package which-key
+     :diminish
+     :config
+     (setq which-key-show-early-on-C-h t)
+     (setq which-key-idle-delay most-positive-fixnum)
+     (setq which-key-idle-secondary-delay 1e-100)
+     (which-key-mode +1))
+   #+END_SRC
+** Bins path needed
+   #+BEGIN_SRC emacs-lisp
+   ;;(setenv "PATH" (concat "/home/insanityinc/.nvm/versions/node/v12.18.3/bin" ":" (getenv "PATH")))
+   #+END_SRC
+** CSV mode
+   #+BEGIN_SRC emacs-lisp
+   (use-package csv-mode)
+   #+END_SRC
+
+* Isolated Settings
+  #+BEGIN_SRC emacs-lisp
+  ;; Frame title
+  (setq-default frame-title-format '("EMACS" "@" user-login-name))
+
+  (setq-default
+    confirm-kill-emacs 'yes-or-no-p
+    indent-tabs-mode nil
+    inhibit-startup-screen t
+    mouse-yank-at-point t
+    show-help-function nil
+    tab-width 2)
+
+  (delete-selection-mode 1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (set-default-coding-systems 'utf-8)
+  (blink-cursor-mode 0)
+  (add-hook 'after-init-hook 'recentf-mode)
+
+  (scroll-bar-mode 0)
+  (tool-bar-mode 0)
+  (menu-bar-mode 0)
+
+  (global-set-key [remap kill-buffer] #'kill-this-buffer)
+  (global-set-key (kbd "C-z") nil)
+  (global-set-key (kbd "M-z") nil)
+  (global-set-key (kbd "C-x C-z") nil)
+  (global-set-key (kbd "M-/") nil)
+  #+END_SRC
+
+* UI
+  #+BEGIN_SRC emacs-lisp
+  (use-package color-theme-sanityinc-tomorrow
+    :config (load-theme 'sanityinc-tomorrow-day t))
+
+  (use-package all-the-icons)
+
+  (use-package powerline
+  :diminish
+  :config (powerline-default-theme))
+
+  (use-package dashboard
+  :diminish
+  :config
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-center-content t)
+  (setq dashboard-items '((recents  . 5)
+                          (projects . 5)
+                          (agenda . 5)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-navigator t)
+  (setq dashboard-set-footer nil)
+  (dashboard-setup-startup-hook))
+
+  ;; Font
+  (defun insanityinc/get-default-font ()
+    (eq system-type 'gnu/linux) "Ubuntu Mono-12")
+  (add-to-list 'default-frame-alist `(font . ,(insanityinc/get-default-font)))
+  (when (display-graphic-p)
+    (set-face-attribute 'fixed-pitch nil :font (insanityinc/get-default-font)))
+#+END_SRC
+
+* Projectile
+  #+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :hook (after-init . projectile-global-mode)
+    :bind ("C-c p" . projectile-command-map)
+    :init
+    (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+                  projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
+    :custom (projectile-enable-caching t))
+  #+END_SRC
+
+* Ivy, Counsel & Swiper
+  #+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :diminish
+    :init
+    (use-package counsel :diminish :config (counsel-mode 1))
+    (use-package counsel-projectile :diminish :config (counsel-projectile-mode 1))
+    (use-package swiper :diminish )
+    (ivy-mode 1)
+    :bind
+    (("C-s" . swiper-isearch)
+      ("C-z s" . counsel-ag)
+      ("C-z b" . counsel-buffer-or-recentf)
+      ("M-x" . counsel-M-x)
+      (:map ivy-minibuffer-map
+        ("C-r" . ivy-previous-line-or-history)
+        ("M-RET" . ivy-immediate-done)))
+    :custom
+    (ivy-use-virtual-buffers t)
+    (ivy-height 10)
+    (ivy-on-del-error-function nil)
+    (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
+    (ivy-wrap t))
+  #+END_SRC
+
+* Version control/ Backup files
+  #+BEGIN_SRC emacs-lisp
+  (use-package magit)
+  (global-set-key (kbd "C-x g") 'magit-status)
+
+  (use-package fullframe)
+  (with-eval-after-load 'magit
+    (fullframe magit-status magit-mode-quit-window))
+
+  (setq auto-save-default nil
+    auto-save-list-file-prefix nil
+    make-backup-files nil)
+
+  (use-package recentf
+    :diminish
+    :config
+    (progn
+      (setq recentf-save-file (concat user-emacs-directory "recentf")
+            recentf-max-saved-items 100
+            recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa"))
+            (recentf-mode t)))
+  #+END_SRC
+
+* Org mode
+  #+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :diminish
+    :hook (org-mode . org-bullets-mode)
+    :commands org-bullets-mode
+    :config
+    (setq org-bullets-bullet-list '("◉" "○" "●" "►" "•"))
+    (setq org-image-actual-width nil))
+  #+END_SRC
+
+* Linter, Expansion & Completion
+  #+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :hook ((emacs-lisp-mode . flycheck-mode)
+           (cc-mode . flycheck-mode))
+    :custom
+    ;;(flycheck-check-syntax-automatically '(save mode-enabled))
+    (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+    (flycheck-display-errors-delay .3)
+    :config
+    (setq-default flycheck-gcc-openmp t)
+    (setq flycheck-display-errors-function nil))
+
+  (use-package yasnippet
+    :diminish Yas
+    :hook
+    ((emacs-lisp-mode . yas-minor-mode)
+     (org-mode . yas-minor-mode)
+     (cc-mode . yas-minor-mode)
+     (haskell-mode . yas-minor-mode))
+    :config
+    (yas-reload-all))
+  (use-package yasnippet-snippets)
+  (use-package react-snippets)
+
+  (use-package company
+    :bind
+    (:map company-active-map
+          ("RET" . nil)
+          ([return] . nil)
+          ("TAB" . company-complete-selection)
+          ([tab] . company-complete-selection)
+          ("<right>" . company-complete-common))
+    :custom (company-dabbrev-downcase nil)
+            (company-idle-delay .2)
+            (company-minimum-prefix-length 3)
+            (company-require-match nil)
+            (company-tooltip-align-annotations t)
+    :config (global-company-mode))
+  #+END_SRC
+
+* Eshell
+  #+BEGIN_SRC emacs-lisp
+  (use-package eshell
+    :bind (("C-c e" . eshell))
+    :config
+    (defun zakame/eshell-rename-buffer-before-command ()
+      (let* ((last-input
+             (buffer-substring eshell-last-input-start eshell-last-input-end)))
+      (rename-buffer
+       (format "*eshell[%s]$ %s...*" default-directory last-input) t)))
+    (defun zakame/eshell-rename-buffer-after-command ()
+      (rename-buffer
+      (format "*eshell[%s]$ %s*" default-directory
+              (eshell-previous-input-string 0)) t))
+    (add-hook 'eshell-pre-command-hook
+              'zakame/eshell-rename-buffer-before-command)
+    (add-hook 'eshell-post-command-hook
+              'zakame/eshell-rename-buffer-after-command)
+    (require 'em-smart)
+    (setq eshell-where-to-jump 'begin
+          eshell-review-quick-commands nil
+          eshell-smart-space-goes-to-end t)
+    (add-hook 'eshell-mode-hook
+              '(lambda ()
+                (eshell-smart-initialize))))
+  #+END_SRC
+
+* Buffers & Windows
+  #+BEGIN_SRC emacs-lisp
+  (use-package switch-window
+    :diminish
+    :config
+    (setq-default switch-window-shortcut-style 'alphabet)
+    (setq-default switch-window-timeout nil)
+    (global-set-key (kbd "C-x o") 'switch-window))
+  #+END_SRC
+
+* Insanity Inc aka Coding
+** LSP
+   #+BEGIN_SRC emacs-lisp
+   (use-package lsp-mode
+     :after (typescript-mode)
+     :init
+     
+     (setq lsp-keymap-prefix "C-c l")
+     ;;(require 'lsp-clients)
+     (setq lsp-clients-clangd-executable "/usr/bin/clangd")
+     :hook ((c-mode . lsp)
+            (c++-mode . lsp)
+            (javascript-mode . lsp)
+            (typescript-mode . lsp)
+            (lsp-mode . lsp-enable-which-key-integration))
+     :commands lsp)
+
+    (use-package lsp-ui :commands lsp-ui-mode)
+    (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+    (use-package company-lsp :after (lsp-mode company) :config (push 'company-lsp company-backends))
+    (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  #+END_SRC
+** C
+   #+BEGIN_SRC emacs-lisp
+   (use-package cc-mode)
+   (global-set-key (kbd "<f3>") 'compile)
+   #+END_SRC
+** JSON
+   #+BEGIN_SRC emacs-lisp
+   (use-package json-mode)
+   #+END_SRC
+** Javascript
+*** JS2 mode
+    #+BEGIN_SRC emacs-lisp
+    (use-package js2-mode
+      :hook (js-mode . js2-minor-mode)
+      :interpreter (("node" . js2-mode))
+      :bind (:map js2-mode-map ("C-c C-p" . js2-print-json-path))
+      :mode "\\.\\(js\\|json\\)$"
+      :config
+      (setq js2-basic-offset 2
+            js2-highlight-level 3
+            js2-mode-show-parse-errors nil
+            js2-mode-show-strict-warnings nil))
+
+    (use-package js2-refactor
+      :defer t
+      :diminish js2-refactor-mode
+      :commands js2-refactor-mode
+      :hook (js2-mode . js2-refactor-mode)
+      :config (js2r-add-keybindings-with-prefix "C-c C-m"))
+    #+END_SRC
+*** Tern
+    #+BEGIN_SRC emacs-lisp
+    (use-package tern
+      :defer t
+      :diminish tern-mode
+      :hook (js2-mode . tern-mode)
+      :config (setq tern-command '("node" "/home/insanityinc/.nvm/versions/node/v12.18.3/bin/tern")))
+
+    (use-package tern-auto-complete :after tern :config (tern-ac-setup))
+    #+END_SRC
+*** Skewer
+    #+BEGIN_SRC emacs-lisp
+    (use-package skewer-mode
+      :bind (("C-c K" . run-skewer))
+      :diminish skewer-mode
+      :hook ((js2-mode . skewer-mode)
+             (css-mode . skewer-css-mode)
+             (html-mode . skewer-html-mode)))
+    #+END_SRC
+** Typescript
+   #+BEGIN_SRC emacs-lisp
+   (use-package typescript-mode)
+   #+END_SRC
+** Web
+   #+BEGIN_SRC emacs-lisp
+   (use-package web-mode
+     :hook (html-mode . web-mode))
+   #+END_SRC
+** Python
+   #+BEGIN_SRC emacs-lisp
+   (use-package python-mode)
+   (use-package lsp-jedi
+     :config
+     (with-eval-after-load "lsp-mode"
+       (add-to-list 'lsp-disabled-clients 'pyls)
+       (add-to-list 'lsp-enabled-clients 'jedi))
+     (setq python-indent-offset 4))
+   #+END_SRC
+
