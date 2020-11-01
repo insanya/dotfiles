@@ -24,6 +24,9 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+;; Obsolete warnings
+(setq byte-compile-warnings '(not obsolete))
+
 ;; Tangle configuration
 (org-babel-load-file (expand-file-name "README.org" user-emacs-directory))
 (put 'dired-find-alternate-file 'disabled nil)

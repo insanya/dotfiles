@@ -101,19 +101,19 @@ source $ZSH/oh-my-zsh.sh
 # some more ls aliases
 alias l='ls --group-directories-first -hlX'
 alias ll='ls --group-directories-first -hlAX'
-alias bfg='java -jar /home/insanityinc/Desktop/Apps/bfg-1.13.0.jar'
+# alias bfg='java -jar /home/insanityinc/Desktop/Apps/bfg-1.13.0.jar'
 
-export MonetDB_rel=Jun2020-SP1
-export MonetDB_ver=11.37.11
-export MonetDB_base_dir=$HOME/Desktop/Apps/MonetDB-$MonetDB_rel
-export MonetDB_source_dir=$MonetDB_base_dir/MonetDB-$MonetDB_ver
-export MonetDB_build_dir=$MonetDB_base_dir/BUILD
-export MonetDB_prefix_dir=$MonetDB_base_dir
+# export MonetDB_rel=Jun2020-SP1
+# export MonetDB_ver=11.37.11
+# export MonetDB_base_dir=$HOME/Desktop/Apps/MonetDB-$MonetDB_rel
+# export MonetDB_source_dir=$MonetDB_base_dir/MonetDB-$MonetDB_ver
+# export MonetDB_build_dir=$MonetDB_base_dir/BUILD
+# export MonetDB_prefix_dir=$MonetDB_base_dir
 
-export PATH=$MonetDB_prefix_dir/bin:$PATH
-export MANPATH=$MonetDB_prefix_dir/share/man:$MANPATH
-export CLASSPATH=$MonetDB_prefix_dir/share/monetdb/lib:$CLASSPATH
+# export PATH=$MonetDB_prefix_dir/bin:$PATH
+# export MANPATH=$MonetDB_prefix_dir/share/man:$MANPATH
+# export CLASSPATH=$MonetDB_prefix_dir/share/monetdb/lib:$CLASSPATH
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
