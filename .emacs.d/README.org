@@ -203,6 +203,19 @@
      (ivy-wrap t))
    #+end_src
 
+** Key chords helper
+
+   #+begin_src emacs-lisp
+   (use-package which-key
+     :diminish
+     :config
+     (setq which-key-show-early-on-C-h t)
+     (setq which-key-idle-delay most-positive-fixnum)
+     (setq which-key-idle-secondary-delay 1e-100)
+     (which-key-mode +1))
+   #+end_src
+
+
 ** Line numbers bar
 
    #+BEGIN_SRC emacs-lisp
@@ -262,16 +275,6 @@
    #+end_src
 
 *** =rainbow-delimiters=
-
-    #+BEGIN_QUOTE
-    rainbow-delimiters is a "rainbow parentheses"-like mode which highlights
-    delimiters such as parentheses, brackets or braces according to their
-    depth. Each successive level is highlighted in a different color. This makes it
-    easy to spot matching delimiters, orient yourself in the code, and tell which
-    statements are at a given depth.
-
-    [[https://github.com/Fanael/rainbow-delimiters][Fanael Linithien]]
-    #+END_QUOTE
 
     #+begin_src emacs-lisp
     (use-package rainbow-delimiters
@@ -451,6 +454,18 @@
 ** C++
 ** CMake
 ** CSS - LESS - SCSS
+
+   #+begin_src emacs-lisp
+   (use-package css-mode
+     :custom (css-indent-offset 2))
+
+   (use-package less-css-mode
+     :mode "\\.less\\'")
+
+   (use-package scss-mode
+     :mode "\\.scss\\'")
+   #+end_src
+
 ** CSV
 
    #+begin_src emacs-lisp
@@ -461,6 +476,14 @@
 
    #+begin_src emacs-lisp
    ;;(use-package elisp-mode)
+   #+end_src
+
+** HTML
+
+   #+begin_src emacs-lisp
+   (use-package emmet-mode
+     :delight
+     :hook (css-mode sgml-mode web-mode))
    #+end_src
 
 

@@ -4,3 +4,6 @@
 /.emacs.d/custom.el
 /.emacs.d/elpa/
 /.emacs.d/projectile-bookmarks.eld
+/.emacs.d/.dap-breakpoints
+/.emacs.d/recentf
+/.emacs.d/transient/
