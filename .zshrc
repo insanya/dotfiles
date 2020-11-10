@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/insanityinc/.oh-my-zsh"
+export ZSH="/home/insanya/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -101,7 +101,7 @@ source $ZSH/oh-my-zsh.sh
 # some more ls aliases
 alias l='ls --group-directories-first -hlX'
 alias ll='ls --group-directories-first -hlAX'
-# alias bfg='java -jar /home/insanityinc/Desktop/Apps/bfg-1.13.0.jar'
+# alias bfg='java -jar /home/insanya/Desktop/Apps/bfg-1.13.0.jar'
 
 # export MonetDB_rel=Jun2020-SP1
 # export MonetDB_ver=11.37.11
