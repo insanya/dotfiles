@@ -114,6 +114,6 @@ alias ll='ls --group-directories-first -hlAX'
 # export MANPATH=$MonetDB_prefix_dir/share/man:$MANPATH
 # export CLASSPATH=$MonetDB_prefix_dir/share/monetdb/lib:$CLASSPATH
 
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
