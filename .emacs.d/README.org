@@ -214,8 +214,6 @@
      (setq which-key-idle-secondary-delay 1e-100)
      (which-key-mode +1))
    #+end_src
-
-
 ** Line numbers bar
 
    #+BEGIN_SRC emacs-lisp
@@ -516,5 +514,13 @@
   #+end_src
 
 ** Bullets
+
+   #+begin_src emacs-lisp
+   (use-package org-bullets
+     :hook (org-mode . org-bullets-mode)
+     :custom
+     (org-bullets-bullet-list '("●" "►" "▸")))
+   #+end_src
+   
 ** Agenda
 
