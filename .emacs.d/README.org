@@ -76,7 +76,21 @@
    #+end_src
 
 
-* Utilities Packages
+
+* Utilities
+** Agressive Indent
+
+   #+begin_src emacs-lisp
+     (use-package aggressive-indent
+       :hook
+       ((css-mode . aggressive-indent-mode)
+        (emacs-lisp-mode . aggressive-indent-mode)
+        (js-mode . aggressive-indent-mode)
+        (lisp-mode . aggressive-indent-mode))
+       :custom
+       (aggressive-indent-comments-too))
+   #+end_src
+   
 ** Browser
 
    #+begin_src emacs-lisp
@@ -235,6 +249,15 @@
        (add-hook 'org-mode-hook 'display-line-numbers-mode))
    #+END_SRC
 
+** Move text
+
+   #+begin_src emacs-lisp
+     (use-package move-text
+         :bind (("M-p" . move-text-up)
+                ("M-n" . move-text-down))
+         :config (move-text-default-bindings))
+   #+end_src
+
 ** Navigation
 
    *FROM:* http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
@@ -322,6 +345,33 @@
        (setq flycheck-display-errors-function nil))
    #+end_src
 
+** Treemacs
+
+   #+begin_src emacs-lisp
+     (use-package treemacs
+       :bind
+       (:map global-map
+             ("M-0" . treemacs-select-window)
+             ("C-c t d" . treemacs-delete-other-windows)
+             ("C-c t t" . treemacs)
+             ("C-c t b" . treemacs-bookmark)
+             ("C-c t f" . treemacs-find-file)
+             ("C-c t T" . treemacs-find-tag)
+             ("C-c t p" . treemacs-projectile))
+       :config
+       (treemacs-follow-mode t)
+       (treemacs-filewatch-mode t)
+       (treemacs-fringe-indicator-mode t))
+
+     (use-package treemacs-projectile
+       :after treemacs projectile)
+
+     (use-package treemacs-all-the-icons
+       :after treemacs all-the-icons
+       :config
+       (treemacs-load-theme "all-the-icons"))
+   #+end_src
+
 ** Version control/ Backup files
 
    #+BEGIN_SRC emacs-lisp
@@ -343,10 +393,32 @@
          (recentf-mode t)))
    #+END_SRC
 
+** Web mode
+
+   #+begin_src emacs-lisp
+     (use-package web-mode
+       :mode
+       (("\\.php\\'" . web-mode)
+        ("\\.html?\\'" . web-mode))
+       :custom
+       (web-mode-attr-indent-offset 2)
+       (web-mode-block-padding 2)
+       (web-mode-css-indent-offset 2)
+       (web-mode-code-indent-offset 2)
+       (web-mode-comment-style 2)
+       (web-mode-enable-current-element-highlight t)
+       (web-mode-markup-indent-offset 2)
+       :config
+       (setq web-mode-code-indent-offset 2
+             web-mode-markup-indent-offset 2
+             web-mode-css-indent-offset 2))
+   #+end_src
+
 ** Whitespaces
 
    #+begin_src emacs-lisp
-     (use-package whitespace :diminish
+     (use-package whitespace
+       :diminish
        :hook
        (after-init . whitespace-turn-on)
        :custom
@@ -412,14 +484,128 @@
    #+end_src
 
 
+
 * Language Server Protocol
 
+  #+begin_src emacs-lisp
+    (use-package lsp-mode
+      :hook
+      ((web-mode vue-mode css-mode typescript-mode) . lsp)
+      (lsp-mode . lsp-enable-which-key-integration)
+      :commands lsp
+      :config
+      (setq lsp-keymap-prefix "C-c l")
+      :custom
+      (lsp-prefer-flymake nil))
+
+    (use-package company-lsp
+      :config
+      (push 'company-lsp company-backends))
+
+    (use-package lsp-ui
+      :commands lsp-ui-mode
+      :config
+      (setq lsp-ui-sideline-enable t)
+      (setq lsp-ui-doc-enable nil)
+      (setq lsp-ui-peek-enable t)
+      (setq lsp-ui-peek-always-show t))
+
+    (use-package lsp-ivy
+      :commands lsp-ivy-workspace-symbol)
+
+    (use-package lsp-treemacs
+      :config
+      (lsp-treemacs-sync-mode 1))
+
+    (use-package dap-mode
+      :config
+      (dap-mode t)
+      (dap-ui-mode t))
+  #+end_src
+
+
 * PL
+** TODO C/C++
+** TODO CMake
+** CSS/LESS/SCSS
+
+   #+begin_src emacs-lisp
+     (use-package css-mode
+       :custom
+       (css-indent-offset 2))
+
+     (use-package less-css-mode
+       :mode "\\.less\\'")
+
+     (use-package scss-mode
+       :mode "\\.scss\\'")
+   #+end_src
+
+** CSV
+
+   #+begin_src emacs-lisp
+     (use-package csv-mode)
+   #+end_src
+
+** TODO ELISP
+** HTML
+
+   #+begin_src emacs-lisp
+     (use-package emmet-mode
+       :hook
+       (css-mode sgml-mode web-mode))
+   #+end_src
+** JavaScript
+
+   #+begin_src emacs-lisp
+     (use-package prettier-js
+       :custom (prettier-js-args '("--print-width" "100"
+                                   "--single-quote" "true"
+                                   "--trailing-comma" "all"))
+       :hook
+       ((js-mode . prettier-js-mode)
+        (web-mode . prettier-js-mode)))
+   #+end_src
+
+   #+begin_src emacs-lisp
+     (use-package js2-mode
+       :hook
+       (js2-mode . prettier-js-mode)
+       (js-mode . js2-minor-mode)
+       :config
+       (add-to-list 'interpreter-mode-alist '("node" . js2-mode)))
+
+     (use-package js2-refactor
+       :after js2-mode
+       :hook
+       (js2-mode . js2-refactor-mode))
+   #+end_src
+
+** TypeScript
+
+   #+begin_src emacs-lisp
+     (use-package typescript-mode
+       :mode ("\\.ts\\'" "\\.tsx\\'")
+       :hook
+       (typescript-mode . prettier-js-mode)
+       :init
+       (setq-default typescript-indent-level 2))
+   #+end_src
+
+** VueJS
+
+   #+begin_src emacs-lisp
+     (use-package vue-mode
+       :mode "\\.vue\\'")
+   #+end_src
+
+
 
 * Org
 
   #+begin_src emacs-lisp
-    (use-package org)
+    (use-package org
+      :ensure org-plus-contrib)
   #+end_src
 
 ** =org-bullets=
