@@ -3,524 +3,441 @@
 #+STARTUP: content
 
 * Startup
-
 ** Authentication
 ** Defaults
 
    #+begin_src emacs-lisp
-   (setq-default
-     frame-title-format '("EMACS" "@" user-login-name)
-     confirm-kill-emacs 'yes-or-no-p
-     mouse-yank-at-point t
-     show-help-function nil
-     cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-     fill-column 80                                   ; Set width for automatic line breaks
-     help-window-select t                             ; Focus new help windows when opened
-     indent-tabs-mode nil                             ; Prefers spaces over tabs
-     inhibit-startup-screen t                         ; Disable start-up screen
-     scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-     select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-     tab-width 2                                      ; Set width for tabs
-     user-full-name "Lucas Pereira"                   ; Set the full name of the current user
-     user-mail-address "insanya@protonmail.com"       ; Set the email address of the current user
-     vc-follow-symlinks t                             ; Always follow the symlinks
-     view-read-only t)                                ; Always open read-only buffers in view-mode
+     (setq-default
+      frame-title-format '("EMACS" "@" user-login-name)
+      confirm-kill-emacs 'yes-or-no-p
+      mouse-yank-at-point t
+      show-help-function nil
+      cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
+      fill-column 80                                   ; Set width for automatic line breaks
+      help-window-select t                             ; Focus new help windows when opened
+      indent-tabs-mode nil                             ; Prefers spaces over tabs
+      inhibit-startup-screen t                         ; Disable start-up screen
+      scroll-conservatively most-positive-fixnum       ; Always scroll by one line
+      select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+      tab-width 2                                      ; Set width for tabs
+      user-full-name "Lucas Pereira"                   ; Set the full name of the current user
+      user-mail-address "insanya@protonmail.com"       ; Set the email address of the current user
+      vc-follow-symlinks t                             ; Always follow the symlinks
+      view-read-only t)                                ; Always open read-only buffers in view-mode
 
-   (delete-selection-mode 1)
-   (fset 'yes-or-no-p 'y-or-n-p)
-   (set-default-coding-systems 'utf-8)
-   (blink-cursor-mode 0)
-   (add-hook 'after-init-hook 'recentf-mode)
+     (delete-selection-mode 1)
+     (fset 'yes-or-no-p 'y-or-n-p)
+     (set-default-coding-systems 'utf-8)
+     (blink-cursor-mode 0)
+     (add-hook 'after-init-hook 'recentf-mode)
 
-   (menu-bar-mode -1)                               ; Disable the menu bar
-   (scroll-bar-mode -1)                             ; Disable the scroll bar
-   (tool-bar-mode -1)                               ; Disable the tool bar
-   (tooltip-mode -1)                                ; Disable the tooltips
-   (column-number-mode 1)                           ; Show the column number
+     (menu-bar-mode -1)                               ; Disable the menu bar
+     (scroll-bar-mode -1)                             ; Disable the scroll bar
+     (tool-bar-mode -1)                               ; Disable the tool bar
+     (tooltip-mode -1)                                ; Disable the tooltips
+     (column-number-mode 1)                           ; Show the column number
 
-   (column-number-mode 1)                           ; Show the column number
-   (display-time-mode 1)                            ; Enable time in the mode-line
-   (global-hl-line-mode)                            ; Hightlight current line
-   (show-paren-mode 1)                              ; Show the parent
+     (column-number-mode 1)                           ; Show the column number
+     (display-time-mode 1)                            ; Enable time in the mode-line
+     (global-hl-line-mode)                            ; Hightlight current line
+     (show-paren-mode 1)                              ; Show the parent
 
-   (global-set-key [remap kill-buffer] #'kill-this-buffer)
-   (global-set-key (kbd "C-z") nil)
-   (global-set-key (kbd "M-z") nil)
-   (global-set-key (kbd "C-x C-z") nil)
-   (global-set-key (kbd "M-/") nil)
+     (global-set-key [remap kill-buffer] #'kill-this-buffer)
+     (global-set-key (kbd "C-z") nil)
+     (global-set-key (kbd "M-z") nil)
+     (global-set-key (kbd "C-x C-z") nil)
+     (global-set-key (kbd "M-/") nil)
 
-   (use-package diminish)
+     (use-package diminish)
    #+end_src
 
 ** Fonts
 
    #+begin_src emacs-lisp
-   (defun insanya/get-default-font ()
-     (eq system-type 'gnu/linux) "Ubuntu Mono-12")
-   (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
-   (when (display-graphic-p)
-     (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
+     (defun insanya/get-default-font ()
+       (eq system-type 'gnu/linux) "Ubuntu Mono-12")
+     (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
+     (when (display-graphic-p)
+       (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
    #+end_src
 
 ** Theme
 
    #+BEGIN_SRC emacs-lisp
-   (use-package color-theme-sanityinc-tomorrow :config (load-theme 'sanityinc-tomorrow-night t))
-   (use-package all-the-icons)
-   (use-package powerline :config (powerline-default-theme))
+     (use-package color-theme-sanityinc-tomorrow
+       :config
+       (load-theme 'sanityinc-tomorrow-night t))
+
+     (use-package all-the-icons)
+
+     (use-package powerline
+       :config
+       (powerline-default-theme))
    #+end_src
 
 
 * Utilities Packages
-
 ** Browser
 
    #+begin_src emacs-lisp
-   (use-package browse-url
-     :ensure nil
-     :custom
-     (browse-url-browser-function 'browse-url-generic)
-     (browse-url-generic-program "qutebrowser"))
+     (use-package browse-url
+       :custom
+       (browse-url-browser-function 'browse-url-generic)
+       (browse-url-generic-program "qutebrowser"))
    #+end_src
 
 *** =engine-mode=
     #+begin_src emacs-lisp
-    (use-package engine-mode
-      :config
-      (defengine duckduckgo
-        "https://duckduckgo.com/?q=%s"
-        :keybinding "d")
-
-      (defengine github
-        "https://github.com/search?ref=simplesearch&q=%s"
-        :keybinding "g")
-
-      (defengine stack-overflow
-        "https://stackoverflow.com/search?q=%s"
-        :keybinding "s")
-
-      (defengine youtube
-        "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
-        :keybinding "y")
-
-      (defengine wikipedia
-        "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s"
-        :keybinding "w"
-        :docstring "Searchin' the wikis.")
+      (use-package engine-mode
+        :config
+        (defengine duckduckgo "https://duckduckgo.com/?q=%s" :keybinding "d")
+        (defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "g")
+        (defengine stack-overflow "https://stackoverflow.com/search?q=%s" :keybinding "s")
+        (defengine youtube "http://www.youtube.com/results?aq=f&oq=&search_query=%s" :keybinding "y")
+        (defengine wikipedia "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s" :keybinding "w")
         (engine-mode t))
     #+end_src
 
 ** Buffers
 
    #+BEGIN_SRC emacs-lisp
-   (use-package switch-window
-     :diminish
-     :config
-     (setq-default switch-window-shortcut-style 'alphabet)
-     (setq-default switch-window-timeout nil)
-     (global-set-key (kbd "C-x o") 'switch-window))
+     (use-package switch-window
+       :diminish
+       :bind
+       ("C-x o" . switch-window)
+       :config
+       (setq-default switch-window-shortcut-style 'alphabet
+                     switch-window-timeout nil))
 
-   (use-package ibuffer :bind ("C-x C-b" . ibuffer))
+     (use-package ibuffer
+       :bind
+       ("C-x C-b" . ibuffer))
 
-   (use-package ibuffer-projectile
-     :after ibuffer
-     :preface
-     (defun my/ibuffer-projectile ()
-       (ibuffer-projectile-set-filter-groups)
-       (unless (eq ibuffer-sorting-mode 'alphabetic)
-         (ibuffer-do-sort-by-alphabetic)))
-     :hook (ibuffer . my/ibuffer-projectile))
+     (use-package ibuffer-projectile
+       :after ibuffer
+       :preface
+       (defun insanya/ibuffer-projectile ()
+         (ibuffer-projectile-set-filter-groups)
+         (unless (eq ibuffer-sorting-mode 'alphabetic)
+           (ibuffer-do-sort-by-alphabetic)))
+       :hook
+       (ibuffer . insanya/ibuffer-projectile))
    #+END_SRC
 
 ** Company
 
    #+begin_src emacs-lisp
-   (use-package company :diminish "Cpy"
-     :bind
-     (:map company-active-map
-           ("RET" . nil)
-           ([return] . nil)
-           ("TAB" . company-complete-selection)
-           ([tab] . company-complete-selection)
-           ("<right>" . company-complete-common))
-     :custom (company-dabbrev-downcase nil)
-             (company-idle-delay .2)
-             (company-minimum-prefix-length 3)
-             (company-require-match nil)
-             (company-tooltip-align-annotations t)
-     :config (global-company-mode))
-   (use-package company-box :diminish :hook (company-mode . company-box-mode))
+     (use-package company
+       :diminish "Cpy"
+       :bind
+       (:map company-active-map
+             ("RET" . nil)
+             ([return] . nil)
+             ("TAB" . company-complete-selection)
+             ([tab] . company-complete-selection)
+             ("<right>" . company-complete-common))
+       :custom
+       (company-dabbrev-downcase nil)
+       (company-idle-delay .2)
+       (company-minimum-prefix-length 3)
+       (company-require-match nil)
+       (company-tooltip-align-annotations t)
+       :config
+       (global-company-mode))
+
+     (use-package company-box
+       :diminish
+       :hook
+       (company-mode . company-box-mode))
    #+end_src
 
 ** Dashboard
 
    #+BEGIN_SRC emacs-lisp
-   (use-package dashboard
-     :diminish
-     :config
-     (setq dashboard-startup-banner 'logo)
-     (setq dashboard-center-content t)
-     (setq dashboard-items '((recents  . 5)
-                             (projects . 5)
-                             (agenda . 5)))
-     (setq dashboard-set-heading-icons t)
-     (setq dashboard-set-file-icons t)
-     (setq dashboard-set-navigator t)
-     (setq dashboard-set-footer nil)
-     (dashboard-setup-startup-hook))
+     (use-package dashboard
+       :diminish
+       :config
+       (setq dashboard-startup-banner 'logo
+             dashboard-center-content t
+             dashboard-items '((recents  . 5) (projects . 5) (agenda . 5))
+             dashboard-set-heading-icons t
+             dashboard-set-file-icons t
+             dashboard-set-navigator t
+             dashboard-set-footer nil)
+       (dashboard-setup-startup-hook))
    #+end_src
 
 ** Dired
 ** Ivy/Counsel
 
    #+begin_src emacs-lisp
-   (use-package ivy
-     :diminish
-     :init
-     (use-package counsel :diminish :config (counsel-mode 1))
-     (use-package counsel-projectile :diminish :config (counsel-projectile-mode 1))
-     (use-package swiper :diminish )
-     (use-package ivy-posframe :diminish
+     (use-package counsel
+       :diminish
+       :bind
+       ("C-x C-d" . counsel-dired-jump)
+       ("C-x C-r" . counsel-buffer-or-recentf)
+       ;; ("C-z s" . counsel-ag)
+       ("M-x" . counsel-M-x)
        :config
-       (ivy-posframe-mode t)
-       (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
-     (ivy-mode 1)
-     :bind
-     (("C-s" . swiper)
-      ("C-x b" . ivy-switch-buffer)
-      ("C-x C-d" . counsel-dired-jump)
-      ("C-x C-r" . counsel-buffer-or-recentf)
-      ("C-z s" . counsel-ag)
-      ("M-x" . counsel-M-x)
-      (:map ivy-minibuffer-map
-        ("C-r" . ivy-previous-line-or-history)
-        ("M-RET" . ivy-immediate-done)))
-     :custom
-     (ivy-use-virtual-buffers t)
-     (ivy-height 10)
-     (ivy-on-del-error-function nil)
-     (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
-     (ivy-wrap t))
+       (counsel-mode 1))
+
+     (use-package counsel-projectile
+       :diminish
+       :config
+       (counsel-projectile-mode 1))
+
+     (use-package ivy
+       :diminish
+       :init
+       (ivy-mode 1)
+       :bind
+       ("C-x b" . ivy-switch-buffer)
+       (:map ivy-minibuffer-map
+         ("C-r" . ivy-previous-line-or-history)
+         ("M-RET" . ivy-immediate-done))
+       :custom
+       (ivy-use-virtual-buffers t)
+       (ivy-height 10)
+       (ivy-on-del-error-function nil)
+       (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
+       (ivy-wrap t))
+
+     (use-package ivy-posframe
+       :diminish
+         :config
+         (ivy-posframe-mode t)
+         (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
+
+     (use-package swiper
+       :diminish
+       :bind
+       ("C-s" . swiper))
    #+end_src
 
 ** Key chords helper
 
    #+begin_src emacs-lisp
-   (use-package which-key
-     :diminish
-     :config
-     (setq which-key-show-early-on-C-h t)
-     (setq which-key-idle-delay most-positive-fixnum)
-     (setq which-key-idle-secondary-delay 1e-100)
-     (which-key-mode +1))
+     (use-package which-key
+       :diminish
+       :config
+       (setq which-key-show-early-on-C-h t
+             which-key-idle-delay most-positive-fixnum
+             which-key-idle-secondary-delay 1e-100)
+       (which-key-mode +1))
    #+end_src
+
 ** Line numbers bar
 
    #+BEGIN_SRC emacs-lisp
-   (when (fboundp 'display-line-numbers-mode)
-     (setq-default display-line-numbers-width 3)
-     (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-     (add-hook 'org-mode-hook 'display-line-numbers-mode))
+     (when (fboundp 'display-line-numbers-mode)
+       (setq-default display-line-numbers-width 3)
+       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+       (add-hook 'org-mode-hook 'display-line-numbers-mode))
    #+END_SRC
 
 ** Navigation
 
    *FROM:* http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-
    #+begin_src emacs-lisp
-   (defun my/smarter-move-beginning-of-line (arg)
-     "Moves point back to indentation of beginning of line.
-
-     Move point to the first non-whitespace character on this line.
-     If point is already there, move to the beginning of the line.
-     Effectively toggle between the first non-whitespace character and
-     the beginning of the line.
-
-     If ARG is not nil or 1, move forward ARG - 1 lines first. If
-     point reaches the beginning or end of the buffer, stop there."
-     (interactive "^p")
-     (setq arg (or arg 1))
-
-     ;; Move lines first
-     (when (/= arg 1)
-       (let ((line-move-visual nil))
-         (forward-line (1- arg))))
-
-     (let ((orig-point (point)))
-       (back-to-indentation)
-       (when (= orig-point (point))
-         (move-beginning-of-line 1))))
-
-   (global-set-key (kbd "C-a") 'my/smarter-move-beginning-of-line)
+     (defun insanya/smarter-move-beginning-of-line (arg)
+       (interactive "^p")
+       (setq arg (or arg 1))
+       (when (/= arg 1)
+         (let ((line-move-visual nil))
+           (forward-line (1- arg))))
+       (let ((orig-point (point)))
+         (back-to-indentation)
+         (when (= orig-point (point))
+           (move-beginning-of-line 1))))
+     (global-set-key (kbd "C-a") 'insanya/smarter-move-beginning-of-line)
    #+end_src
 
 ** Page Break Lines
 
    #+begin_src emacs-lisp
-   (use-package page-break-lines :diminish)
+     (use-package page-break-lines
+       :diminish)
    #+end_src
 
 ** Parentheses
-
-   #+begin_src emacs-lisp
-   (use-package faces
-     :ensure nil
-     :custom (show-paren-delay 0)
-     :config
-     (set-face-background 'show-paren-match "#262b36")
-     (set-face-bold 'show-paren-match t)
-     (set-face-foreground 'show-paren-match "#ffffff"))
-   #+end_src
-
 *** =rainbow-delimiters=
 
     #+begin_src emacs-lisp
-    (use-package rainbow-delimiters
-      :hook (prog-mode . rainbow-delimiters-mode))
+      (use-package rainbow-delimiters)
     #+end_src
 
 *** =smartparens=
 
     #+begin_src emacs-lisp
-    (use-package smartparens
-      :custom (sp-escape-quotes-after-insert nil)
-      :config (smartparens-global-mode 1))
+      (use-package smartparens
+        :hook
+        (after-init . smartparens-global-mode)
+        :custom
+        (sp-escape-quotes-after-insert nil))
     #+end_src
 
 ** PDF
 
    #+begin_src emacs-lisp
-   (use-package pdf-tools
-     :magic ("%PDF" . pdf-view-mode)
-     :init (pdf-tools-install :no-query))
-
-   (use-package pdf-view
-     :ensure nil
-     :after pdf-tools
-     :bind (:map pdf-view-mode-map
-             ("C-s" . isearch-forward)
-             ("d" . pdf-annot-delete)
-             ("h" . pdf-annot-add-highlight-markup-annotation)
-             ("t" . pdf-annot-add-text-annotation))
-     :custom
-     (pdf-view-display-size 'fit-page)
-     (pdf-view-resize-factor 1.1)
-     (pdf-view-use-unicode-ligther nil))
+     (use-package pdf-tools
+       :init
+       (pdf-tools-install :noquery))
    #+end_src
 
 ** Projectile
 
    #+BEGIN_SRC emacs-lisp
-   (use-package projectile
-     :diminish
-     :hook (after-init . projectile-global-mode)
-     :bind ("C-c p" . projectile-command-map)
-     :init
-     (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
-                   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
-     :custom
-     (projectile-enable-caching t))
+     (use-package projectile
+       :diminish
+       :hook
+       (after-init . projectile-global-mode)
+       :bind
+       ("C-c p" . projectile-command-map)
+       :init
+       (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+                     projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
+       :custom
+       (projectile-enable-caching t))
 
-   (use-package counsel-projectile
-     :after (counsel projectile)
-     :config (counsel-projectile-mode 1))
+     (use-package counsel-projectile
+       :after
+       (counsel projectile)
+       :config
+       (counsel-projectile-mode 1))
    #+END_SRC
-
-** Reveal.js
-
-   #+begin_src emacs-lisp
-   (use-package org-re-reveal
-     :after org
-     :custom
-     (org-reveal-mathjax t)
-     (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
-   #+end_src
 
 ** Syntax Checking
 
    #+begin_src emacs-lisp
-   (use-package flycheck :diminish FlyC
-     :hook ((emacs-lisp-mode . flycheck-mode)
-            (cc-mode . flycheck-mode))
-     :custom
-     ;;(flycheck-check-syntax-automatically '(save mode-enabled))
-     (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-     (flycheck-display-errors-delay .3)
-     :config
-     (setq-default flycheck-gcc-openmp t)
-     (setq flycheck-display-errors-function nil))
+     (use-package flycheck
+       :diminish FlyC
+       :hook ((emacs-lisp-mode . flycheck-mode)
+              (cc-mode . flycheck-mode))
+       :custom
+       ;;(flycheck-check-syntax-automatically '(save mode-enabled))
+       (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+       (flycheck-display-errors-delay .3)
+       :config
+       (setq-default flycheck-gcc-openmp t)
+       (setq flycheck-display-errors-function nil))
    #+end_src
 
 ** Version control/ Backup files
 
    #+BEGIN_SRC emacs-lisp
-   (use-package magit :config (global-set-key (kbd "C-x g") 'magit-status))
-   (use-package fullframe)
-   (with-eval-after-load 'magit (fullframe magit-status magit-mode-quit-window))
+     (use-package magit
+       :config (global-set-key (kbd "C-x g") 'magit-status))
 
-   (setq auto-save-default nil
-         auto-save-list-file-prefix nil
-	 make-backup-files nil)
+     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
+     (setq auto-save-default nil
+           auto-save-list-file-prefix nil
+           make-backup-files nil)
 
-   (use-package recentf
-     :diminish
-     :config
-     (progn
-       (setq recentf-save-file (concat user-emacs-directory "recentf")
-             recentf-max-saved-items 100
-             recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa"))
-             (recentf-mode t)))
+     (use-package recentf
+       :diminish
+       :config
+       (progn
+         (setq recentf-save-file (concat user-emacs-directory "recentf")
+               recentf-max-saved-items 100
+               recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa"))
+         (recentf-mode t)))
    #+END_SRC
 
 ** Whitespaces
 
    #+begin_src emacs-lisp
-   (use-package whitespace :diminish
-     :hook (after-init . whitespace-turn-on)
-     :custom (whitespace-style '(face empty indentation::space tab trailing))
-     :config (setq whitespace-line-column 80))
+     (use-package whitespace :diminish
+       :hook
+       (after-init . whitespace-turn-on)
+       :custom
+       (whitespace-style '(face empty indentation::space tab trailing)))
    #+end_src
 
 *** =hungry-delete=
 
     #+begin_src emacs-lisp
-    (use-package hungry-delete :diminish
-      :defer 0.7
-      :config (global-hungry-delete-mode))
+      (use-package hungry-delete
+        :diminish
+        :config
+        (global-hungry-delete-mode))
     #+end_src
 
 ** Windows
 
    #+begin_src emacs-lisp
-   (defun hsplit-last-buffer ()
-     "Gives the focus to the last created horizontal window."
-     (interactive)
-     (split-window-horizontally)
-     (other-window 1))
+     (defun hsplit-last-buffer ()
+       "Gives the focus to the last created horizontal window."
+       (interactive)
+       (split-window-horizontally)
+       (other-window 1))
 
-   (defun vsplit-last-buffer ()
-     "Gives the focus to the last created vertical window."
-     (interactive)
-     (split-window-vertically)
-     (other-window 1))
+     (defun vsplit-last-buffer ()
+       "Gives the focus to the last created vertical window."
+       (interactive)
+       (split-window-vertically)
+       (other-window 1))
 
-   (global-set-key (kbd "C-x 3") 'hsplit-last-buffer)
-   (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
+     (global-set-key (kbd "C-x 3") 'hsplit-last-buffer)
+     (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
    #+end_src
 
 *** =switch-window=
 
     #+begin_src emacs-lisp
-    (use-package switch-window
-      :bind (("C-x o" . switch-window)
-             ("C-x w" . switch-window-then-swap-buffer)))
-    #+end_src
-
-*** =windmove=
-
-    #+begin_src emacs-lisp
-    (use-package windmove
-      :bind (("C-c h" . windmove-left)
-             ("C-c j" . windmove-down)
-             ("C-c k" . windmove-up)
-             ("C-c l" . windmove-right)))
+      (use-package switch-window
+        :bind
+        (("C-x o" . switch-window)
+         ("C-x w" . switch-window-then-swap-buffer)))
     #+end_src
 
 *** =winner=
 
     #+begin_src emacs-lisp
-    (use-package winner
-      :config (winner-mode 1))
+      (use-package winner
+        :config (winner-mode 1))
     #+end_src
 
 ** YASnippets
 
    #+begin_src emacs-lisp
-   (use-package yasnippet
-     :hook
-     ((emacs-lisp-mode . yas-minor-mode)
-      (org-mode . yas-minor-mode)
-      (cc-mode . yas-minor-mode))
-     :config (yas-reload-all))
+     (use-package yasnippet
+       :hook
+       ((emacs-lisp-mode . yas-minor-mode)
+        (org-mode . yas-minor-mode)
+        (cc-mode . yas-minor-mode))
+       :config
+       (yas-reload-all))
 
-   (use-package yasnippet-snippets)
-   #+end_src
-
-
-* PL
-
-** C++
-** CMake
-** CSS - LESS - SCSS
-
-   #+begin_src emacs-lisp
-   (use-package css-mode
-     :custom (css-indent-offset 2))
-
-   (use-package less-css-mode
-     :mode "\\.less\\'")
-
-   (use-package scss-mode
-     :mode "\\.scss\\'")
-   #+end_src
-
-** CSV
-
-   #+begin_src emacs-lisp
-   (use-package csv-mode)
-   #+end_src
-
-** Emacs Lisp
-
-   #+begin_src emacs-lisp
-   ;;(use-package elisp-mode)
-   #+end_src
-
-** HTML
-
-   #+begin_src emacs-lisp
-   (use-package emmet-mode
-     :delight
-     :hook (css-mode sgml-mode web-mode))
+     (use-package yasnippet-snippets)
    #+end_src
 
 
 * Language Server Protocol
 
-  #+begin_src emacs-lisp
-  (use-package lsp-mode
-    ;; :hook ((c-mode c++-mode dart-mode java-mode json-mode python-mode typescript-mode xml-mode) . lsp)
-    :custom
-    ;;(lsp-clients-typescript-server-args '("--stdio" "--tsserver-log-file" "/dev/stderr"))
-    (lsp-enable-folding nil)
-    (lsp-enable-links nil)
-    (lsp-enable-snippet nil)
-    (lsp-prefer-flymake nil)
-    (lsp-restart 'auto-restart))
+* PL
 
-    (use-package lsp-ui)
-    (use-package dap-mode
-      :after lsp-mode
-      :config
-      (dap-mode t)
-      (dap-ui-mode t))
-  #+end_src
-
-
-* Org ModeEeEeEe
+* Org
 
   #+begin_src emacs-lisp
-  (use-package org :ensure org-plus-contrib)
+    (use-package org)
   #+end_src
 
-** Bullets
+** =org-bullets=
 
    #+begin_src emacs-lisp
-   (use-package org-bullets
-     :hook (org-mode . org-bullets-mode)
-     :custom
-     (org-bullets-bullet-list '("●" "►" "▸")))
+     (use-package org-bullets
+       :hook
+       (org-mode . org-bullets-mode)
+       :custom
+       (org-bullets-bullet-list '("●" "►" "▸")))
    #+end_src
    
-** Agenda
+** =org-agenda=
+** =Reveal.js=
 
+   #+begin_src emacs-lisp
+     (use-package org-re-reveal
+       :custom
+       (org-reveal-mathjax t)
+       (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
+   #+end_src
