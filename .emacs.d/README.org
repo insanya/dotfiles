@@ -66,7 +66,11 @@
    #+BEGIN_SRC emacs-lisp
      (use-package color-theme-sanityinc-tomorrow
        :config
-       (load-theme 'sanityinc-tomorrow-night t))
+       (load-theme 'sanityinc-tomorrow-bright t))
+
+     ;; (use-package almost-mono-themes
+     ;;   :config
+     ;;   (load-theme 'almost-mono-white t))
 
      (use-package all-the-icons)
 
@@ -90,7 +94,6 @@
        :custom
        (aggressive-indent-comments-too))
    #+end_src
-   
 ** Browser
 
    #+begin_src emacs-lisp
@@ -142,7 +145,7 @@
 
    #+begin_src emacs-lisp
      (use-package company
-       :diminish "Cpy"
+       :diminish "Company"
        :bind
        (:map company-active-map
              ("RET" . nil)
@@ -172,6 +175,7 @@
        :diminish
        :config
        (setq dashboard-startup-banner 'logo
+             dashboard-week-agenda t
              dashboard-center-content t
              dashboard-items '((recents  . 5) (projects . 5) (agenda . 5))
              dashboard-set-heading-icons t
@@ -181,7 +185,16 @@
        (dashboard-setup-startup-hook))
    #+end_src
 
-** Dired
+** TODO Dired
+** ElDoc
+
+   #+begin_src emacs-lisp
+     (use-package eldoc
+       :diminish)
+   #+end_src
+
+#+end_src
+
 ** Ivy/Counsel
 
    #+begin_src emacs-lisp
@@ -286,13 +299,15 @@
 *** =rainbow-delimiters=
 
     #+begin_src emacs-lisp
-      (use-package rainbow-delimiters)
+      (use-package rainbow-delimiters
+        :diminish)
     #+end_src
 
 *** =smartparens=
 
     #+begin_src emacs-lisp
       (use-package smartparens
+        :diminish
         :hook
         (after-init . smartparens-global-mode)
         :custom
@@ -473,6 +488,7 @@
 
    #+begin_src emacs-lisp
      (use-package yasnippet
+       :diminish "YaS"
        :hook
        ((emacs-lisp-mode . yas-minor-mode)
         (org-mode . yas-minor-mode)
@@ -480,7 +496,8 @@
        :config
        (yas-reload-all))
 
-     (use-package yasnippet-snippets)
+     (use-package yasnippet-snippets
+       :diminish)
    #+end_src
 
 
@@ -605,7 +622,31 @@
 
   #+begin_src emacs-lisp
     (use-package org
-      :ensure org-plus-contrib)
+      :ensure org-plus-contrib
+      :mode (("\\.org\\'" . org-mode))
+      :bind (("C-c o l" . org-store-link)
+             ("C-c o c" . org-capture)
+             ("C-c o a" . org-agenda)
+             ("C-c o d" . org-clock-display)
+             ("C-c o i" . org-clock-in)
+             ("C-c o I" . org-clock-in-last)
+             ("C-c o o" . org-clock-out)
+             ("C-c o g" . org-clock-goto)
+             ("C-c o C" . org-clock-cancel))
+  
+      :config
+      ;; Enable syntax highlighting of code blocks
+      (setq org-src-fontify-natively t)
+      ;; Disable security prompt before code evaluation
+      (setq org-confirm-babel-evaluate nil)
+      (setq org-todo-keywords
+            '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
+      (setq org-todo-keyword-faces
+            '(("TODO" . "#dfaf8f")
+              ("NEXT" . "#93e0e3")
+              ("STARTED" . "#dc8cc3")
+              ("WAIT" . "#CC9393")
+              ("DONE" . "#dcdccc"))))
   #+end_src
 
 ** =org-bullets=
@@ -619,6 +660,11 @@
    #+end_src
    
 ** =org-agenda=
+
+   #+begin_src emacs-lisp
+     (setq org-agenda-files '("~/Desktop/dailydose"))
+   #+end_src
+
 ** =Reveal.js=
 
    #+begin_src emacs-lisp
