@@ -382,6 +382,7 @@
 
 ** Shackle
 
+   [[https://depp.brause.cc/shackle/][Shackle Source Website]]
    [[https://github.com/sk8ingdom/.emacs.d/blob/master/general-config/general-plugins.el][Solution Savior (Github Source)!!]]
    Function that needs a rework defined here -> [[*Org]]
    #+begin_src emacs-lisp
@@ -427,7 +428,7 @@
           (" *Agenda Commands*"               :align below)
           ("*Org Clock*"                      :align below)
           ("*Edit Formulas*"                  :align below :ratio 10    :select t)
-          ("\\*Org Src.*"           :regexp t :align below :ratio 10    :select t)
+          ("\\*Org Src.*"           :regexp t :align below :ratio 30    :select t)
           ("*Org Attach*"                     :align below              :select t)
           ("*Org Export Dispatcher*"          :align below              :select t)
           ("*Select Link*"                    :align below              :select t)
