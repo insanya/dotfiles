@@ -462,12 +462,17 @@
 
 ** Whitespace
 
-   [[https://www.emacswiki.org/emacs/WhiteSpace][Emacs Wiki on Whitespace]]
+   [[http://ergoemacs.org/emacs/whitespace-mode.html]]
    #+begin_src emacs-lisp
      (require 'whitespace)
-     (global-whitespace-mode +1)
-     (setq whitespace-line-column 80
-           whitespace-line-count 80)
-   #+end_src
 
+     (global-whitespace-mode +1)
+
+     (progn
+       (setq whitespace-style (quote (face tabs newline tab-mark newline-mark )))
+       (setq whitespace-display-mappings
+             '((space-mark 32 [183] [46])
+               (newline-mark 10 [182 10])
+               (tab-mark 9 [9655 9] [92 9]))))
+   #+end_src
 
