@@ -99,7 +99,7 @@
 * Org
 ** Mode
 
-   [[https://orgmode.org/][OrG MoOoOode]]
+   [[https://orgmode.org/][OrG Mode]]
    #+begin_src emacs-lisp
      (use-package org
        :bind
@@ -146,6 +146,82 @@
        (org-mode . org-bullets-mode)
        :custom
        (org-bullets-bullet-list '("●" "►" "▸")))
+   #+end_src
+
+
+* Languages
+** CSS/HTML/ etc
+*** CSS(Native)
+
+    #+begin_src emacs-lisp
+      (use-package css-mode
+        :ensure nil
+        :custom
+        (css-indent-offset 2))
+    #+end_src
+
+*** HTML(Native)
+    #+begin_src emacs-lisp
+      (use-package sgml-mode
+        :ensure nil
+        :hook
+        (html-mode . sgml-electric-tag-pair-mode)
+        (html-mode . sgml-name-8bit-mode)
+        :custom
+        (sgml-basic-offset 2))
+    #+end_src
+
+*** Web Mode
+
+    [[https://web-mode.org/][Web Mode Website]]
+    #+begin_src emacs-lisp
+      (use-package web-mode
+        :mode ("\\.html?\\'")
+        :hook
+        (web-mode . sgml-electric-tag-pair-mode)
+        :custom
+        (web-mode-code-indent-offset 2)
+        (web-mode-enable-auto-quoting nil)
+        (web-mode-markup-indent-offset 2)
+        (web-mode-enable-auto-indentation nil))
+    #+end_src
+
+** JavaScript
+
+   [[https://github.com/mooz/js2-mode][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package js-doc)
+
+     (use-package js2-mode
+       :mode "\\.js\\'"
+       :interpreter (("node" . js2-mode))
+       :custom
+       (js-indent-level 2)
+       (js-switch-indent-offset 2)
+       (js2-highlight-level 3)
+       (js2-idle-timer-delay 0))
+
+     (use-package js2-refactor
+       :diminish
+       :commands js2-refactor-mode
+       :hook
+       (js2-mode . js2-refactor-mode)
+       :config
+       (js2r-add-keybindings-with-prefix "C-c C-m"))
+
+     (use-package rjsx-mode
+       :mode ("\\.jsx\\'" "components/.+\\.js$" "pages/.+\\.js$")
+       :hook
+       (rjsx-mode . sgml-electric-tag-pair-mode)
+       (rjsx-mode . turn-off-auto-fill))
+   #+end_src
+
+** Json
+
+   [[https://github.com/joshwnj/json-mode][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package json-mode
+       :mode "\\.json\\'")
    #+end_src
 
 
@@ -291,7 +367,7 @@
        ("C-x C-u". crux-upcase-region))
    #+end_src
 
-** Dashboard **Disabled**
+** **Disabled** Dashboard 
 
    [[https://github.com/emacs-dashboard/emacs-dashboard][Github Source]]
    #+begin_src emacs-lisp
@@ -313,6 +389,37 @@
    #+begin_src emacs-lisp
      (put 'dired-find-alternate-file 'disabled nil)
    #+end_src
+
+** Expand
+*** Emmet Mode
+
+    [[https://emmet.io/][Emmet Website]]
+    #+begin_src emacs-lisp
+      (use-package emmet-mode
+        :bind
+        (:map emmet-mode-keymap
+              ("<C-return>" . nil))
+        :hook
+        (css-mode . emmet-mode)
+        (html-mode . emmet-mode)
+        (rjsx-mode . emmet-mode)
+        (web-mode . emmet-mode)
+        :custom
+        (emmet-insert-flash-time .1)
+        (emmet-move-cursor-between-quote t))
+    #+end_src
+
+*** YaSnippets
+
+    #+begin_src emacs-lisp
+      (use-package yasnippet
+        :diminish "YaS"
+        :init
+        (yas-global-mode))
+
+      (use-package yasnippet-snippets
+        :diminish)
+    #+end_src
 
 ** Ivy/Counsel/Swiper
 
@@ -425,13 +532,13 @@
      (use-package pdf-tools)
    #+end_src
 
-** Pretty Mode
+** **DISABLE** Pretty Mode
 
    [[https://github.com/pretty-mode/pretty-mode][Github Source]]
    #+begin_src emacs-lisp
-     (use-package pretty-mode
-       :config
-       (global-pretty-mode t))
+     ;;(use-package pretty-mode
+     ;;  :config
+     ;;  (global-pretty-mode t))
    #+end_src
 
 ** Projectile
@@ -439,6 +546,8 @@
    [[https://projectile.mx/][Projectile Website]]
    #+begin_src emacs-lisp
      (use-package projectile
+       :init
+       (projectile-global-mode)
        :bind
        ("C-c p" . projectile-command-map)
        :init
@@ -447,14 +556,12 @@
                       ".projectile-cache" user-emacs-directory)
                      projectile-known-projects-file
                      (expand-file-name
-                      ".projectile-bookmarks" user-emacs-directory))
-       :config
-       (projectile-global-mode))
+                      ".projectile-bookmarks" user-emacs-directory)))
 
      (use-package counsel-projectile
        :after
        (counsel projectile)
-       :config
+       :init
        (counsel-projectile-mode))
    #+end_src
 
@@ -495,8 +602,9 @@
    #+begin_src emacs-lisp
      (use-package which-key
        :diminish
-       :config
+       :init
        (which-key-mode)
+       :config
        (setq which-key-show-early-on-C-h t
              which-key-idle-delay most-positive-fixnum
              which-key-idle-secondary-delay 1e-100))
@@ -660,15 +768,57 @@
                (tab-mark 9 [9655 9] [92 9]))))
    #+end_src
 
-** YaSnippets
 
+* Language Server Protocol
+  [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org][Thank You Mr. Angrybacon xd]]
+  [[https://emacs-lsp.github.io/lsp-mode/][LSP Website]]
+** Setup
    #+begin_src emacs-lisp
-     (use-package yasnippet
-       :diminish "YaS"
-       :init
-       (yas-global-mode))
+     (use-package lsp-mode
+       :preface
+       (defun me/lsp-optimize ()
+         (setq-local
+          gc-cons-threshold (* 100 1024 1024)
+          read-process-output-max (* 1024 1024)))
+       :hook
+       (lsp-mode . me/lsp-optimize)
+       (lsp-mode . lsp-enable-which-key-integration)
+       (js2-mode . lsp-deferred)
+       (rjsx-mode . lsp-deferred)
+       (web-mode . lsp-deferred)
+       :bind
+       ("C-c l" . lsp-keymap-prefix)
+       :custom
+       (lsp-auto-guess-root t)
+       (lsp-idle-delay .01)
+       (lsp-diagnostics-provider :none)
+       (lsp-eldoc-hook nil)
+       (lsp-session-file (expand-file-name ".lsp" user-emacs-directory))
+       :config
+       (setq lsp-eslint-server-command
+             '("node"
+               "~/.nvm/versions/node/v15.2.0/bin/eslint"
+               "--stdio")))
 
-     (use-package yasnippet-snippets
-       :diminish)
+     (use-package lsp-ui
+       :custom
+       (lsp-ui-doc-enable nil)
+       (lsp-ui-doc-delay .1)
+       (lsp-ui-doc-header nil)
+       (lsp-ui-doc-max-height 16)
+       (lsp-ui-doc-max-width 80)
+       (lsp-ui-doc-position 'top)
+       (lsp-ui-imenu-enable nil)
+       (lsp-ui-peek-enable nil)
+       (lsp-ui-sideline-enable nil))
+
+     (use-package lsp-treemacs
+       :init
+       (lsp-treemacs-sync-mode))
+
+     (use-package dap-mode
+       :init
+       (dap-mode)
+       (dap-ui-mode))
    #+end_src
 
