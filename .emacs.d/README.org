@@ -143,16 +143,23 @@
 
 
 * Utilities
-** Agressive Indent
+** Indent Improvements
+*** Options
 
-   [[https://github.com/Malabarba/aggressive-indent-mode][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package aggressive-indent
-       :hook
-       ((emacs-lisp-mode lisp-mode) . aggressive-indent-mode)
-       :custom
-       (aggressive-indent-comments-too))
-   #+end_src
+    #+begin_src emacs-lisp
+      (electric-indent-mode +1)
+    #+end_src
+
+*** Agressive Indent
+
+     [[https://github.com/Malabarba/aggressive-indent-mode][Github Source]]
+     #+begin_src emacs-lisp
+       (use-package aggressive-indent
+         :init
+         (aggressive-indent-mode)
+         :custom
+         (aggressive-indent-comments-too))
+     #+end_src
 
 ** Buffers/Windows
 
@@ -169,7 +176,6 @@
        ("C-x 4 d" . switch-window-then-dired)
        ("C-x 4 f" . switch-window-then-find-file)
        ("C-x 4 r" . switch-window-then-find-file-read-only)
-
        :config
        (setq-default switch-window-shortcut-style 'alphabet
                      switch-window-timeout nil))
@@ -189,8 +195,8 @@
    #+begin_src emacs-lisp
      (use-package company
        :diminish "Company"
-       :hook
-       (after-init . company-mode)
+       :init
+       (company-mode)
        :bind
        (:map company-active-map
              ("RET" . nil)
@@ -200,8 +206,8 @@
              ("<right>" . company-complete-common))
        :custom
        (company-dabbrev-downcase nil)
-       (company-idle-delay .2)
-       (company-minimum-prefix-length 3)
+       (company-idle-delay .1)
+       (company-minimum-prefix-length 2)
        (company-require-match nil)
        (company-tooltip-align-annotations t)
        :config
@@ -308,6 +314,18 @@
      (use-package git-timemachine)
    #+end_src
 
+** Move Text
+
+   [[https://github.com/emacsfodder/move-text][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package move-text
+       :bind
+       (("M-p" . move-text-up)
+        ("M-n" . move-text-down))
+       :config
+       (move-text-default-bindings))
+   #+end_src
+
 ** Pdf Reader
 
    [[https://github.com/politza/pdf-tools][Github Source]]
@@ -338,7 +356,8 @@
        ("C-c p" . projectile-command-map)
        :init
        (setq-default projectile-cache-file
-                     (expand-file-name ".projectile-cache" user-emacs-directory)
+                     (expand-file-name
+                      ".projectile-cache" user-emacs-directory)
                      projectile-known-projects-file
                      (expand-file-name
                       ".projectile-bookmarks" user-emacs-directory))
@@ -358,13 +377,29 @@
    #+begin_src emacs-lisp
      (use-package recentf
        :diminish
-       :hook
-       (after-init . recentf-mode)
+       :init
+       (recentf-mode)
        :config
        (setq recentf-save-file (concat user-emacs-directory "recentf")
              recentf-max-saved-items 100
              recentf-exclude
              '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa")))
+   #+end_src
+
+** Syntax checking
+
+   [[https://www.flycheck.org/en/latest/][Flycheck Website]]
+   #+begin_src emacs-lisp
+     (use-package flycheck
+       :diminish "FlyC"
+       :init
+       (global-flycheck-mode)
+       :custom
+       (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+       (flycheck-display-errors-delay .3)
+       :config
+       (setq-default flycheck-gcc-openmp t)
+       (setq flycheck-display-errors-function nil))
    #+end_src
 
 ** ShortcutS H3lP3R
@@ -442,24 +477,35 @@
        (shackle-mode t))
    #+end_src
 
-** Smartparens
+** Parentheses Look/Nav Improvements
+*** Smartparens
 
-   [[https://github.com/Fuco1/smartparens][Github Source]]
-   [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybinds to look at]]
-   #+begin_src emacs-lisp
-     (use-package smartparens
-       :hook
-       (after-init . smartparens-mode)
-       :diminish "SP"
-       :bind
-       ("C-M-a" . sp-beginning-of-sexp)
-       ("C-M-e" . sp-end-of-sexp)
-       ("C-M-f" . sp-forward-sexp)
-       ("C-M-b" . sp-backward-sexp)
-       :config
-       (smartparens-global-mode t)
-       (smartparens-strict-mode))
-   #+end_src
+    [[https://github.com/Fuco1/smartparens][Github Source]]
+    [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybinds to look at]]
+    #+begin_src emacs-lisp
+      (use-package smartparens
+        :init
+        (smartparens-mode)
+        :diminish "SP"
+        :bind
+        ("C-M-a" . sp-beginning-of-sexp)
+        ("C-M-e" . sp-end-of-sexp)
+        ("C-M-f" . sp-forward-sexp)
+        ("C-M-b" . sp-backward-sexp)
+        :config
+        (smartparens-global-mode t)
+        (smartparens-strict-mode))
+    #+end_src
+
+*** Raibow Parentheses
+
+    [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package rainbow-delimiters
+        :diminish
+        :hook
+        (org-mode . rainbow-delimiters-mode))
+    #+end_src
 
 ** Whitespace
 
