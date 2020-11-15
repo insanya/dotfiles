@@ -383,6 +383,7 @@
 ** Shackle
 
    [[https://github.com/sk8ingdom/.emacs.d/blob/master/general-config/general-plugins.el][Solution Savior (Github Source)!!]]
+   Function that needs a rework defined here -> [[*Org]]
    #+begin_src emacs-lisp
      (use-package shackle
        :config
