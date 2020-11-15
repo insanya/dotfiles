@@ -35,6 +35,7 @@
      (global-hl-line-mode)
      (show-paren-mode 1)
      (global-linum-mode 1)
+     (winner-mode 1)
 
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
      (global-set-key (kbd "C-z") nil)
@@ -47,7 +48,13 @@
                        (find-file "~/.emacs.d/README.org")))
 
      (setq backup-directory-alist
-       `(("." . ,(concat user-emacs-directory "backups"))))
+           `(("." . ,(concat user-emacs-directory "backups"))))
+
+     (setq backup-by-copying t
+           delete-old-versions t
+           kept-new-versions 6
+           kept-old-versions 2
+           version-control t)
    #+end_src
 
 ** Font
@@ -162,24 +169,70 @@
      #+end_src
 
 ** Buffers/Windows
+*** IBuffer
 
-   [[https://github.com/dimitri/switch-window][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package switch-window
-       :bind
-       ("C-x o" . switch-window)
-       ("C-x 1" . switch-window-then-maximize)
-       ("C-x 2" . switch-window-then-split-below)
-       ("C-x 3" . switch-window-then-split-right)
-       ("C-x 0" . switch-window-then-delete)
+    [[https://github.com/purcell/ibuffer-projectile][Github Source 1]]
+    [[https://github.com/purcell/ibuffer-vc][Github Source 2]]
+    #+begin_src emacs-lisp
+      (use-package ibuffer-vc)
 
-       ("C-x 4 d" . switch-window-then-dired)
-       ("C-x 4 f" . switch-window-then-find-file)
-       ("C-x 4 r" . switch-window-then-find-file-read-only)
-       :config
-       (setq-default switch-window-shortcut-style 'alphabet
-                     switch-window-timeout nil))
-   #+end_src
+      (use-package ibuffer-projectile
+        :preface
+        (defun ibuffer-set-up-preferred-filters ()
+          (ibuffer-vc-set-filter-groups-by-vc-root)
+          (unless (eq ibuffer-sorting-mode 'filename/process)
+            (ibuffer-do-sort-by-filename/process)))
+        :hook
+        (ibuffer . ibuffer-set-up-preferred-filters)
+        :bind
+        ("C-x C-b" . ibuffer)
+        :config
+        (setq-default ibuffer-show-empty-filter-groups nil))
+
+      (with-eval-after-load 'ibuffer
+        (define-ibuffer-column size-h
+          (:name "Size" :inline t)
+          (file-size-human-readable (buffer-size))))
+
+      (setq ibuffer-formats
+            '((mark modified read-only vc-status-mini " "
+                    (name 22 22 :left :elide)
+                    " "
+                    (size-h 9 -1 :right)
+                    " "
+                    (mode 12 12 :left :elide)
+                    " "
+                    vc-relative-file)
+              (mark modified read-only vc-status-mini " "
+                    (name 22 22 :left :elide)
+                    " "
+                    (size-h 9 -1 :right)
+                    " "
+                    (mode 14 14 :left :elide)
+                    " "
+                    (vc-status 12 12 :left)
+                    " "
+                    vc-relative-file)))
+    #+end_src
+
+*** Switch Window
+    [[https://github.com/dimitri/switch-window][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package switch-window
+        :bind
+        ("C-x o" . switch-window)
+        ("C-x 1" . switch-window-then-maximize)
+        ("C-x 2" . switch-window-then-split-below)
+        ("C-x 3" . switch-window-then-split-right)
+        ("C-x 0" . switch-window-then-delete)
+
+        ("C-x 4 d" . switch-window-then-dired)
+        ("C-x 4 f" . switch-window-then-find-file)
+        ("C-x 4 r" . switch-window-then-find-file-read-only)
+        :config
+        (setq-default switch-window-shortcut-style 'alphabet
+                      switch-window-timeout nil))
+    #+end_src
 
 ** Break Lines
 
@@ -325,6 +378,40 @@
        :config
        (move-text-default-bindings))
    #+end_src
+
+** Parentheses Look/Nav Improvements
+*** Smartparens
+
+    [[https://github.com/Fuco1/smartparens][Github Source]]
+    [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybinds to look at]]
+    #+begin_src emacs-lisp
+      (use-package smartparens
+        :init
+        (smartparens-mode)
+        :diminish "SP"
+        :bind
+        ("C-M-a" . sp-beginning-of-sexp)
+        ("C-M-e" . sp-end-of-sexp)
+        ("C-M-f" . sp-forward-sexp)
+        ("C-M-b" . sp-backward-sexp)
+        :config
+        (smartparens-global-mode t)
+        (smartparens-strict-mode))
+    #+end_src
+
+*** Raibow Parentheses
+
+    [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package rainbow-delimiters
+        :diminish
+        :hook
+        (org-mode . rainbow-delimiters-mode))
+    #+end_src
+
+** TODO Perspective
+
+   [[https://github.com/nex3/perspective-el][Github Source]]
 
 ** Pdf Reader
 
@@ -477,35 +564,85 @@
        (shackle-mode t))
    #+end_src
 
-** Parentheses Look/Nav Improvements
-*** Smartparens
+** Treemacs
 
-    [[https://github.com/Fuco1/smartparens][Github Source]]
-    [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybinds to look at]]
-    #+begin_src emacs-lisp
-      (use-package smartparens
-        :init
-        (smartparens-mode)
-        :diminish "SP"
-        :bind
-        ("C-M-a" . sp-beginning-of-sexp)
-        ("C-M-e" . sp-end-of-sexp)
-        ("C-M-f" . sp-forward-sexp)
-        ("C-M-b" . sp-backward-sexp)
-        :config
-        (smartparens-global-mode t)
-        (smartparens-strict-mode))
-    #+end_src
+   [[https://github.com/Alexander-Miller/treemacs][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package treemacs
+       :init
+       (with-eval-after-load 'winum
+         (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+       :config
+       (progn
+         (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+               treemacs-deferred-git-apply-delay      0.5
+               treemacs-directory-name-transformer    #'identity
+               treemacs-display-in-side-window        t
+               treemacs-eldoc-display                 t
+               treemacs-file-event-delay              5000
+               treemacs-file-extension-regex          treemacs-last-period-regex-value
+               treemacs-file-follow-delay             0.2
+               treemacs-file-name-transformer         #'identity
+               treemacs-follow-after-init             t
+               treemacs-git-command-pipe              ""
+               treemacs-goto-tag-strategy             'refetch-index
+               treemacs-indentation                   2
+               treemacs-indentation-string            " "
+               treemacs-is-never-other-window         nil
+               treemacs-max-git-entries               5000
+               treemacs-missing-project-action        'ask
+               treemacs-move-forward-on-expand        nil
+               treemacs-no-png-images                 nil
+               treemacs-no-delete-other-windows       t
+               treemacs-project-follow-cleanup        nil
+               treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+               treemacs-position                      'left
+               treemacs-recenter-distance             0.1
+               treemacs-recenter-after-file-follow    nil
+               treemacs-recenter-after-tag-follow     nil
+               treemacs-recenter-after-project-jump   'always
+               treemacs-recenter-after-project-expand 'on-distance
+               treemacs-show-cursor                   nil
+               treemacs-show-hidden-files             t
+               treemacs-silent-filewatch              nil
+               treemacs-silent-refresh                nil
+               treemacs-sorting                       'alphabetic-asc
+               treemacs-space-between-root-nodes      t
+               treemacs-tag-follow-cleanup            t
+               treemacs-tag-follow-delay              1.5
+               treemacs-user-mode-line-format         nil
+               treemacs-user-header-line-format       nil
+               treemacs-width                         35
+               treemacs-workspace-switch-cleanup      nil)
 
-*** Raibow Parentheses
+         (treemacs-follow-mode t)
+         (treemacs-filewatch-mode t)
+         (treemacs-fringe-indicator-mode t)
+         (pcase (cons (not (null (executable-find "git")))
+                      (not (null treemacs-python-executable)))
+           (`(t . t)
+            (treemacs-git-mode 'deferred))
+           (`(t . _)
+            (treemacs-git-mode 'simple))))
+       :bind
+       (:map global-map
+             ("M-0"       . treemacs-select-window)
+             ("C-c t 1"   . treemacs-delete-other-windows)
+             ("C-c t t"   . treemacs)
+             ("C-c t B"   . treemacs-bookmark)
+             ("C-c t C-t" . treemacs-find-file)
+             ("C-c t M-t" . treemacs-find-tag)))
 
-    [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
-    #+begin_src emacs-lisp
-      (use-package rainbow-delimiters
-        :diminish
-        :hook
-        (org-mode . rainbow-delimiters-mode))
-    #+end_src
+     (use-package treemacs-projectile
+       :after treemacs projectile)
+
+     (use-package treemacs-magit
+       :after treemacs magit)
+
+     ;;(use-package treemacs-persp
+     ;;  :after treemacs persp-mode
+     ;;  :config (treemacs-set-scope-type 'Perspectives)) 
+   #+end_src
 
 ** Whitespace
 
@@ -521,5 +658,17 @@
              '((space-mark 32 [183] [46])
                (newline-mark 10 [182 10])
                (tab-mark 9 [9655 9] [92 9]))))
+   #+end_src
+
+** YaSnippets
+
+   #+begin_src emacs-lisp
+     (use-package yasnippet
+       :diminish "YaS"
+       :init
+       (yas-global-mode))
+
+     (use-package yasnippet-snippets
+       :diminish)
    #+end_src
 
