@@ -11,6 +11,12 @@
 (package-initialize)
 (package-refresh-contents)
 
+(unless (package-installed-p 'quelpa)
+  (with-temp-buffer
+    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+    (eval-buffer)
+    (quelpa-self-upgrade)))
+
 ;; use-package configuration.
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -32,4 +38,3 @@
 
 ;; Tangle configuration
 (org-babel-load-file (expand-file-name "README.org" user-emacs-directory))
-(put 'dired-find-alternate-file 'disabled nil)

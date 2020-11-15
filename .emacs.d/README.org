@@ -2,75 +2,81 @@
 #+AUTHOR: Lucas Pereira <insanya@protonmail.com>
 #+STARTUP: content
 
-* Startup
-** Authentication
-** Defaults
+* Interface
+** Better Defaults
 
    #+begin_src emacs-lisp
-     (setq-default
-      frame-title-format '("EMACS" "@" user-login-name)
-      confirm-kill-emacs 'yes-or-no-p
-      mouse-yank-at-point t
-      show-help-function nil
-      cursor-in-non-selected-windows t                 ; Hide the cursor in inactive windows
-      fill-column 80                                   ; Set width for automatic line breaks
-      help-window-select t                             ; Focus new help windows when opened
-      indent-tabs-mode nil                             ; Prefers spaces over tabs
-      inhibit-startup-screen t                         ; Disable start-up screen
-      scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-      select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-      tab-width 2                                      ; Set width for tabs
-      user-full-name "Lucas Pereira"                   ; Set the full name of the current user
-      user-mail-address "insanya@protonmail.com"       ; Set the email address of the current user
-      vc-follow-symlinks t                             ; Always follow the symlinks
-      view-read-only t)                                ; Always open read-only buffers in view-mode
+     (setq-default frame-title-format '("EMACS" "@" user-login-name)
+                   confirm-kill-emacs 'yes-or-no-p
+                   mouse-yank-at-point t
+                   show-help-function nil
+                   cursor-in-non-selected-windows t
+                   fill-column 80
+                   help-window-select t
+                   indent-tabs-mode nil
+                   inhibit-startup-screen t
+                   scroll-conservatively most-positive-fixnum
+                   select-enable-clipboard t
+                   tab-width 2
+                   user-full-name "Lucas Pereira"
+                   user-mail-address "insanya@protonmail.com"
+                   vc-follow-symlinks t
+                   view-read-only t)
 
      (delete-selection-mode 1)
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
      (blink-cursor-mode 0)
-     (add-hook 'after-init-hook 'recentf-mode)
-
-     (menu-bar-mode -1)                               ; Disable the menu bar
-     (scroll-bar-mode -1)                             ; Disable the scroll bar
-     (tool-bar-mode -1)                               ; Disable the tool bar
-     (tooltip-mode -1)                                ; Disable the tooltips
-     (column-number-mode 1)                           ; Show the column number
-
-     (column-number-mode 1)                           ; Show the column number
-     (display-time-mode 1)                            ; Enable time in the mode-line
-     (global-hl-line-mode)                            ; Hightlight current line
-     (show-paren-mode 1)                              ; Show the parent
+     (menu-bar-mode -1)
+     (scroll-bar-mode -1)
+     (tool-bar-mode -1)
+     (tooltip-mode -1)
+     (display-time-mode 1)
+     (global-hl-line-mode)
+     (show-paren-mode 1)
+     (global-linum-mode 1)
 
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
      (global-set-key (kbd "C-z") nil)
      (global-set-key (kbd "M-z") nil)
      (global-set-key (kbd "C-x C-z") nil)
-     (global-set-key (kbd "M-/") nil)
 
-     (use-package diminish)
+     (global-set-key (kbd "<f8>")
+                     (lambda()
+                       (interactive)
+                       (find-file "~/.emacs.d/README.org")))
+
+     (setq backup-directory-alist
+       `(("." . ,(concat user-emacs-directory "backups"))))
    #+end_src
 
-** Fonts
+** Font
 
    #+begin_src emacs-lisp
      (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-12")
+       (eq system-type 'gnu/linux) "Ubuntu Mono-14")
+
      (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
+
      (when (display-graphic-p)
        (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
    #+end_src
 
+** Diminish Mode
+
+   #+begin_src emacs-lisp
+     (use-package diminish)
+   #+end_src
+
 ** Theme
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package color-theme-sanityinc-tomorrow
-       :config
-       (load-theme 'sanityinc-tomorrow-bright t))
-
-     ;; (use-package almost-mono-themes
+   #+begin_src emacs-lisp
+     ;; (use-package color-theme-sanityinc-tomorrow
      ;;   :config
-     ;;   (load-theme 'almost-mono-white t))
+     ;;   (load-theme 'sanityinc-tomorrow-bright t))
+     (use-package gruvbox-theme
+       :config
+       (load-theme 'gruvbox-dark-hard t))
 
      (use-package all-the-icons)
 
@@ -80,72 +86,111 @@
    #+end_src
 
 
+* TODO Authentication
+
+
+* Org
+** Mode
+
+   [[https://orgmode.org/][OrG MoOoOode]]
+   #+begin_src emacs-lisp
+     (use-package org
+       :bind
+       (("C-c o c" . org-capture)
+        ("C-c o a" . org-agenda))
+       :config
+       (setq org-src-fontify-natively t
+             org-confirm-babel-evaluate nil
+             org-src-tab-acts-natively t)
+
+       (setq org-todo-keywords
+             '((sequence
+                "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
+
+       (setq org-todo-keyword-faces
+             '(("TODO" . "#dfaf8f")
+               ("NEXT" . "#93e0e3")
+               ("STARTED" . "#dc8cc3")
+               ("WAIT" . "#CC9393")
+               ("DONE" . "#dcdccc")))
+
+       (setq org-default-notes-file "~/Desktop/dailydose/notes.org"))
+
+     ;; (setq org-agenda-files '("~/Desktop/dailydose"))
+
+     ;; Re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
+     ;; Primarily for compatibility with shackle.
+     (defun org-switch-to-buffer-other-window (args)
+       "Switch to buffer in a second window on the current frame.
+     In particular, do not allow pop-up frames.
+     Returns the newly created buffer.
+     Redefined to allow pop-up windows."
+       ;; (org-no-popups
+       ;;   (apply 'switch-to-buffer-other-window args))
+       (switch-to-buffer-other-window args))
+   #+end_src
+
+** Bullets
+
+   [[https://github.com/sabof/org-bullets][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package org-bullets
+       :hook
+       (org-mode . org-bullets-mode)
+       :custom
+       (org-bullets-bullet-list '("●" "►" "▸")))
+   #+end_src
+
 
 * Utilities
 ** Agressive Indent
 
+   [[https://github.com/Malabarba/aggressive-indent-mode][Github Source]]
    #+begin_src emacs-lisp
      (use-package aggressive-indent
        :hook
-       ((css-mode . aggressive-indent-mode)
-        (emacs-lisp-mode . aggressive-indent-mode)
-        (js-mode . aggressive-indent-mode)
-        (lisp-mode . aggressive-indent-mode))
+       ((emacs-lisp-mode lisp-mode) . aggressive-indent-mode)
        :custom
        (aggressive-indent-comments-too))
    #+end_src
-** Browser
 
+** Buffers/Windows
+
+   [[https://github.com/dimitri/switch-window][Github Source]]
    #+begin_src emacs-lisp
-     (use-package browse-url
-       :custom
-       (browse-url-browser-function 'browse-url-generic)
-       (browse-url-generic-program "qutebrowser"))
-   #+end_src
-
-*** =engine-mode=
-    #+begin_src emacs-lisp
-      (use-package engine-mode
-        :config
-        (defengine duckduckgo "https://duckduckgo.com/?q=%s" :keybinding "d")
-        (defengine github "https://github.com/search?ref=simplesearch&q=%s" :keybinding "g")
-        (defengine stack-overflow "https://stackoverflow.com/search?q=%s" :keybinding "s")
-        (defengine youtube "http://www.youtube.com/results?aq=f&oq=&search_query=%s" :keybinding "y")
-        (defengine wikipedia "http://www.wikipedia.org/search-redirect.php?language=en&go=Go&search=%s" :keybinding "w")
-        (engine-mode t))
-    #+end_src
-
-** Buffers
-
-   #+BEGIN_SRC emacs-lisp
      (use-package switch-window
-       :diminish
        :bind
        ("C-x o" . switch-window)
+       ("C-x 1" . switch-window-then-maximize)
+       ("C-x 2" . switch-window-then-split-below)
+       ("C-x 3" . switch-window-then-split-right)
+       ("C-x 0" . switch-window-then-delete)
+
+       ("C-x 4 d" . switch-window-then-dired)
+       ("C-x 4 f" . switch-window-then-find-file)
+       ("C-x 4 r" . switch-window-then-find-file-read-only)
+
        :config
        (setq-default switch-window-shortcut-style 'alphabet
                      switch-window-timeout nil))
+   #+end_src
 
-     (use-package ibuffer
-       :bind
-       ("C-x C-b" . ibuffer))
+** Break Lines
 
-     (use-package ibuffer-projectile
-       :after ibuffer
-       :preface
-       (defun insanya/ibuffer-projectile ()
-         (ibuffer-projectile-set-filter-groups)
-         (unless (eq ibuffer-sorting-mode 'alphabetic)
-           (ibuffer-do-sort-by-alphabetic)))
-       :hook
-       (ibuffer . insanya/ibuffer-projectile))
-   #+END_SRC
+   [[https://github.com/purcell/page-break-lines][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package page-break-lines
+       :diminish)
+   #+end_src
 
-** Company
+** Code Completion
 
+   [[https://company-mode.github.io/][Company Mode Website]]
    #+begin_src emacs-lisp
      (use-package company
        :diminish "Company"
+       :hook
+       (after-init . company-mode)
        :bind
        (:map company-active-map
              ("RET" . nil)
@@ -168,50 +213,60 @@
        (company-mode . company-box-mode))
    #+end_src
 
-** Dashboard
+** Crux
 
-   #+BEGIN_SRC emacs-lisp
-     (use-package dashboard
-       :diminish
-       :config
-       (setq dashboard-startup-banner 'logo
-             dashboard-week-agenda t
-             dashboard-center-content t
-             dashboard-items '((recents  . 5) (projects . 5) (agenda . 5))
-             dashboard-set-heading-icons t
-             dashboard-set-file-icons t
-             dashboard-set-navigator t
-             dashboard-set-footer nil)
-       (dashboard-setup-startup-hook))
+   [[https://github.com/bbatsov/crux][Crux Github Source]]
+   #+begin_src emacs-lisp
+     (use-package crux
+       :bind
+       ("C-a" . crux-move-beginning-of-line)
+       ;;("C-k" . crux-smart-kill-line)
+       ("C-<backspace>" . crux-kill-line-backwards)
+       ("C-c c D" . crux-delete-file-and-buffer)
+       ("C-c c d" . crux-duplicate-current-line-or-region)
+       ("C-c c r". crux-rename-file-and-buffer)
+       ("C-c c t". crux-visit-term-buffer)
+       ("C-c c k". crux-kill-other-buffers)
+       ("C-c c c". crux-cleanup-buffer-or-region)
+       ("C-x C-l". crux-downcase-region)
+       ("C-x C-u". crux-upcase-region))
+   #+end_src
+
+** Dashboard **Disabled**
+
+   [[https://github.com/emacs-dashboard/emacs-dashboard][Github Source]]
+   #+begin_src emacs-lisp
+     ;; (use-package dashboard
+     ;;   :config
+     ;;   (setq dashboard-startup-banner 'logo
+     ;;         dashboard-week-agenda t
+     ;;         dashboard-center-content t
+     ;;         dashboard-items '((recents  . 5) (projects . 5) (agenda . 5))
+     ;;         dashboard-set-heading-icons t
+     ;;         dashboard-set-file-icons t
+     ;;         dashboard-set-navigator t
+     ;;         dashboard-set-footer nil)
+     ;;   (dashboard-setup-startup-hook))
    #+end_src
 
 ** TODO Dired
-** ElDoc
 
    #+begin_src emacs-lisp
-     (use-package eldoc
-       :diminish)
+     (put 'dired-find-alternate-file 'disabled nil)
    #+end_src
 
-#+end_src
+** Ivy/Counsel/Swiper
 
-** Ivy/Counsel
-
+   [[https://github.com/abo-abo/swiper][Github Source]]
    #+begin_src emacs-lisp
      (use-package counsel
        :diminish
        :bind
        ("C-x C-d" . counsel-dired-jump)
        ("C-x C-r" . counsel-buffer-or-recentf)
-       ;; ("C-z s" . counsel-ag)
+       ("C-x C-z" . counsel-ag)
        ("M-x" . counsel-M-x)
-       :config
-       (counsel-mode 1))
-
-     (use-package counsel-projectile
-       :diminish
-       :config
-       (counsel-projectile-mode 1))
+       :config (counsel-mode))
 
      (use-package ivy
        :diminish
@@ -220,8 +275,8 @@
        :bind
        ("C-x b" . ivy-switch-buffer)
        (:map ivy-minibuffer-map
-         ("C-r" . ivy-previous-line-or-history)
-         ("M-RET" . ivy-immediate-done))
+             ("C-r" . ivy-previous-line-or-history)
+             ("M-RET" . ivy-immediate-done))
        :custom
        (ivy-use-virtual-buffers t)
        (ivy-height 10)
@@ -229,447 +284,189 @@
        (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
        (ivy-wrap t))
 
-     (use-package ivy-posframe
-       :diminish
-         :config
-         (ivy-posframe-mode t)
-         (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
+     ;; (use-package ivy-posframe
+     ;;   :diminish
+     ;;   :config
+     ;;   (ivy-posframe-mode t)
+     ;;   (setq ivy-posframe-display-functions-alist
+     ;;         '((t . ivy-posframe-display-at-frame-center))))
 
      (use-package swiper
-       :diminish
        :bind
        ("C-s" . swiper))
    #+end_src
 
-** Key chords helper
+** Magit
 
+   [[https://magit.vc/][Magit Website]]
    #+begin_src emacs-lisp
-     (use-package which-key
-       :diminish
+     (use-package magit
+       :bind
+       ("C-x g" . magit-status)
        :config
-       (setq which-key-show-early-on-C-h t
-             which-key-idle-delay most-positive-fixnum
-             which-key-idle-secondary-delay 1e-100)
-       (which-key-mode +1))
+       (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+     (use-package git-timemachine)
    #+end_src
 
-** Line numbers bar
+** Pdf Reader
 
-   #+BEGIN_SRC emacs-lisp
-     (when (fboundp 'display-line-numbers-mode)
-       (setq-default display-line-numbers-width 3)
-       (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-       (add-hook 'org-mode-hook 'display-line-numbers-mode))
-   #+END_SRC
-
-** Move text
+   [[https://github.com/politza/pdf-tools][Github Source]]
+   Dependencies:
+   libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev
+   Optional:
+   sudo apt install imagemagick
 
    #+begin_src emacs-lisp
-     (use-package move-text
-         :bind (("M-p" . move-text-up)
-                ("M-n" . move-text-down))
-         :config (move-text-default-bindings))
+     (use-package pdf-tools)
    #+end_src
 
-** Navigation
+** Pretty Mode
 
-   *FROM:* http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+   [[https://github.com/pretty-mode/pretty-mode][Github Source]]
    #+begin_src emacs-lisp
-     (defun insanya/smarter-move-beginning-of-line (arg)
-       (interactive "^p")
-       (setq arg (or arg 1))
-       (when (/= arg 1)
-         (let ((line-move-visual nil))
-           (forward-line (1- arg))))
-       (let ((orig-point (point)))
-         (back-to-indentation)
-         (when (= orig-point (point))
-           (move-beginning-of-line 1))))
-     (global-set-key (kbd "C-a") 'insanya/smarter-move-beginning-of-line)
-   #+end_src
-
-** Page Break Lines
-
-   #+begin_src emacs-lisp
-     (use-package page-break-lines
-       :diminish)
-   #+end_src
-
-** Parentheses
-*** =rainbow-delimiters=
-
-    #+begin_src emacs-lisp
-      (use-package rainbow-delimiters
-        :diminish)
-    #+end_src
-
-*** =smartparens=
-
-    #+begin_src emacs-lisp
-      (use-package smartparens
-        :diminish
-        :hook
-        (after-init . smartparens-global-mode)
-        :custom
-        (sp-escape-quotes-after-insert nil))
-    #+end_src
-
-** PDF
-
-   #+begin_src emacs-lisp
-     (use-package pdf-tools
-       :init
-       (pdf-tools-install :noquery))
+     (use-package pretty-mode
+       :config
+       (global-pretty-mode t))
    #+end_src
 
 ** Projectile
 
-   #+BEGIN_SRC emacs-lisp
+   [[https://projectile.mx/][Projectile Website]]
+   #+begin_src emacs-lisp
      (use-package projectile
-       :diminish
-       :hook
-       (after-init . projectile-global-mode)
        :bind
        ("C-c p" . projectile-command-map)
        :init
-       (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
-                     projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
-       :custom
-       (projectile-enable-caching t))
+       (setq-default projectile-cache-file
+                     (expand-file-name ".projectile-cache" user-emacs-directory)
+                     projectile-known-projects-file
+                     (expand-file-name
+                      ".projectile-bookmarks" user-emacs-directory))
+       :config
+       (projectile-global-mode))
 
      (use-package counsel-projectile
        :after
        (counsel projectile)
        :config
-       (counsel-projectile-mode 1))
-   #+END_SRC
-
-** Syntax Checking
-
-   #+begin_src emacs-lisp
-     (use-package flycheck
-       :diminish FlyC
-       :hook ((emacs-lisp-mode . flycheck-mode)
-              (cc-mode . flycheck-mode))
-       :custom
-       ;;(flycheck-check-syntax-automatically '(save mode-enabled))
-       (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-       (flycheck-display-errors-delay .3)
-       :config
-       (setq-default flycheck-gcc-openmp t)
-       (setq flycheck-display-errors-function nil))
+       (counsel-projectile-mode))
    #+end_src
 
-** Treemacs
+** Recent Files
 
+   [[https://www.emacswiki.org/emacs/RecentFiles][Recentf Emacs Wiki]]
    #+begin_src emacs-lisp
-     (use-package treemacs
-       :bind
-       (:map global-map
-             ("M-0" . treemacs-select-window)
-             ("C-c t d" . treemacs-delete-other-windows)
-             ("C-c t t" . treemacs)
-             ("C-c t b" . treemacs-bookmark)
-             ("C-c t f" . treemacs-find-file)
-             ("C-c t T" . treemacs-find-tag)
-             ("C-c t p" . treemacs-projectile))
-       :config
-       (treemacs-follow-mode t)
-       (treemacs-filewatch-mode t)
-       (treemacs-fringe-indicator-mode t))
-
-     (use-package treemacs-projectile
-       :after treemacs projectile)
-
-     (use-package treemacs-all-the-icons
-       :after treemacs all-the-icons
-       :config
-       (treemacs-load-theme "all-the-icons"))
-   #+end_src
-
-** Version control/ Backup files
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package magit
-       :config (global-set-key (kbd "C-x g") 'magit-status))
-
-     (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
-     (setq auto-save-default nil
-           auto-save-list-file-prefix nil
-           make-backup-files nil)
-
      (use-package recentf
        :diminish
+       :hook
+       (after-init . recentf-mode)
        :config
-       (progn
-         (setq recentf-save-file (concat user-emacs-directory "recentf")
-               recentf-max-saved-items 100
-               recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa"))
-         (recentf-mode t)))
-   #+END_SRC
-
-** Web mode
-
-   #+begin_src emacs-lisp
-     (use-package web-mode
-       :mode
-       (("\\.php\\'" . web-mode)
-        ("\\.html?\\'" . web-mode))
-       :custom
-       (web-mode-attr-indent-offset 2)
-       (web-mode-block-padding 2)
-       (web-mode-css-indent-offset 2)
-       (web-mode-code-indent-offset 2)
-       (web-mode-comment-style 2)
-       (web-mode-enable-current-element-highlight t)
-       (web-mode-markup-indent-offset 2)
-       :config
-       (setq web-mode-code-indent-offset 2
-             web-mode-markup-indent-offset 2
-             web-mode-css-indent-offset 2))
+       (setq recentf-save-file (concat user-emacs-directory "recentf")
+             recentf-max-saved-items 100
+             recentf-exclude
+             '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa")))
    #+end_src
 
-** Whitespaces
+** ShortcutS H3lP3R
 
+   [[https://github.com/justbur/emacs-which-key][Github Source]]
    #+begin_src emacs-lisp
-     (use-package whitespace
+     (use-package which-key
        :diminish
-       :hook
-       (after-init . whitespace-turn-on)
-       :custom
-       (whitespace-style '(face empty indentation::space tab trailing)))
-   #+end_src
-
-*** =hungry-delete=
-
-    #+begin_src emacs-lisp
-      (use-package hungry-delete
-        :diminish
-        :config
-        (global-hungry-delete-mode))
-    #+end_src
-
-** Windows
-
-   #+begin_src emacs-lisp
-     (defun hsplit-last-buffer ()
-       "Gives the focus to the last created horizontal window."
-       (interactive)
-       (split-window-horizontally)
-       (other-window 1))
-
-     (defun vsplit-last-buffer ()
-       "Gives the focus to the last created vertical window."
-       (interactive)
-       (split-window-vertically)
-       (other-window 1))
-
-     (global-set-key (kbd "C-x 3") 'hsplit-last-buffer)
-     (global-set-key (kbd "C-x 2") 'hsplit-last-buffer)
-   #+end_src
-
-*** =switch-window=
-
-    #+begin_src emacs-lisp
-      (use-package switch-window
-        :bind
-        (("C-x o" . switch-window)
-         ("C-x w" . switch-window-then-swap-buffer)))
-    #+end_src
-
-*** =winner=
-
-    #+begin_src emacs-lisp
-      (use-package winner
-        :config (winner-mode 1))
-    #+end_src
-
-** YASnippets
-
-   #+begin_src emacs-lisp
-     (use-package yasnippet
-       :diminish "YaS"
-       :hook
-       ((emacs-lisp-mode . yas-minor-mode)
-        (org-mode . yas-minor-mode)
-        (cc-mode . yas-minor-mode))
        :config
-       (yas-reload-all))
-
-     (use-package yasnippet-snippets
-       :diminish)
+       (which-key-mode)
+       (setq which-key-show-early-on-C-h t
+             which-key-idle-delay most-positive-fixnum
+             which-key-idle-secondary-delay 1e-100))
    #+end_src
 
+** Shackle
 
-
-* Language Server Protocol
-
-  #+begin_src emacs-lisp
-    (use-package lsp-mode
-      :hook
-      ((web-mode vue-mode css-mode typescript-mode) . lsp)
-      (lsp-mode . lsp-enable-which-key-integration)
-      :commands lsp
-      :config
-      (setq lsp-keymap-prefix "C-c l")
-      :custom
-      (lsp-prefer-flymake nil))
-
-    (use-package company-lsp
-      :config
-      (push 'company-lsp company-backends))
-
-    (use-package lsp-ui
-      :commands lsp-ui-mode
-      :config
-      (setq lsp-ui-sideline-enable t)
-      (setq lsp-ui-doc-enable nil)
-      (setq lsp-ui-peek-enable t)
-      (setq lsp-ui-peek-always-show t))
-
-    (use-package lsp-ivy
-      :commands lsp-ivy-workspace-symbol)
-
-    (use-package lsp-treemacs
-      :config
-      (lsp-treemacs-sync-mode 1))
-
-    (use-package dap-mode
-      :config
-      (dap-mode t)
-      (dap-ui-mode t))
-  #+end_src
-
-
-* PL
-** TODO C/C++
-** TODO CMake
-** CSS/LESS/SCSS
-
+   [[https://github.com/sk8ingdom/.emacs.d/blob/master/general-config/general-plugins.el][Solution Savior (Github Source)!!]]
    #+begin_src emacs-lisp
-     (use-package css-mode
-       :custom
-       (css-indent-offset 2))
-
-     (use-package less-css-mode
-       :mode "\\.less\\'")
-
-     (use-package scss-mode
-       :mode "\\.scss\\'")
-   #+end_src
-
-** CSV
-
-   #+begin_src emacs-lisp
-     (use-package csv-mode)
-   #+end_src
-
-** TODO ELISP
-** HTML
-
-   #+begin_src emacs-lisp
-     (use-package emmet-mode
-       :hook
-       (css-mode sgml-mode web-mode))
-   #+end_src
-** JavaScript
-
-   #+begin_src emacs-lisp
-     (use-package prettier-js
-       :custom (prettier-js-args '("--print-width" "100"
-                                   "--single-quote" "true"
-                                   "--trailing-comma" "all"))
-       :hook
-       ((js-mode . prettier-js-mode)
-        (web-mode . prettier-js-mode)))
-   #+end_src
-
-   #+begin_src emacs-lisp
-     (use-package js2-mode
-       :hook
-       (js2-mode . prettier-js-mode)
-       (js-mode . js2-minor-mode)
+     (use-package shackle
        :config
-       (add-to-list 'interpreter-mode-alist '("node" . js2-mode)))
+       (setq shackle-default-rule nil)
+       (setq
+        shackle-rules
+        '(;; Built-in
+          (compilation-mode                   :align below :ratio 0.20)
+          ;;("*Calendar*"                       :align below :ratio 10    :select t)
+          (" *Deletions*"                     :align below)
+          ("*Occur*"                          :align below :ratio 0.20)
+          ("*Completions*"                    :align below :ratio 0.20)
+          ("*Help*"                           :align below :ratio 0.33  :select t)
+          (" *Metahelp*"                      :align below :ratio 0.20  :select t)
+          ("*Messages*"                       :align below :ratio 0.20  :select t)
+          ("*Warning*"                        :align below :ratio 0.20  :select t)
+          ("*Warnings*"                       :align below :ratio 0.20  :select t)
+          ("*Backtrace*"                      :align below :ratio 0.20  :select t)
+          ("*Compile-Log*"                    :align below :ratio 0.20)
+          ("*package update results*"         :align below :ratio 0.20)
+          ("*Ediff Control Panel*"            :align below              :select t)
+          ("*tex-shell*"                      :align below :ratio 0.20  :select t)
+          ("*Dired Log*"                      :align below :ratio 0.20  :select t)
+          ("*Register Preview*"               :align below              :select t)
+          ("*Process List*"                   :align below :ratio 0.20  :select t)
 
-     (use-package js2-refactor
-       :after js2-mode
+          ;; Magit
+          ("*magit-commit-popup*"             :align below              :select t)
+          ("*magit-dispatch-popup*"           :align below              :select t)
+
+          ;; Plugins
+          ;; (" *undo-tree*"                     :align right :ratio 0.10  :select t)
+          ;; (" *command-log*"                   :align right :ratio 0.20)
+
+          ;; Org-mode
+          (" *Org todo*"                      :align below :ratio 10    :select t)
+          ("*Org Note*"                       :align below :ratio 10    :select t)
+          ("CAPTURE.*"              :regexp t :align below :ratio 20)
+          ("*Org Select*"                     :align below :ratio 20)
+          ("*Org Links*"                      :align below :ratio 10)
+          (" *Agenda Commands*"               :align below)
+          ("*Org Clock*"                      :align below)
+          ("*Edit Formulas*"                  :align below :ratio 10    :select t)
+          ("\\*Org Src.*"           :regexp t :align below :ratio 10    :select t)
+          ("*Org Attach*"                     :align below              :select t)
+          ("*Org Export Dispatcher*"          :align below              :select t)
+          ("*Select Link*"                    :align below              :select t)
+
+          ;; PDF Tools
+          ("*PDF-Occur*"                      :align below :ratio 0.20  :select t)
+          ("\\*Edit Annotation.*\\*":regexp t :align below :ratio 0.10  :select t)
+          ("*Contents*"                       :align below :ratio 0.10)
+          ("\\*.* annots\\*"        :regexp t :align below :ratio 0.20  :select t)
+          ))
+       (shackle-mode t))
+   #+end_src
+
+** Smartparens
+
+   [[https://github.com/Fuco1/smartparens][Github Source]]
+   [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybinds to look at]]
+   #+begin_src emacs-lisp
+     (use-package smartparens
        :hook
-       (js2-mode . js2-refactor-mode))
+       (after-init . smartparens-mode)
+       :diminish "SP"
+       :bind
+       ("C-M-a" . sp-beginning-of-sexp)
+       ("C-M-e" . sp-end-of-sexp)
+       ("C-M-f" . sp-forward-sexp)
+       ("C-M-b" . sp-backward-sexp)
+       :config
+       (smartparens-global-mode t)
+       (smartparens-strict-mode))
    #+end_src
 
-** TypeScript
+** Whitespace
 
+   [[https://www.emacswiki.org/emacs/WhiteSpace][Emacs Wiki on Whitespace]]
    #+begin_src emacs-lisp
-     (use-package typescript-mode
-       :mode ("\\.ts\\'" "\\.tsx\\'")
-       :hook
-       (typescript-mode . prettier-js-mode)
-       :init
-       (setq-default typescript-indent-level 2))
-   #+end_src
-
-** VueJS
-
-   #+begin_src emacs-lisp
-     (use-package vue-mode
-       :mode "\\.vue\\'")
+     (require 'whitespace)
+     (global-whitespace-mode +1)
+     (setq whitespace-line-column 80
+           whitespace-line-count 80)
    #+end_src
 
 
-
-* Org
-
-  #+begin_src emacs-lisp
-    (use-package org
-      :ensure org-plus-contrib
-      :mode (("\\.org\\'" . org-mode))
-      :bind (("C-c o l" . org-store-link)
-             ("C-c o c" . org-capture)
-             ("C-c o a" . org-agenda)
-             ("C-c o d" . org-clock-display)
-             ("C-c o i" . org-clock-in)
-             ("C-c o I" . org-clock-in-last)
-             ("C-c o o" . org-clock-out)
-             ("C-c o g" . org-clock-goto)
-             ("C-c o C" . org-clock-cancel))
-  
-      :config
-      ;; Enable syntax highlighting of code blocks
-      (setq org-src-fontify-natively t)
-      ;; Disable security prompt before code evaluation
-      (setq org-confirm-babel-evaluate nil)
-      (setq org-todo-keywords
-            '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
-      (setq org-todo-keyword-faces
-            '(("TODO" . "#dfaf8f")
-              ("NEXT" . "#93e0e3")
-              ("STARTED" . "#dc8cc3")
-              ("WAIT" . "#CC9393")
-              ("DONE" . "#dcdccc"))))
-  #+end_src
-
-** =org-bullets=
-
-   #+begin_src emacs-lisp
-     (use-package org-bullets
-       :hook
-       (org-mode . org-bullets-mode)
-       :custom
-       (org-bullets-bullet-list '("●" "►" "▸")))
-   #+end_src
-   
-** =org-agenda=
-
-   #+begin_src emacs-lisp
-     (setq org-agenda-files '("~/Desktop/dailydose"))
-   #+end_src
-
-** =Reveal.js=
-
-   #+begin_src emacs-lisp
-     (use-package org-re-reveal
-       :custom
-       (org-reveal-mathjax t)
-       (org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
-   #+end_src
