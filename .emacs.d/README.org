@@ -162,27 +162,6 @@
 
 
 * Languages
-** CSS/HTML (Native)
-
-   #+begin_src emacs-lisp
-     (require 'css-mode)
-     (setq css-indent-offset 2)
-   #+end_src
-
-** Web Mode
-
-   [[https://web-mode.org/][Web Mode Website]]
-   #+begin_src emacs-lisp
-     (use-package web-mode
-       :mode ("\\.html?\\'")
-       :custom
-       (web-mode-code-indent-offset 2)
-       (web-mode-css-indent-offset 2)
-       (web-mode-markup-indent-offset 2)
-       (web-mode-enable-auto-quoting nil)
-       (web-mode-enable-auto-indentation nil))
-   #+end_src
-
 ** JavaScript
 *** Mode Setup
 
@@ -231,6 +210,20 @@
    #+begin_src emacs-lisp
      (use-package vue-mode
        :mode "\\.vue\\'")
+   #+end_src
+
+** Web Mode
+
+   [[https://web-mode.org/][Web Mode Website]]
+   #+begin_src emacs-lisp
+     (use-package web-mode
+       :mode ("\\.html?\\'" "\\.css?\\'")
+       :custom
+       (web-mode-code-indent-offset 2)
+       (web-mode-css-indent-offset 2)
+       (web-mode-markup-indent-offset 2)
+       (web-mode-enable-auto-quoting nil)
+       (web-mode-enable-auto-indentation nil))
    #+end_src
 
 
