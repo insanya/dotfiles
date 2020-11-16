@@ -35,6 +35,9 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+;; Load Secrets
+(load (concat user-emacs-directory "secrets.el"))
+
 ;; Obsolete warnings
 (setq byte-compile-warnings '(not obsolete))
 
