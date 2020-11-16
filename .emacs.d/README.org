@@ -78,15 +78,15 @@
 ** Theme
 
    #+begin_src emacs-lisp
+
      ;; (use-package color-theme-sanityinc-tomorrow
      ;;   :config
      ;;   (load-theme 'sanityinc-tomorrow-bright t))
+
      (use-package gruvbox-theme
        :config
        (load-theme 'gruvbox-dark-hard t))
-
      (use-package all-the-icons)
-
      (use-package powerline
        :config
        (powerline-default-theme))
@@ -103,10 +103,10 @@
        (exec-path-from-shell-check-startup-files nil))
    #+end_src
 
+** Authentication
 
-* TODO Authentication
+   Need to implement some secrets.
 
-  Need to implement some secrets.
 
 * Org
 ** Mode
@@ -162,52 +162,35 @@
 
 
 * Languages
-** CSS/HTML/ etc
-*** CSS(Native)
+** CSS/HTML (Native)
 
-    #+begin_src emacs-lisp
-      (use-package css-mode
-        :ensure nil
-        :custom
-        (css-indent-offset 2))
-    #+end_src
+   #+begin_src emacs-lisp
+     (require 'css-mode)
+     (setq css-indent-offset 2)
+   #+end_src
 
-*** HTML(Native)
-    #+begin_src emacs-lisp
-      (use-package sgml-mode
-        :ensure nil
-        :hook
-        (html-mode . sgml-electric-tag-pair-mode)
-        (html-mode . sgml-name-8bit-mode)
-        :custom
-        (sgml-basic-offset 2))
-    #+end_src
+** Web Mode
 
-*** Web Mode
-
-    [[https://web-mode.org/][Web Mode Website]]
-    #+begin_src emacs-lisp
-      (use-package web-mode
-        :mode ("\\.html?\\'")
-        :hook
-        (web-mode . sgml-electric-tag-pair-mode)
-        :custom
-        (web-mode-code-indent-offset 2)
-        (web-mode-enable-auto-quoting nil)
-        (web-mode-markup-indent-offset 2)
-        (web-mode-enable-auto-indentation nil))
-    #+end_src
+   [[https://web-mode.org/][Web Mode Website]]
+   #+begin_src emacs-lisp
+     (use-package web-mode
+       :mode ("\\.html?\\'")
+       :custom
+       (web-mode-code-indent-offset 2)
+       (web-mode-css-indent-offset 2)
+       (web-mode-markup-indent-offset 2)
+       (web-mode-enable-auto-quoting nil)
+       (web-mode-enable-auto-indentation nil))
+   #+end_src
 
 ** JavaScript
+*** Mode Setup
 
    [[https://github.com/mooz/js2-mode][Github Source]]
    [[https://github.com/mooz/js2-mode/blob/bb73461c2c7048d811b38e6b533a30fb5fdcea93/js2-mode.el#L57][Important Fix]]
    #+begin_src emacs-lisp
-     (use-package js-doc)
-
      (use-package js2-mode
-       :hook
-       (js-mode . js2-minor-mode)
+       :mode "\\.js\\'"
        :interpreter (("node" . js2-mode))
        :custom
        (js-indent-level 2)
@@ -224,12 +207,78 @@
        (js2r-add-keybindings-with-prefix "C-c C-m"))
    #+end_src
 
+*** Skewer
+
+    [[https://github.com/skeeto/skewer-mode][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package simple-httpd)
+      (use-package skewer-mode
+        :hook
+        (js2-mode . skewer-mode))
+    #+end_src
+
 ** Json
 
    [[https://github.com/joshwnj/json-mode][Github Source]]
    #+begin_src emacs-lisp
      (use-package json-mode
        :mode "\\.json\\'")
+   #+end_src
+
+** Vue
+
+   [[https://github.com/AdamNiederer/vue-mode][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package vue-mode
+       :mode "\\.vue\\'")
+   #+end_src
+
+
+* Language Server Protocol
+  [[https://emacs-lsp.github.io/lsp-mode/][LSP Website]]
+** Setup
+
+   #+begin_src emacs-lisp
+     (use-package lsp-mode
+       :preface
+       (defun me/lsp-optimize ()
+         (setq-local
+          gc-cons-threshold (* 100 1024 1024)
+          read-process-output-max (* 1024 1024)))
+       :hook
+       (lsp-mode . me/lsp-optimize)
+       (lsp-mode . lsp-enable-which-key-integration)
+       :bind
+       ("C-c l" . lsp-keymap-prefix)
+       :custom
+       (lsp-auto-guess-root t)
+       (lsp-idle-delay .01)
+       (lsp-diagnostics-provider :none)
+       (lsp-eldoc-hook nil)
+       (lsp-session-file (expand-file-name ".lsp" user-emacs-directory))
+       :config
+       (setq lsp-eslint-server-command insanya/eslint-path))
+
+     (use-package lsp-ui
+       :custom
+       (lsp-ui-doc-enable nil)
+       (lsp-ui-doc-delay .1)
+       (lsp-ui-doc-header nil)
+       (lsp-ui-doc-max-height 16)
+       (lsp-ui-doc-max-width 80)
+       (lsp-ui-doc-position 'top)
+       (lsp-ui-imenu-enable nil)
+       (lsp-ui-peek-enable nil)
+       (lsp-ui-sideline-enable nil))
+
+     (use-package lsp-treemacs
+       :init
+       (lsp-treemacs-sync-mode))
+
+     (use-package dap-mode
+       :init
+       (dap-mode)
+       (dap-ui-mode))
    #+end_src
 
 
@@ -326,6 +375,15 @@
        :diminish)
    #+end_src
 
+** Browser Setup
+
+   #+begin_src emacs-lisp
+     (use-package browse-url
+       :custom
+       (browse-url-browser-function 'browse-url-generic)
+       (browse-url-generic-program "firefox"))
+   #+end_src
+
 ** Code Completion
 
    [[https://company-mode.github.io/][Company Mode Website]]
@@ -392,7 +450,7 @@
      ;;   (dashboard-setup-startup-hook))
    #+end_src
 
-** TODO Dired
+** Dired
 
    #+begin_src emacs-lisp
      (put 'dired-find-alternate-file 'disabled nil)
@@ -405,12 +463,10 @@
     #+begin_src emacs-lisp
       (use-package emmet-mode
         :bind
-        (:map emmet-mode-keymap
-              ("<C-return>" . nil))
+        (:map
+         emmet-mode-keymap
+         ("<C-return>" . nil))
         :hook
-        (css-mode . emmet-mode)
-        (html-mode . emmet-mode)
-        (rjsx-mode . emmet-mode)
         (web-mode . emmet-mode)
         :custom
         (emmet-insert-flash-time .1)
@@ -540,7 +596,7 @@
      (use-package pdf-tools)
    #+end_src
 
-** **DISABLE** Pretty Mode
+** **Disabled** Pretty Mode
 
    [[https://github.com/pretty-mode/pretty-mode][Github Source]]
    #+begin_src emacs-lisp
@@ -776,52 +832,4 @@
                (tab-mark 9 [9655 9] [92 9]))))
    #+end_src
 
-
-* Language Server Protocol
-  [[https://github.com/angrybacon/dotemacs/blob/master/dotemacs.org][Thank You Mr. Angrybacon xd]]
-  [[https://emacs-lsp.github.io/lsp-mode/][LSP Website]]
-** Setup
-   #+begin_src emacs-lisp
-     (use-package lsp-mode
-       :preface
-       (defun me/lsp-optimize ()
-         (setq-local
-          gc-cons-threshold (* 100 1024 1024)
-          read-process-output-max (* 1024 1024)))
-       :hook
-       (lsp-mode . me/lsp-optimize)
-       (lsp-mode . lsp-enable-which-key-integration)
-       ((js-mode web-mode) . lsp)
-       :bind
-       ("C-c l" . lsp-keymap-prefix)
-       :custom
-       (lsp-auto-guess-root t)
-       (lsp-idle-delay .01)
-       (lsp-diagnostics-provider :none)
-       (lsp-eldoc-hook nil)
-       (lsp-session-file (expand-file-name ".lsp" user-emacs-directory))
-       :config
-       (setq lsp-eslint-server-command insanya/eslint-path))
-
-     (use-package lsp-ui
-       :custom
-       (lsp-ui-doc-enable nil)
-       (lsp-ui-doc-delay .1)
-       (lsp-ui-doc-header nil)
-       (lsp-ui-doc-max-height 16)
-       (lsp-ui-doc-max-width 80)
-       (lsp-ui-doc-position 'top)
-       (lsp-ui-imenu-enable nil)
-       (lsp-ui-peek-enable nil)
-       (lsp-ui-sideline-enable nil))
-
-     (use-package lsp-treemacs
-       :init
-       (lsp-treemacs-sync-mode))
-
-     (use-package dap-mode
-       :init
-       (dap-mode)
-       (dap-ui-mode))
-   #+end_src
 
