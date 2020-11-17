@@ -78,18 +78,12 @@
 ** Theme
 
    #+begin_src emacs-lisp
+     ;; (use-package color-theme-sanityinc-tomorrow)
+     (use-package gruvbox-theme)
+     (load-theme 'gruvbox-dark-hard t)
 
-     ;; (use-package color-theme-sanityinc-tomorrow
-     ;;   :config
-     ;;   (load-theme 'sanityinc-tomorrow-bright t))
-
-     (use-package gruvbox-theme
-       :config
-       (load-theme 'gruvbox-dark-hard t))
      (use-package all-the-icons)
-     (use-package powerline
-       :config
-       (powerline-default-theme))
+     (use-package powerline :config (powerline-default-theme))
    #+end_src
 
 ** Load Proper Exec Path
@@ -108,173 +102,6 @@
    Need to implement some secrets.
 
 
-* Org
-** Mode
-
-   [[https://orgmode.org/][OrG Mode]]
-   #+begin_src emacs-lisp
-     (use-package org
-       :bind
-       (("C-c o c" . org-capture)
-        ("C-c o a" . org-agenda))
-       :config
-       (setq org-src-fontify-natively t
-             org-confirm-babel-evaluate nil
-             org-src-tab-acts-natively t)
-
-       (setq org-todo-keywords
-             '((sequence
-                "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
-
-       (setq org-todo-keyword-faces
-             '(("TODO" . "#dfaf8f")
-               ("NEXT" . "#93e0e3")
-               ("STARTED" . "#dc8cc3")
-               ("WAIT" . "#CC9393")
-               ("DONE" . "#dcdccc")))
-
-       (setq org-default-notes-file "~/Desktop/dailydose/notes.org"))
-
-     ;; (setq org-agenda-files '("~/Desktop/dailydose"))
-
-     ;; Re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
-     ;; Primarily for compatibility with shackle.
-     (defun org-switch-to-buffer-other-window (args)
-       "Switch to buffer in a second window on the current frame.
-     In particular, do not allow pop-up frames.
-     Returns the newly created buffer.
-     Redefined to allow pop-up windows."
-       ;; (org-no-popups
-       ;;   (apply 'switch-to-buffer-other-window args))
-       (switch-to-buffer-other-window args))
-   #+end_src
-
-** Bullets
-
-   [[https://github.com/sabof/org-bullets][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package org-bullets
-       :hook
-       (org-mode . org-bullets-mode)
-       :custom
-       (org-bullets-bullet-list '("●" "►" "▸")))
-   #+end_src
-
-
-* Languages
-** JavaScript
-*** Mode Setup
-
-   [[https://github.com/mooz/js2-mode][Github Source]]
-   [[https://github.com/mooz/js2-mode/blob/bb73461c2c7048d811b38e6b533a30fb5fdcea93/js2-mode.el#L57][Important Fix]]
-   #+begin_src emacs-lisp
-     (use-package js2-mode
-       :mode "\\.js\\'"
-       :interpreter (("node" . js2-mode))
-       :custom
-       (js-indent-level 2)
-       (js-switch-indent-offset 2)
-       (js2-highlight-level 3)
-       (js2-idle-timer-delay 0))
-
-     (use-package js2-refactor
-       :diminish
-       :commands js2-refactor-mode
-       :hook
-       (js2-mode . js2-refactor-mode)
-       :config
-       (js2r-add-keybindings-with-prefix "C-c C-m"))
-   #+end_src
-
-*** Skewer
-
-    [[https://github.com/skeeto/skewer-mode][Github Source]]
-    #+begin_src emacs-lisp
-      (use-package simple-httpd)
-      (use-package skewer-mode
-        :hook
-        (js2-mode . skewer-mode))
-    #+end_src
-
-** Json
-
-   [[https://github.com/joshwnj/json-mode][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package json-mode
-       :mode "\\.json\\'")
-   #+end_src
-
-** Vue
-
-   [[https://github.com/AdamNiederer/vue-mode][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package vue-mode
-       :mode "\\.vue\\'")
-   #+end_src
-
-** Web Mode
-
-   [[https://web-mode.org/][Web Mode Website]]
-   #+begin_src emacs-lisp
-     (use-package web-mode
-       :mode ("\\.html?\\'" "\\.css?\\'")
-       :custom
-       (web-mode-code-indent-offset 2)
-       (web-mode-css-indent-offset 2)
-       (web-mode-markup-indent-offset 2)
-       (web-mode-enable-auto-quoting nil)
-       (web-mode-enable-auto-indentation nil))
-   #+end_src
-
-
-* Language Server Protocol
-  [[https://emacs-lsp.github.io/lsp-mode/][LSP Website]]
-** Setup
-
-   #+begin_src emacs-lisp
-     (use-package lsp-mode
-       :preface
-       (defun me/lsp-optimize ()
-         (setq-local
-          gc-cons-threshold (* 100 1024 1024)
-          read-process-output-max (* 1024 1024)))
-       :hook
-       (lsp-mode . me/lsp-optimize)
-       (lsp-mode . lsp-enable-which-key-integration)
-       :bind
-       ("C-c l" . lsp-keymap-prefix)
-       :custom
-       (lsp-auto-guess-root t)
-       (lsp-idle-delay .01)
-       (lsp-diagnostics-provider :none)
-       (lsp-eldoc-hook nil)
-       (lsp-session-file (expand-file-name ".lsp" user-emacs-directory))
-       :config
-       (setq lsp-eslint-server-command insanya/eslint-path))
-
-     (use-package lsp-ui
-       :custom
-       (lsp-ui-doc-enable nil)
-       (lsp-ui-doc-delay .1)
-       (lsp-ui-doc-header nil)
-       (lsp-ui-doc-max-height 16)
-       (lsp-ui-doc-max-width 80)
-       (lsp-ui-doc-position 'top)
-       (lsp-ui-imenu-enable nil)
-       (lsp-ui-peek-enable nil)
-       (lsp-ui-sideline-enable nil))
-
-     (use-package lsp-treemacs
-       :init
-       (lsp-treemacs-sync-mode))
-
-     (use-package dap-mode
-       :init
-       (dap-mode)
-       (dap-ui-mode))
-   #+end_src
-
-
 * Utilities
 ** Indent Improvements
 *** Options
@@ -289,7 +116,7 @@
      #+begin_src emacs-lisp
        (use-package aggressive-indent
          :init
-         (aggressive-indent-mode)
+         (aggressive-indent-global-mode)
          :custom
          (aggressive-indent-comments-too))
      #+end_src
@@ -382,9 +209,9 @@
    [[https://company-mode.github.io/][Company Mode Website]]
    #+begin_src emacs-lisp
      (use-package company
-       :diminish "Company"
        :init
-       (company-mode)
+       (global-company-mode)
+       :diminish "Company"
        :bind
        (:map company-active-map
              ("RET" . nil)
@@ -397,9 +224,7 @@
        (company-idle-delay .1)
        (company-minimum-prefix-length 2)
        (company-require-match nil)
-       (company-tooltip-align-annotations t)
-       :config
-       (global-company-mode))
+       (company-tooltip-align-annotations t))
 
      (use-package company-box
        :diminish
@@ -426,23 +251,6 @@
        ("C-x C-u". crux-upcase-region))
    #+end_src
 
-** **Disabled** Dashboard 
-
-   [[https://github.com/emacs-dashboard/emacs-dashboard][Github Source]]
-   #+begin_src emacs-lisp
-     ;; (use-package dashboard
-     ;;   :config
-     ;;   (setq dashboard-startup-banner 'logo
-     ;;         dashboard-week-agenda t
-     ;;         dashboard-center-content t
-     ;;         dashboard-items '((recents  . 5) (projects . 5) (agenda . 5))
-     ;;         dashboard-set-heading-icons t
-     ;;         dashboard-set-file-icons t
-     ;;         dashboard-set-navigator t
-     ;;         dashboard-set-footer nil)
-     ;;   (dashboard-setup-startup-hook))
-   #+end_src
-
 ** Dired
 
    #+begin_src emacs-lisp
@@ -459,8 +267,6 @@
         (:map
          emmet-mode-keymap
          ("<C-return>" . nil))
-        :hook
-        (web-mode . emmet-mode)
         :custom
         (emmet-insert-flash-time .1)
         (emmet-move-cursor-between-quote t))
@@ -470,9 +276,9 @@
 
     #+begin_src emacs-lisp
       (use-package yasnippet
-        :diminish "YaS"
         :init
-        (yas-global-mode))
+        (yas-global-mode)
+        :diminish "YaS")
 
       (use-package yasnippet-snippets
         :diminish)
@@ -490,11 +296,13 @@
        ("C-x C-z" . counsel-ag)
        ("M-x" . counsel-M-x)
        :config (counsel-mode))
+   #+end_src
 
+   #+begin_src emacs-lisp
      (use-package ivy
-       :diminish
        :init
        (ivy-mode 1)
+       :diminish
        :bind
        ("C-x b" . ivy-switch-buffer)
        (:map ivy-minibuffer-map
@@ -506,14 +314,9 @@
        (ivy-on-del-error-function nil)
        (ivy-magic-slash-non-match-action 'ivy-magic-slash-non-match-create)
        (ivy-wrap t))
+   #+end_src
 
-     ;; (use-package ivy-posframe
-     ;;   :diminish
-     ;;   :config
-     ;;   (ivy-posframe-mode t)
-     ;;   (setq ivy-posframe-display-functions-alist
-     ;;         '((t . ivy-posframe-display-at-frame-center))))
-
+   #+begin_src emacs-lisp
      (use-package swiper
        :bind
        ("C-s" . swiper))
@@ -528,6 +331,7 @@
        ("C-x g" . magit-status)
        :config
        (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+
      (use-package git-timemachine)
    #+end_src
 
@@ -568,12 +372,13 @@
     [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
     #+begin_src emacs-lisp
       (use-package rainbow-delimiters
+        :init
+        (rainbow-delimiters-mode)
         :diminish
-        :hook
-        (org-mode . rainbow-delimiters-mode))
+        )
     #+end_src
 
-** TODO Perspective
+** Perspective
 
    [[https://github.com/nex3/perspective-el][Github Source]]
 
@@ -589,15 +394,6 @@
      (use-package pdf-tools)
    #+end_src
 
-** **Disabled** Pretty Mode
-
-   [[https://github.com/pretty-mode/pretty-mode][Github Source]]
-   #+begin_src emacs-lisp
-     ;;(use-package pretty-mode
-     ;;  :config
-     ;;  (global-pretty-mode t))
-   #+end_src
-
 ** Projectile
 
    [[https://projectile.mx/][Projectile Website]]
@@ -607,17 +403,11 @@
        (projectile-global-mode)
        :bind
        ("C-c p" . projectile-command-map)
-       :init
-       (setq-default projectile-cache-file
-                     (expand-file-name
-                      ".projectile-cache" user-emacs-directory)
-                     projectile-known-projects-file
-                     (expand-file-name
-                      ".projectile-bookmarks" user-emacs-directory)))
+       :config
+       (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+                     projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)))
 
      (use-package counsel-projectile
-       :after
-       (counsel projectile)
        :init
        (counsel-projectile-mode))
    #+end_src
@@ -627,9 +417,9 @@
    [[https://www.emacswiki.org/emacs/RecentFiles][Recentf Emacs Wiki]]
    #+begin_src emacs-lisp
      (use-package recentf
-       :diminish
        :init
        (recentf-mode)
+       :diminish
        :config
        (setq recentf-save-file (concat user-emacs-directory "recentf")
              recentf-max-saved-items 100
@@ -642,9 +432,9 @@
    [[https://www.flycheck.org/en/latest/][Flycheck Website]]
    #+begin_src emacs-lisp
      (use-package flycheck
-       :diminish "FlyC"
        :init
        (global-flycheck-mode)
+       :diminish "FlyC"
        :custom
        (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
        (flycheck-display-errors-delay .3)
@@ -658,9 +448,9 @@
    [[https://github.com/justbur/emacs-which-key][Github Source]]
    #+begin_src emacs-lisp
      (use-package which-key
-       :diminish
        :init
        (which-key-mode)
+       :diminish
        :config
        (setq which-key-show-early-on-C-h t
              which-key-idle-delay most-positive-fixnum
@@ -814,8 +604,7 @@
    [[http://ergoemacs.org/emacs/whitespace-mode.html]]
    #+begin_src emacs-lisp
      (require 'whitespace)
-
-     (global-whitespace-mode +1)
+     ;;(global-whitespace-mode +1)
 
      (progn
        (setq whitespace-style (quote (face tabs newline tab-mark newline-mark )))
@@ -823,6 +612,207 @@
              '((space-mark 32 [183] [46])
                (newline-mark 10 [182 10])
                (tab-mark 9 [9655 9] [92 9]))))
+   #+end_src
+
+
+* Language Server Protocol
+
+  [[https://emacs-lsp.github.io/lsp-mode/][LSP Website]]
+** LSP Mode
+   #+begin_src emacs-lisp
+     (use-package lsp-mode
+       :preface
+       (defun me/lsp-optimize ()
+         (setq-local
+          gc-cons-threshold (* 100 1024 1024)
+          read-process-output-max (* 1024 1024)))
+       :hook
+       (lsp-mode . me/lsp-optimize)
+       (lsp-mode . lsp-enable-which-key-integration)
+       :bind
+       ("C-c l" . lsp-keymap-prefix)
+       :custom
+       (lsp-auto-guess-root t)
+       (lsp-idle-delay .01)
+       (lsp-diagnostics-provider :none)
+       (lsp-eldoc-hook nil)
+       (lsp-session-file (expand-file-name ".lsp" user-emacs-directory))
+       :config
+       (setq lsp-eslint-server-command insanya/eslint-path))
+   #+end_src
+
+** LSP Ui
+  #+begin_src emacs-lisp
+    (use-package lsp-ui
+      :custom
+      (lsp-ui-doc-enable nil)
+      (lsp-ui-doc-delay .1)
+      (lsp-ui-doc-header nil)
+      (lsp-ui-doc-max-height 16)
+      (lsp-ui-doc-max-width 80)
+      (lsp-ui-doc-position 'top)
+      (lsp-ui-imenu-enable nil)
+      (lsp-ui-peek-enable nil)
+      (lsp-ui-sideline-enable nil))
+   #+end_src
+
+** LSP Treemacs and DAP Mode
+
+   #+begin_src emacs-lisp
+     (use-package lsp-treemacs
+       :init
+       (lsp-treemacs-sync-mode))
+   #+end_src
+
+** DAP Mode
+
+   #+begin_src emacs-lisp
+     (use-package dap-mode
+       :init
+       (dap-mode)
+       (dap-ui-mode))
+  #+end_src
+
+
+* Languages
+** JavaScript
+*** Skewer
+
+    [[https://github.com/skeeto/skewer-mode][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package simple-httpd)
+      (use-package skewer-mode
+        :diminish "Skewer")
+    #+end_src
+
+*** JS Mode
+
+   [[https://github.com/mooz/js2-mode][Github Source]]
+   [[https://github.com/mooz/js2-mode/blob/bb73461c2c7048d811b38e6b533a30fb5fdcea93/js2-mode.el#L57][Important Fix]]
+   #+begin_src emacs-lisp
+     (use-package js2-mode
+       :hook
+       (js-mode . js2-minor-mode)
+       (js-mode . lsp)
+       (js-mode . whitespace-mode)
+       (js-mode . skewer-mode)
+       :interpreter
+       (("node" . js2-mode))
+       :custom
+       (js-indent-level 2)
+       (js-switch-indent-offset 2)
+       (js2-highlight-level 3)
+       (js2-idle-timer-delay 0))
+
+     (use-package js2-refactor
+       :diminish
+       :commands
+       js2-refactor-mode
+       :hook
+       (jss-mode . js2-refactor-mode)
+       :config
+       (js2r-add-keybindings-with-prefix "C-c C-m"))
+   #+end_src
+
+** Json
+
+   [[https://github.com/joshwnj/json-mode][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package json-mode
+       :mode "\\.json\\'")
+   #+end_src
+
+** Vue
+
+   [[https://github.com/AdamNiederer/vue-mode][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package vue-mode
+       :mode "\\.vue\\'"
+       :hook
+       (vue-mode . lsp))
+   #+end_src
+
+** Web Mode
+*** HTML
+
+   [[https://web-mode.org/][Web Mode Website]]
+   #+begin_src emacs-lisp
+     (use-package web-mode
+       :mode ("\\.html?\\'")
+       :hook
+       (web-mode . emmet-mode)
+       (web-mode . whitespace-mode)
+       ;;(web-mode . skewer-html-mode)
+       :custom
+       (web-mode-code-indent-offset 2)
+       (web-mode-css-indent-offset 2)
+       (web-mode-markup-indent-offset 2)
+       (web-mode-enable-auto-quoting nil)
+       (web-mode-enable-auto-indentation nil))
+   #+end_src
+
+*** CSS
+
+    #+begin_src emacs-lisp
+      (use-package css-mode
+        :hook
+        (css-mode . skewer-css-mode)
+        (css-mode . whitespace-mode)
+        :custom
+        (css-indent-offset 2))
+    #+end_src
+
+
+* Org
+** Mode
+
+   [[https://orgmode.org/][OrG Mode]]
+   #+begin_src emacs-lisp
+     (use-package org
+       :bind
+       (("C-c o c" . org-capture)
+        ("C-c o a" . org-agenda))
+       :config
+       (setq org-src-fontify-natively t
+             org-confirm-babel-evaluate nil
+             org-src-tab-acts-natively t)
+
+       (setq org-todo-keywords
+             '((sequence
+                "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
+
+       (setq org-todo-keyword-faces
+             '(("TODO" . "#dfaf8f")
+               ("NEXT" . "#93e0e3")
+               ("STARTED" . "#dc8cc3")
+               ("WAIT" . "#CC9393")
+               ("DONE" . "#dcdccc")))
+
+       (setq org-default-notes-file "~/Desktop/dailydose/notes.org"))
+
+     ;; (setq org-agenda-files '("~/Desktop/dailydose"))
+
+     ;; Re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
+     ;; Primarily for compatibility with shackle.
+     (defun org-switch-to-buffer-other-window (args)
+       "Switch to buffer in a second window on the current frame.
+     In particular, do not allow pop-up frames.
+     Returns the newly created buffer.
+     Redefined to allow pop-up windows."
+       ;; (org-no-popups
+       ;;   (apply 'switch-to-buffer-other-window args))
+       (switch-to-buffer-other-window args))
+   #+end_src
+
+** Bullets
+
+   [[https://github.com/sabof/org-bullets][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package org-bullets
+       :hook
+       (org-mode . org-bullets-mode)
+       :custom
+       (org-bullets-bullet-list '("●" "►" "▸")))
    #+end_src
 
 
