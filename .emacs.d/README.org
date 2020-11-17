@@ -1,4 +1,4 @@
-#+TITLE: GNU EMACS 27 Configuration
+#+TITLE: GNU EMACS 27.1 Configuration
 #+AUTHOR: Lucas Pereira <insanya@protonmail.com>
 #+STARTUP: content
 
@@ -201,7 +201,7 @@
      (use-package browse-url
        :custom
        (browse-url-browser-function 'browse-url-generic)
-       (browse-url-generic-program "firefox"))
+       (browse-url-generic-program "firefox-developer"))
    #+end_src
 
 ** Code Completion
