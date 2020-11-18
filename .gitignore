@@ -13,3 +13,4 @@
 /.emacs.d/.lsp
 /.emacs.d/secrets.el
 /.emacs.d/var/
+/.emacs.d/perspectives

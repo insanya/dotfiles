@@ -306,6 +306,18 @@
 ** Perspective
 
    [[https://github.com/nex3/perspective-el][Github Source]]
+   #+begin_src emacs-lisp
+     (use-package perspective
+       :init
+       (persp-mode)
+       :hook
+       (kill-emacs . persp-state-save)
+       :bind
+       ("C-x b" . persp-switch-to-buffer*)
+       ("C-x k" . persp-kill-buffer*)
+       :custom
+       (persp-state-default-file (concat user-emacs-directory "perspectives")))
+   #+end_src
 
 ** Pdf Reader
 
