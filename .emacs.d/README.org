@@ -104,7 +104,57 @@
 
 
 * Utilities
-** Buffers/Windows
+** Buffers & Windows
+*** IBuffer
+
+    [[https://github.com/purcell/ibuffer-projectile][Github Source 1]]
+    [[https://github.com/purcell/ibuffer-vc][Github Source 2]]
+    #+begin_src emacs-lisp
+      (use-package ibuffer-vc)
+
+      (use-package ibuffer-projectile
+        :preface
+        (defun ibuffer-set-up-preferred-filters ()
+          (ibuffer-vc-set-filter-groups-by-vc-root)
+          (unless (eq ibuffer-sorting-mode 'filename/process)
+            (ibuffer-do-sort-by-filename/process)))
+        :hook
+        (ibuffer . ibuffer-set-up-preferred-filters)
+        :bind
+        ("C-x C-b" . ibuffer)
+        :custom
+        (ibuffer-show-empty-filter-groups nil))
+    #+end_src
+
+*** Narrowed Search
+
+    [[https://github.com/raxod502/ctrlf][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package ctrlf
+        :init
+        (ctrlf-mode))
+    #+end_src
+
+*** Switch Window
+
+    [[https://github.com/dimitri/switch-window][Github Source]]
+    #+begin_src emacs-lisp
+      (use-package switch-window
+        :bind
+        ("C-x o" . switch-window)
+        ("C-x 1" . switch-window-then-maximize)
+        ("C-x 2" . switch-window-then-split-below)
+        ("C-x 3" . switch-window-then-split-right)
+        ("C-x 0" . switch-window-then-delete)
+
+        ("C-x 4 d" . switch-window-then-dired)
+        ("C-x 4 f" . switch-window-then-find-file)
+        ("C-x 4 r" . switch-window-then-find-file-read-only)
+        :custom
+        (switch-window-shortcut-style 'alphabet)
+        (switch-window-timeout nil))
+    #+end_src
+
 ** Break Lines
 
    [[https://github.com/purcell/page-break-lines][Github Source]]
@@ -193,56 +243,6 @@
         :diminish)
     #+end_src
 
-** IBuffer
-
-   [[https://github.com/purcell/ibuffer-projectile][Github Source 1]]
-   [[https://github.com/purcell/ibuffer-vc][Github Source 2]]
-   #+begin_src emacs-lisp
-     (use-package ibuffer-vc)
-
-     (use-package ibuffer-projectile
-       :preface
-       (defun ibuffer-set-up-preferred-filters ()
-         (ibuffer-vc-set-filter-groups-by-vc-root)
-         (unless (eq ibuffer-sorting-mode 'filename/process)
-           (ibuffer-do-sort-by-filename/process)))
-       :hook
-       (ibuffer . ibuffer-set-up-preferred-filters)
-       :bind
-       ("C-x C-b" . ibuffer)
-       :custom
-       (ibuffer-show-empty-filter-groups nil))
-   #+end_src
-
-*** Search
-
-    [[https://github.com/raxod502/ctrlf][Github Source]]
-    #+begin_src emacs-lisp
-      (use-package ctrlf
-        :init
-        (ctrlf-mode))
-    #+end_src
-
-*** Switch Window
-
-    [[https://github.com/dimitri/switch-window][Github Source]]
-    #+begin_src emacs-lisp
-      (use-package switch-window
-        :bind
-        ("C-x o" . switch-window)
-        ("C-x 1" . switch-window-then-maximize)
-        ("C-x 2" . switch-window-then-split-below)
-        ("C-x 3" . switch-window-then-split-right)
-        ("C-x 0" . switch-window-then-delete)
-
-        ("C-x 4 d" . switch-window-then-dired)
-        ("C-x 4 f" . switch-window-then-find-file)
-        ("C-x 4 r" . switch-window-then-find-file-read-only)
-        :custom
-        (switch-window-shortcut-style 'alphabet)
-        (switch-window-timeout nil))
-    #+end_src
-
 ** Indentation
 *** Electric Indent
 
@@ -285,8 +285,22 @@
         :bind
         ("C-M-a" . sp-beginning-of-sexp)
         ("C-M-e" . sp-end-of-sexp)
-        ("C-M-f" . sp-forward-sexp)
+
+        ("C-<down>" . sp-down-sexp)
+        ("C-<up>"   . sp-up-sexp)
+        ("M-<down>" . sp-backward-down-sexp)
+        ("M-<up>"   . sp-backward-up-sexp)
+
         ("C-M-b" . sp-backward-sexp)
+        ("C-M-f" . sp-forward-sexp)
+
+        ("C-M-n" . sp-next-sexp)
+        ("C-M-p" . sp-previous-sexp)
+
+        ("M-<backspace>" . backward-kill-word)
+        ("C-<backspace>" . sp-backward-kill-word)
+        ([remap sp-backward-kill-word] . backward-kill-word)
+
         :config
         (smartparens-global-mode t)
         (smartparens-strict-mode))
