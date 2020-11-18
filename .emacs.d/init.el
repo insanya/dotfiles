@@ -27,12 +27,14 @@
 
 ;; Always ensures packages are in the system.
 (setq use-package-always-ensure t)
+(setq use-package-always-defer t)
 
 ;; Automatic package update.
 (use-package auto-package-update
+  :custom
+  (auto-package-update-delete-old-versions t)
+  (auto-package-update-hide-results t)
   :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
 ;; Load Secrets
