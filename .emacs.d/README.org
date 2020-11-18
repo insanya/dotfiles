@@ -3,6 +3,30 @@
 #+STARTUP: content
 
 * Interface
+** Theme
+
+   #+begin_src emacs-lisp
+     ;; (use-package color-theme-sanityinc-tomorrow)
+     ;; (use-package gruvbox-theme)
+     (use-package sublime-themes)
+     (load-theme 'graham t)
+
+     (use-package all-the-icons)
+     (use-package powerline :config (powerline-default-theme))
+   #+end_src
+
+** Font
+
+   #+begin_src emacs-lisp
+     (defun insanya/get-default-font ()
+       (eq system-type 'gnu/linux) "Ubuntu Mono-12")
+
+     (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
+
+     (when (display-graphic-p)
+       (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
+   #+end_src
+
 ** Better Defaults
 
    #+begin_src emacs-lisp
@@ -57,33 +81,10 @@
            version-control t)
    #+end_src
 
-** Font
-
-   #+begin_src emacs-lisp
-     (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-12")
-
-     (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
-
-     (when (display-graphic-p)
-       (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
-   #+end_src
-
 ** Diminish Mode
 
    #+begin_src emacs-lisp
      (use-package diminish)
-   #+end_src
-
-** Theme
-
-   #+begin_src emacs-lisp
-     ;; (use-package color-theme-sanityinc-tomorrow)
-     (use-package gruvbox-theme)
-     (load-theme 'gruvbox-dark-hard t)
-
-     (use-package all-the-icons)
-     (use-package powerline :config (powerline-default-theme))
    #+end_src
 
 ** Load Proper Exec Path
@@ -115,6 +116,7 @@
      [[https://github.com/Malabarba/aggressive-indent-mode][Github Source]]
      #+begin_src emacs-lisp
        (use-package aggressive-indent
+         :defer t
          :init
          (aggressive-indent-global-mode)
          :custom
@@ -127,7 +129,8 @@
     [[https://github.com/purcell/ibuffer-projectile][Github Source 1]]
     [[https://github.com/purcell/ibuffer-vc][Github Source 2]]
     #+begin_src emacs-lisp
-      (use-package ibuffer-vc)
+      (use-package ibuffer-vc
+        :defer t)
 
       (use-package ibuffer-projectile
         :preface
@@ -276,11 +279,13 @@
 
     #+begin_src emacs-lisp
       (use-package yasnippet
+        :defer t
         :init
         (yas-global-mode)
         :diminish "YaS")
 
       (use-package yasnippet-snippets
+        :defer t
         :diminish)
     #+end_src
 
@@ -372,6 +377,7 @@
     [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
     #+begin_src emacs-lisp
       (use-package rainbow-delimiters
+        :defer t
         :init
         (rainbow-delimiters-mode)
         :diminish
@@ -391,7 +397,8 @@
    sudo apt install imagemagick
 
    #+begin_src emacs-lisp
-     (use-package pdf-tools)
+     (use-package pdf-tools
+       :defer t)
    #+end_src
 
 ** Projectile
@@ -417,6 +424,7 @@
    [[https://www.emacswiki.org/emacs/RecentFiles][Recentf Emacs Wiki]]
    #+begin_src emacs-lisp
      (use-package recentf
+       :defer t
        :init
        (recentf-mode)
        :diminish
@@ -432,6 +440,7 @@
    [[https://www.flycheck.org/en/latest/][Flycheck Website]]
    #+begin_src emacs-lisp
      (use-package flycheck
+       :defer t
        :init
        (global-flycheck-mode)
        :diminish "FlyC"
@@ -448,6 +457,7 @@
    [[https://github.com/justbur/emacs-which-key][Github Source]]
    #+begin_src emacs-lisp
      (use-package which-key
+       :defer t
        :init
        (which-key-mode)
        :diminish
@@ -464,6 +474,7 @@
    Function that needs a rework defined here -> [[*Org]]
    #+begin_src emacs-lisp
      (use-package shackle
+       :defer t
        :config
        (setq shackle-default-rule nil)
        (setq
@@ -524,6 +535,7 @@
    [[https://github.com/Alexander-Miller/treemacs][Github Source]]
    #+begin_src emacs-lisp
      (use-package treemacs
+       :defer t
        :init
        (with-eval-after-load 'winum
          (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
@@ -589,14 +601,12 @@
              ("C-c t M-t" . treemacs-find-tag)))
 
      (use-package treemacs-projectile
+       :defer t
        :after treemacs projectile)
 
      (use-package treemacs-magit
+       :defer t
        :after treemacs magit)
-
-     ;;(use-package treemacs-persp
-     ;;  :after treemacs persp-mode
-     ;;  :config (treemacs-set-scope-type 'Perspectives)) 
    #+end_src
 
 ** Whitespace
@@ -632,7 +642,7 @@
        :bind
        ("C-c l" . lsp-keymap-prefix)
        :custom
-       (lsp-auto-guess-root t)
+       ;; (lsp-auto-guess-root t)
        (lsp-idle-delay .01)
        (lsp-diagnostics-provider :none)
        (lsp-eldoc-hook nil)
@@ -644,6 +654,7 @@
 ** LSP Ui
   #+begin_src emacs-lisp
     (use-package lsp-ui
+      :defer t
       :custom
       (lsp-ui-doc-enable nil)
       (lsp-ui-doc-delay .1)
@@ -660,14 +671,17 @@
 
    #+begin_src emacs-lisp
      (use-package lsp-treemacs
+       :defer t
        :init
        (lsp-treemacs-sync-mode))
    #+end_src
 
 ** DAP Mode
 
+   [[https://emacs-lsp.github.io/dap-mode/][DAP Website]]
    #+begin_src emacs-lisp
      (use-package dap-mode
+       :defer t
        :init
        (dap-mode)
        (dap-ui-mode))
@@ -680,8 +694,10 @@
 
     [[https://github.com/skeeto/skewer-mode][Github Source]]
     #+begin_src emacs-lisp
-      (use-package simple-httpd)
+      (use-package simple-httpd
+        :defer t)
       (use-package skewer-mode
+        :defer t
         :diminish "Skewer")
     #+end_src
 

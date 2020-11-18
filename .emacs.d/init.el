@@ -39,7 +39,8 @@
 (load (concat user-emacs-directory "secrets.el"))
 
 ;; Disable Package Signature Check
-;; (setq package-check-signature nil)
+;;(setq package-check-signature nil)
+
 ;; Obsolete warnings
 (setq byte-compile-warnings '(not obsolete))
 
