@@ -12,3 +12,4 @@
 /.emacs.d/projectile-bookmarks.eld
 /.emacs.d/.lsp
 /.emacs.d/secrets.el
+/.emacs.d/var/
