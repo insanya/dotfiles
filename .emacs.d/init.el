@@ -7,17 +7,11 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/") t)
+;; (add-to-list 'package-archives
+;;              '("org" . "http://orgmode.org/elpa/") t)
 
 (package-initialize)
 (package-refresh-contents)
-
-(unless (package-installed-p 'quelpa)
-  (with-temp-buffer
-    (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
-    (eval-buffer)
-    (quelpa-self-upgrade)))
 
 ;; use-package configuration.
 (unless (package-installed-p 'use-package)
@@ -41,10 +35,7 @@
 (load (concat user-emacs-directory "secrets.el"))
 
 ;; Disable Package Signature Check
-;;(setq package-check-signature nil)
-
-;; Obsolete warnings
-(setq byte-compile-warnings '(not obsolete))
+;; (setq package-check-signature nil)
 
 ;; Tangle configuration
 (org-babel-load-file (expand-file-name "README.org" user-emacs-directory))

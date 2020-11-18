@@ -356,15 +356,14 @@
 
    [[https://github.com/raxod502/selectrum][Github Source]]
    #+begin_src emacs-lisp
-     (use-package prescient
-       :config
-       (prescient-persist-mode)
-       (use-package selectrum-prescient))
-
      (use-package selectrum
        :init
-       (selectrum-mode)
-       (selectrum-prescient-mode))
+       (selectrum-mode))
+
+     (use-package selectrum-prescient
+       :init
+       (selectrum-prescient-mode)
+       (prescient-persist-mode))
    #+end_src
 
 ** Shackle
