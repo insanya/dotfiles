@@ -8,6 +8,7 @@
    #+begin_src emacs-lisp
      ;; (use-package gruvbox-theme)
      (use-package gruber-darker-theme)
+     (use-package immaterial-theme)
      (load-theme 'gruber-darker t)
 
      (use-package all-the-icons)
@@ -18,7 +19,7 @@
 
    #+begin_src emacs-lisp
      (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-18")
+       (eq system-type 'gnu/linux) "Ubuntu Mono-15")
      (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
      (when (display-graphic-p)
        (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
@@ -53,9 +54,10 @@
      (tool-bar-mode -1)
      (tooltip-mode -1)
      (display-time-mode 1)
-     (global-hl-line-mode)
      (show-paren-mode 1)
-     (global-linum-mode 1)
+
+     (global-hl-line-mode)
+     (global-linum-mode)
 
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
      (global-set-key (kbd "C-z") nil)
@@ -146,7 +148,6 @@
         ("C-x 2" . switch-window-then-split-below)
         ("C-x 3" . switch-window-then-split-right)
         ("C-x 0" . switch-window-then-delete)
-
         ("C-x 4 d" . switch-window-then-dired)
         ("C-x 4 f" . switch-window-then-find-file)
         ("C-x 4 r" . switch-window-then-find-file-read-only)
@@ -272,7 +273,7 @@
      (use-package git-timemachine)
    #+end_src
 
-** Parentheses Look/Nav Improvements
+** Smartparentheses
 *** Smartparens
 
     [[https://github.com/Fuco1/smartparens][Github Source]]
@@ -306,32 +307,15 @@
         (smartparens-strict-mode))
     #+end_src
 
-*** Raibow Parentheses
+*** Raibow
 
     [[https://github.com/Fanael/rainbow-delimiters][Github Source]]
     #+begin_src emacs-lisp
       (use-package rainbow-delimiters
-        :init
-        (rainbow-delimiters-mode)
         :diminish
-        )
+        :init
+        (rainbow-delimiters-mode))
     #+end_src
-
-** Perspective
-
-   [[https://github.com/nex3/perspective-el][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package perspective
-       :init
-       (persp-mode)
-       :hook
-       (kill-emacs . persp-state-save)
-       :bind
-       ("C-x b" . persp-switch-to-buffer*)
-       ("C-x k" . persp-kill-buffer*)
-       :custom
-       (persp-state-default-file (concat user-emacs-directory "perspectives")))
-   #+end_src
 
 ** Pdf Reader
 
@@ -396,7 +380,7 @@
 
    [[https://depp.brause.cc/shackle/][Shackle Source Website]]
    [[https://github.com/sk8ingdom/.emacs.d/blob/master/general-config/general-plugins.el][Solution Savior (Github Source)!!]]
-   Function that needs a rework defined here -> [[*Org]]
+   Function that needs a rework defined here [[Org]]
    #+begin_src emacs-lisp
      (use-package shackle
        :init
@@ -424,6 +408,9 @@
           ("*Dired Log*"                      :align below :ratio 0.20  :select t)
           ("*Register Preview*"               :align below              :select t)
           ("*Process List*"                   :align below :ratio 0.20  :select t)
+
+          ;; Terminal
+          ;; ("*ansi-term*"                     :same t :select t)
 
           ;; Magit
           ("*magit-commit-popup*"             :align below              :select t)
@@ -567,7 +554,7 @@
    [[http://ergoemacs.org/emacs/whitespace-mode.html]]
    #+begin_src emacs-lisp
      (require 'whitespace)
-     (global-whitespace-mode +1)
+     ;; (global-whitespace-mode +1)
      (diminish 'global-whitespace-mode)
 
      (progn
@@ -726,52 +713,107 @@
 
 
 * Org
-** Mode
 
-   [[https://orgmode.org/][OrG Mode]]
-   #+begin_src emacs-lisp
-     (use-package org
-       :bind
-       (("C-c o c" . org-capture)
-        ("C-c o a" . org-agenda))
-       :custom
-       (org-src-fontify-natively t)
-       (org-confirm-babel-evaluate nil)
-       (org-src-tab-acts-natively t)
-       (org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "WAIT(w)" "|" "DONE(d)")))
+  [[https://orgmode.org/][OrG Mode]]
+  
+  #+begin_src emacs-lisp
+    (use-package org
+      :hook
+      (after-init . (lambda () (org-agenda nil "i")))
+      :bind
+      (("C-c o a" . org-agenda)
+       ("C-c o c" . org-capture)
+       ("C-c o l" . org-store-link))
+      :custom
+      (org-directory "~/Desktop/insanya/org")
 
-       (org-todo-keyword-faces
-        '(("TODO" . "#dfaf8f")
-          ("NEXT" . "#93e0e3")
-          ("STARTED" . "#dc8cc3")
-          ("WAIT" . "#CC9393")
-          ("DONE" . "#dcdccc")))
+      (org-src-fontify-natively t)
+      (org-src-tab-acts-natively t)
+      (org-startup-with-inline-images t)
+      (org-startup-folded 'content)
+      (org-pretty-entities t)
 
-       (org-default-notes-file "~/Desktop/dailydose/notes.org"))
+      (org-agenda-files (list org-directory))
+      (org-agenda-window-setup 'current-window)
+      (org-agenda-time-grid '((daily today require-timed) () "......" "----------------------"))
+      (org-agenda-skip-scheduled-if-done t)
+      (org-agenda-skip-deadline-if-done t)
+      (org-agenda-include-deadlines t)
+      (org-agenda-block-separator nil)
+      (org-agenda-compact-blocks t)
+      (org-agenda-start-with-log-mode t)
 
-     :config
-     ;; Re-define org-switch-to-buffer-other-window to NOT use org-no-popups.
-     ;; Primarily for compatibility with shackle.
-     (defun org-switch-to-buffer-other-window (args)
-       "Switch to buffer in a second window on the current frame.
-     In particular, do not allow pop-up frames.
-     Returns the newly created buffer.
-     Redefined to allow pop-up windows."
-       ;; (org-no-popups
-       ;;   (apply 'switch-to-buffer-other-window args))
-       (switch-to-buffer-other-window args))
-   #+end_src
+      (org-todo-keywords
+       '(
+         (sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")
+         )
+       )
 
-** Bullets
+      (org-todo-keyword-faces
+       '(
+         ("WORKING" . "purple")
+         ("WAITING" . "yellow")
+         ("MEETING" . "orange")
+         ("CANCELED" . "black")
+         )
+       )
 
-   [[https://github.com/sabof/org-bullets][Github Source]]
-   #+begin_src emacs-lisp
-     (use-package org-bullets
-       :hook
-       (org-mode . org-bullets-mode)
-       :custom
-       (org-bullets-bullet-list '("●" "►" "▸")))
-   #+end_src
+      (org-capture-templates
+       '(
+         ("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
+          "** TODO %?\n")
+         ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
+          "** MEETING %?\n")
+         ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
+          "** TODO %?\n :Personal:")
+         )
+       )
+
+      :config
+      (defun org-switch-to-buffer-other-window (args)
+        (switch-to-buffer-other-window args)))
+
+    (use-package org-super-agenda
+      :init
+      (org-super-agenda-mode t)
+      :custom
+      (org-agenda-custom-commands
+       (list(quote
+             ("i" "Super Insanya View"
+              (
+               (agenda "" ((org-agenda-span 'day)
+                           (org-agenda-property-position 'where-it-fits)
+                           (org-agenda-property-separator "|" )
+                           (org-super-agenda-groups
+                            '(
+                              (:name "Today" :time-grid t :date today :todo "TODAY" :scheduled today :order 1)
+                              (:name "Overdue" :deadline past :order 3)
+                              (:name "Due Soon" :deadline future :order 4)))))
+
+               (alltodo "WTF" ((org-agenda-overriding-header "")
+                               (org-agenda-property-position 'where-it-fits)
+                               (org-agenda-property-separator "|" )
+                               (org-super-agenda-groups
+                                '(
+                                  (:name "Working On" :todo "WORKING" :order 0)
+                                  (:name "Waiting" :todo "WAITING" :order 1)
+                                  (:name "Issues" :tag "Issue" :order 4)
+                                  (:name "Meetings" :todo "MEETING" :order 6)
+                                  (:name "Dissertation" :tag "Diss" :order 8)
+                                  (:name "PEI" :tag "PEI" :order 10)
+                                  (:name "Overall" :todo "TODO" :order 12))))))
+              )))))
+
+    (use-package org-bullets
+      :hook
+      (org-mode . org-bullets-mode)
+      :custom
+      (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
+  #+end_src
 
 
+* My Own Dashboard
+
+  #+begin_src emacs-lisp
+
+  #+end_src

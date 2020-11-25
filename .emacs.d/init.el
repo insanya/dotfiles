@@ -32,7 +32,7 @@
   (auto-package-update-maybe))
 
 ;; Load Secrets
-(load (concat user-emacs-directory "secrets.el"))
+(load "~/Desktop/insanya/secrets/secrets.el")
 
 ;; Disable Package Signature Check
 ;; (setq package-check-signature nil)
