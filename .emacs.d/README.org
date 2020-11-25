@@ -12,7 +12,7 @@
      (load-theme 'gruber-darker t)
 
      (use-package all-the-icons)
-     (use-package powerline :config (powerline-default-theme))
+     (use-package powerline :init (powerline-default-theme))
    #+end_src
 
 ** Font
@@ -718,8 +718,6 @@
   
   #+begin_src emacs-lisp
     (use-package org
-      :hook
-      (after-init . (lambda () (org-agenda nil "i")))
       :bind
       (("C-c o a" . org-agenda)
        ("C-c o c" . org-capture)
@@ -813,7 +811,19 @@
 
 
 * My Own Dashboard
+** Workgroups2
 
-  #+begin_src emacs-lisp
+   #+begin_src emacs-lisp
+     (use-package workgroups2
+       :init
+       (workgroups-mode 1)
+       :custom
+       (wg-prefix-key (kbd "C-c w"))
+       (wg-session-file "~/.emacs.d/.emacs_workgroups")
+       (wg-mode-line-display-on t)
+       (wg-flag-modified t)
+       (wg-mode-line-decor-left-brace "[")
+       (wg-mode-line-decor-right-brace "]")
+       (wg-mode-line-decor-divider ":"))
+   #+end_src
 
-  #+end_src
