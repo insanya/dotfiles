@@ -3,6 +3,13 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
+
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
 ;; Make all commands of the “package” module present.
 (require 'package)
 (add-to-list 'package-archives
@@ -31,11 +38,8 @@
   :config
   (auto-package-update-maybe))
 
-;; Load Secrets
-(load "~/Desktop/insanya/secrets/secrets.el")
-
 ;; Disable Package Signature Check
-;; (setq package-check-signature nil)
+(setq package-check-signature nil)
 
 ;; Tangle configuration
 (org-babel-load-file (expand-file-name "README.org" user-emacs-directory))
