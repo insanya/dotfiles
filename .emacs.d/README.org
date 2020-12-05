@@ -11,6 +11,7 @@
      (tool-bar-mode -1)
      (menu-bar-mode -1)
      (tooltip-mode 0)
+     (show-paren-mode 1)
      (blink-cursor-mode -1)
      (delete-selection-mode 1)
      (scroll-bar-mode 0)
@@ -62,17 +63,36 @@
 
    #+begin_src emacs-lisp
 
-     (use-package gruvbox-theme :init (load-theme 'gruvbox-dark-medium t))
-     (use-package powerline :init (powerline-default-theme))
      (use-package all-the-icons)
+     (use-package gruvbox-theme :init (load-theme 'gruvbox-dark-medium t))
 
-   #+end_src
+     ;;(use-package powerline :init (powerline-default-theme))
+
+     (use-package telephone-line
+       :after
+       (workgroups2)
+       :init
+       (telephone-line-mode 1)
+       :custom
+       (telephone-line-lhs
+	'((accent . (telephone-line-vc-segment
+		     telephone-line-erc-modified-channels-segment
+		     telephone-line-process-segment))
+	  (nil    . (telephone-line-workgroups2-segment
+		     telephone-line-minor-mode-segment
+		     telephone-line-buffer-segment))))
+       (telephone-line-rhs
+	'((nil    . (telephone-line-misc-info-segment))
+	  (accent . (telephone-line-major-mode-segment))
+	  (evil   . (telephone-line-airline-position-segment)))))
+
+     #+end_src
 
 ** Font
 
    #+begin_src emacs-lisp
      (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-15")
+       (eq system-type 'gnu/linux) "Ubuntu Mono-13.5")
      (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
      (when (display-graphic-p)
        (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
@@ -223,7 +243,7 @@
    #+begin_src emacs-lisp
 
      (use-package flycheck
-       :diminish "FlyC"
+       :diminish
        :init
        (global-flycheck-mode)
        :custom
@@ -260,6 +280,7 @@
    #+begin_src emacs-lisp
 
      (use-package aggressive-indent
+       :diminish
        :init
        (global-aggressive-indent-mode +1))
 
@@ -618,6 +639,14 @@
 
 * Languages
 
+** Docker
+
+   #+begin_src emacs-lisp
+     (use-package dockerfile-mode
+       :hook
+       (dockerfile-mode . lsp))
+   #+end_src
+
 ** JavaScript
 *** Skewer
 
@@ -728,7 +757,7 @@
 
        (org-agenda-files (list org-directory))
        (org-agenda-window-setup 'current-window)
-       (org-agenda-time-grid '((daily today require-timed) () "......" "----------------------"))
+       (org-agenda-time-grid '((daily today require-timed) () "......" ""))
        (org-agenda-skip-scheduled-if-done t)
        (org-agenda-skip-deadline-if-done t)
        (org-agenda-include-deadlines t)
@@ -736,29 +765,22 @@
        (org-agenda-compact-blocks t)
        (org-agenda-start-with-log-mode t)
 
-       (org-todo-keywords
-	'(
-	  (sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")
-	  )
-	)
+       (org-todo-keywords '((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
 
-       (org-todo-keyword-faces
-	'(
-	  ("WORKING" . "purple")
-	  ("WAITING" . "yellow")
-	  ("MEETING" . "orange")
-	  ("CANCELED" . "black")
-	  )
-	)
+       (org-todo-keyword-faces '(
+				 ("WORKING" . "purple")
+				 ("WAITING" . "yellow")
+				 ("MEETING" . "orange")
+				 ("CANCELED" . "black")))
 
        (org-capture-templates
 	'(
 	  ("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
-	   "** TODO %?\n")
+	   "** TODO %?\n%T \n")
 	  ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
-	   "** MEETING %?\n")
+	   "** MEETING %?\n%T \n")
 	  ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
-	   "** TODO %?\n :Personal:")
+	   "** TODO %?\n%T \n :Personal:")
 	  )
 	)
 
@@ -773,6 +795,7 @@
    #+begin_src emacs-lisp
 
      (use-package org-super-agenda
+       :diminish
        :init
        (org-super-agenda-mode t)
        :custom
@@ -789,18 +812,18 @@
 			       (:name "Overdue" :deadline past :order 3)
 			       (:name "Due Soon" :deadline future :order 4)))))
 
-		(alltodo "WTF" ((org-agenda-overriding-header "")
-				(org-agenda-property-position 'where-it-fits)
-				(org-agenda-property-separator "|" )
-				(org-super-agenda-groups
-				 '(
-				   (:name "Working On" :todo "WORKING" :order 0)
-				   (:name "Waiting" :todo "WAITING" :order 1)
-				   (:name "Issues" :tag "Issue" :order 4)
-				   (:name "Meetings" :todo "MEETING" :order 6)
-				   (:name "Dissertation" :tag "Diss" :order 8)
-				   (:name "PEI" :tag "PEI" :order 10)
-				   (:name "Overall" :todo "TODO" :order 12))))))
+		(alltodo "Insa" ((org-agenda-overriding-header "")
+				 (org-agenda-property-position 'where-it-fits)
+				 (org-agenda-property-separator "|" )
+				 (org-super-agenda-groups
+				  '(
+				    (:name "Working On" :todo "WORKING" :order 0)
+				    (:name "Waiting" :todo "WAITING" :order 1)
+				    (:name "Issues" :tag "Issue" :order 4)
+				    (:name "Meetings" :todo "MEETING" :order 6)
+				    (:name "Dissertation" :tag "THESIS" :order 8)
+				    (:name "PEI" :tag "PEI" :order 10)
+				    (:name "Overall" :todo "TODO" :order 12))))))
 	       )))))
 
    #+end_src
@@ -810,10 +833,37 @@
    #+begin_src emacs-lisp
 
      (use-package org-bullets
+       :diminish
        :hook
        (org-mode . org-bullets-mode)
        :custom
        (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
 
    #+end_src
+
+
+* Workgroups2
+
+** Mode
+  #+begin_src emacs-lisp
+
+    (use-package workgroups2
+      :init
+      (workgroups-mode 1)
+      :custom
+      (wg-prefix-key (kbd "C-c w"))
+      (wg-session-file (concat user-emacs-directory ".emacs.workgroups2"))
+
+      (wg-emacs-exit-save-behavior           'nil)
+      (wg-workgroups-mode-exit-save-behavior 'nil)
+
+      (wg-mode-line-display-on t)
+      (wg-flag-modified t)
+      (wg-mode-line-decor-left-brace "[")
+      (wg-mode-line-decor-right-brace "]")
+      (wg-mode-line-decor-divider ":"))
+
+    (diminish 'workgroups-mode)
+
+  #+end_src
 

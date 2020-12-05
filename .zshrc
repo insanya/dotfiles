@@ -1,5 +1,12 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export MonetDB_rel=Oct2020-SP1
+export MonetDB_ver=11.39.7
+export MonetDB_base_dir=$HOME/Desktop/bin/MonetDB-$MonetDB_rel
+export MonetDB_source_dir=$MonetDB_base_dir/MonetDB-$MonetDB_ver
+export MonetDB_build_dir=$MonetDB_base_dir/BUILD
+export MonetDB_prefix_dir=$MonetDB_base_dir
+
 # Path to your oh-my-zsh installation.
 export ZSH="/home/insanya/.oh-my-zsh"
 
@@ -49,4 +56,5 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 
-
+export LD_LIBRARY_PATH=/home/insanya/Desktop/bin/openssl/lib:$LD_LIBRARY_PATH
+export PATH=/home/insanya/Desktop/bin/openssl/bin:$PATH
