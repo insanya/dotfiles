@@ -22,7 +22,7 @@
      ;; revert buffers automatically when underlying files are changed externally
      (global-auto-revert-mode t)
 
-	  #+end_src
+   #+end_src
 
 ** Setq's
 
@@ -61,7 +61,9 @@
      (setq cursor-in-non-selected-windows t)
 
      (setq initial-scratch-message
-	   ";; Don't Complain!    <insanya@protonmail.com>")
+	   ";; Don't Complain!    <https://github.com/insanya>
+
+     ")
 
    #+end_src
 
@@ -90,7 +92,7 @@
 	  (accent . (telephone-line-major-mode-segment))
 	  (evil   . (telephone-line-airline-position-segment)))))
 
-     #+end_src
+   #+end_src
 
 ** Font
 
@@ -547,16 +549,16 @@
 
      (use-package lsp-ui)
 
-       ;; :custom
-       ;; (lsp-ui-doc-enable nil)
-       ;; (lsp-ui-doc-delay .1)
-       ;; (lsp-ui-doc-header nil)
-       ;; (lsp-ui-doc-max-height 16)
-       ;; (lsp-ui-doc-max-width 80)
-       ;; (lsp-ui-doc-position 'top)
-       ;; (lsp-ui-imenu-enable nil)
-       ;; (lsp-ui-peek-enable nil)
-       ;; (lsp-ui-sideline-enable nil))
+     ;; :custom
+     ;; (lsp-ui-doc-enable nil)
+     ;; (lsp-ui-doc-delay .1)
+     ;; (lsp-ui-doc-header nil)
+     ;; (lsp-ui-doc-max-height 16)
+     ;; (lsp-ui-doc-max-width 80)
+     ;; (lsp-ui-doc-position 'top)
+     ;; (lsp-ui-imenu-enable nil)
+     ;; (lsp-ui-peek-enable nil)
+     ;; (lsp-ui-sideline-enable nil))
 
    #+end_src
 
@@ -630,10 +632,8 @@
        (org-directory "~/Desktop/insanya/org")
 
        (org-src-fontify-natively t)
-       (org-src-tab-acts-natively t)
+       ;;(org-src-tab-acts-natively t)
        (org-startup-with-inline-images t)
-       (org-startup-folded 'content)
-       (org-pretty-entities t)
 
        (org-agenda-files (list org-directory))
        (org-agenda-window-setup 'current-window)
@@ -711,4 +711,16 @@
        :custom (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
 
    #+end_src
+
+
+* My Dashboard
+
+  #+begin_src emacs-lisp
+    (add-hook 'after-init-hook
+	      (lambda ()
+		(split-window-below)
+		(other-window 1)
+		(org-agenda nil "i")
+		(other-window 1)))
+  #+end_src
 
