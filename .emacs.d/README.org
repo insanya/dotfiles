@@ -22,46 +22,49 @@
      ;; revert buffers automatically when underlying files are changed externally
      (global-auto-revert-mode t)
 
+     (global-set-key [remap kill-buffer] #'kill-this-buffer)
+
    #+end_src
 
 ** Setq's
 
    #+begin_src emacs-lisp
 
-	  (setq ring-bell-function 'ignore)
-	  (setq inhibit-startup-screen t)
-	  (setq confirm-kill-emacs 'yes-or-no-p)
-	  (setq mouse-yank-at-point t)
-	  (setq select-enable-clipboard t)
+     (setq ring-bell-function 'ignore)
+     (setq inhibit-startup-screen t)
+     (setq confirm-kill-emacs 'yes-or-no-p)
+     (setq mouse-yank-at-point t)
+     (setq select-enable-clipboard t)
 
-	  (setq show-help-function nil)
-	  (setq help-window-select t)
+     (setq show-help-function nil)
+     (setq help-window-select t)
 
-	  (setq scroll-margin 0
-		redisplay-dont-pause t
-		scroll-margin 1
-		scroll-step 1
-		scroll-conservatively 100000
-		scroll-preserve-screen-position 1)
+     (setq scroll-margin 0
+           redisplay-dont-pause t
+           scroll-margin 1
+           scroll-step 1
+           scroll-conservatively 100000
+           scroll-preserve-screen-position 1)
 
-	  (setq vc-follow-symlinks t)
-	  (setq auto-save-default nil)
-	  (setq make-backup-files nil)
-	  (setq create-lockfiles nil)
+     (setq vc-follow-symlinks t)
+     (setq auto-save-default nil)
+     (setq make-backup-files nil)
+     (setq create-lockfiles nil)
 
 
-	  (setq indent-tabs-mode nil)
-	  (setq tab-width 2)
+     (setq indent-tabs-mode nil)
+     (setq tab-width 2)
 
-	  ;; Reuse windows
-	  (setq display-buffer-alist
-		'((".*" (display-buffer-reuse-window display-buffer-same-window))))
-	  (setq display-buffer-reuse-frames t)
-	  (setq even-window-sizes nil)
-	  (setq cursor-in-non-selected-windows nil)
+     ;; Reuse windows
+     (setq display-buffer-alist
+           '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+     (setq display-buffer-reuse-frames t)
+     (setq even-window-sizes nil)
+     (setq cursor-in-non-selected-windows nil)
 
-	  (setq initial-scratch-message
-		";; “The first principle is that you must not fool yourself and you are the easiest person to fool.”
+     (setq initial-scratch-message
+           ";; 
+     ;; “The first principle is that you must not fool yourself and you are the easiest person to fool.”
      ;; - Richard P. Feynman
      ;; 
      ;; https://github.com/insanya
@@ -85,16 +88,16 @@
        :init (telephone-line-mode 1)
        :custom
        (telephone-line-lhs
-	'((accent . (telephone-line-vc-segment
-		     telephone-line-erc-modified-channels-segment
-		     telephone-line-process-segment))
-	  (nil    . (telephone-line-workgroups2-segment
-		     telephone-line-minor-mode-segment
-		     telephone-line-buffer-segment))))
+        '((accent . (telephone-line-vc-segment
+                     telephone-line-erc-modified-channels-segment
+                     telephone-line-process-segment))
+          (nil    . (telephone-line-workgroups2-segment
+                     telephone-line-minor-mode-segment
+                     telephone-line-buffer-segment))))
        (telephone-line-rhs
-	'((nil    . (telephone-line-misc-info-segment))
-	  (accent . (telephone-line-major-mode-segment))
-	  (evil   . (telephone-line-airline-position-segment)))))
+        '((nil    . (telephone-line-misc-info-segment))
+          (accent . (telephone-line-major-mode-segment))
+          (evil   . (telephone-line-airline-position-segment)))))
 
    #+end_src
 
@@ -154,8 +157,8 @@
      (progn
        (setq whitespace-style (quote (face spaces tabs newline-mark tab-mark)))
        (setq whitespace-display-mappings
-	     '((space-mark 32 [183] [46])
-	       (tab-mark 9 [9655 9] [92 9]))))
+             '((space-mark 32 [183] [46])
+               (tab-mark 9 [9655 9] [92 9]))))
 
    #+end_src
 
@@ -201,7 +204,7 @@
     #+begin_src emacs-lisp
 
       (use-package expand-region
-	:bind ("C-=" . er/expand-region))
+        :bind ("C-=" . er/expand-region))
 
     #+end_src
 
@@ -210,12 +213,12 @@
     #+begin_src emacs-lisp
 
       (use-package yasnippet
-	:diminish
-	:init (yas-global-mode)
-	:config (diminish 'yas-minor-mode))
+        :diminish
+        :init (yas-global-mode)
+        :config (diminish 'yas-minor-mode))
 
       (use-package yasnippet-snippets
-	:diminish)
+        :diminish)
 
     #+end_src
 
@@ -238,9 +241,9 @@
      (use-package ibuffer-projectile
        :preface
        (defun ibuffer-set-up-preferred-filters ()
-	 (ibuffer-vc-set-filter-groups-by-vc-root)
-	 (unless (eq ibuffer-sorting-mode 'filename/process)
-	   (ibuffer-do-sort-by-filename/process)))
+         (ibuffer-vc-set-filter-groups-by-vc-root)
+         (unless (eq ibuffer-sorting-mode 'filename/process)
+           (ibuffer-do-sort-by-filename/process)))
        :hook (ibuffer . ibuffer-set-up-preferred-filters)
        :bind ("C-x C-b" . ibuffer)
        :custom (ibuffer-show-empty-filter-groups nil))
@@ -280,8 +283,8 @@
     #+begin_src emacs-lisp
 
       (use-package rainbow-delimiters
-	:diminish
-	:hook (prog-mode . rainbow-delimiters-mode))
+        :diminish
+        :hook (prog-mode . rainbow-delimiters-mode))
 
     #+end_src
 
@@ -290,19 +293,19 @@
     #+begin_src emacs-lisp
 
       (use-package smartparens
-	:diminish
-	:init
-	(smartparens-mode)
-	(smartparens-global-mode t)
-	:bind
-	("C-M-a" . sp-beginning-of-sexp)
-	("C-M-e" . sp-end-of-sexp)
-	("C-M-b" . sp-backward-sexp)
-	("C-M-f" . sp-forward-sexp)
-	("C-M-n" . sp-next-sexp)
-	("C-M-p" . sp-previous-sexp)
-	("M-<backspace>" . sp-backward-kill-word)
-	("C-<backspace>" . backward-kill-word))
+        :diminish
+        :init
+        (smartparens-mode)
+        (smartparens-global-mode t)
+        :bind
+        ("C-M-a" . sp-beginning-of-sexp)
+        ("C-M-e" . sp-end-of-sexp)
+        ("C-M-b" . sp-backward-sexp)
+        ("C-M-f" . sp-forward-sexp)
+        ("C-M-n" . sp-next-sexp)
+        ("C-M-p" . sp-previous-sexp)
+        ("M-<backspace>" . sp-backward-kill-word)
+        ("C-<backspace>" . backward-kill-word))
 
     #+end_src
 
@@ -325,7 +328,7 @@
        :bind ("C-c p" . projectile-command-map)
        :custom
        (projectile-known-projects-file
-	(expand-file-name ".projectile-bookmarks" user-emacs-directory)))
+        (expand-file-name ".projectile-bookmarks" user-emacs-directory)))
 
    #+end_src
 
@@ -379,52 +382,52 @@
        :config
        (setq shackle-default-rule nil)
        (setq
-	shackle-rules
-	'(;; Built-in
-	  (compilation-mode                   :align below :ratio 0.30)
-	  ;;("*Calendar*"                       :align below :ratio 10    :select t)
-	  (" *Deletions*"                     :align below)
-	  ("*Occur*"                          :align below :ratio 0.20)
-	  ("*Completions*"                    :align below :ratio 0.20)
-	  ("*Help*"                           :align below :ratio 0.33  :select t)
-	  (" *Metahelp*"                      :align below :ratio 0.20  :select t)
-	  ("*Messages*"                       :align below :ratio 0.20  :select t)
-	  ("*Warning*"                        :align below :ratio 0.20  :select t)
-	  ("*Warnings*"                       :align below :ratio 0.20  :select t)
-	  ("*Backtrace*"                      :align below :ratio 0.20  :select t)
-	  ("*Compile-Log*"                    :align below :ratio 0.20)
-	  ("*package update results*"         :align below :ratio 0.20)
-	  ("*Ediff Control Panel*"            :align below              :select t)
-	  ("*tex-shell*"                      :align below :ratio 0.20  :select t)
-	  ("*Dired Log*"                      :align below :ratio 0.20  :select t)
-	  ("*Register Preview*"               :align below              :select t)
-	  ("*Process List*"                   :align below :ratio 0.20  :select t)
-	  ;; Terminal
+        shackle-rules
+        '(;; Built-in
+          (compilation-mode                   :align below :ratio 0.30)
+          ;;("*Calendar*"                       :align below :ratio 10    :select t)
+          (" *Deletions*"                     :align below)
+          ("*Occur*"                          :align below :ratio 0.20)
+          ("*Completions*"                    :align below :ratio 0.20)
+          ("*Help*"                           :align below :ratio 0.33  :select t)
+          (" *Metahelp*"                      :align below :ratio 0.20  :select t)
+          ("*Messages*"                       :align below :ratio 0.20  :select t)
+          ("*Warning*"                        :align below :ratio 0.20  :select t)
+          ("*Warnings*"                       :align below :ratio 0.20  :select t)
+          ("*Backtrace*"                      :align below :ratio 0.20  :select t)
+          ("*Compile-Log*"                    :align below :ratio 0.20)
+          ("*package update results*"         :align below :ratio 0.20)
+          ("*Ediff Control Panel*"            :align below              :select t)
+          ("*tex-shell*"                      :align below :ratio 0.20  :select t)
+          ("*Dired Log*"                      :align below :ratio 0.20  :select t)
+          ("*Register Preview*"               :align below              :select t)
+          ("*Process List*"                   :align below :ratio 0.20  :select t)
+          ;; Terminal
 
-	  ;; Magit
-	  ("*magit-commit-popup*"             :align below              :select t)
-	  ("*magit-dispatch-popup*"           :align below              :select t)
-	  ;; Plugins
-	  ;; (" *undo-tree*"                     :align right :ratio 0.10  :select t)
-	  ;; (" *command-log*"                   :align right :ratio 0.20)
-	  ;; Org-mode
-	  (" *Org todo*"                      :align below :ratio 10    :select t)
-	  ("*Org Note*"                       :align below :ratio 10    :select t)
-	  ("CAPTURE.*"              :regexp t :align below :ratio 20)
-	  ("*Org Select*"                     :align below :ratio 20)
-	  ("*Org Links*"                      :align below :ratio 10)
-	  (" *Agenda Commands*"               :align below)
-	  ("*Org Clock*"                      :align below)
-	  ("*Edit Formulas*"                  :align below :ratio 10    :select t)
-	  ("\\*Org Src.*"           :regexp t :align below :ratio 30    :select t)
-	  ("*Org Attach*"                     :align below              :select t)
-	  ("*Org Export Dispatcher*"          :align below              :select t)
-	  ("*Select Link*"                    :align below              :select t)
-	  ;; PDF Tools
-	  ("*PDF-Occur*"                      :align below :ratio 0.20  :select t)
-	  ("\\*Edit Annotation.*\\*":regexp t :align below :ratio 0.10  :select t)
-	  ("*Contents*"                       :align below :ratio 0.10)
-	  ("\\*.* annots\\*"        :regexp t :align below :ratio 0.20  :select t))))
+          ;; Magit
+          ("*magit-commit-popup*"             :align below              :select t)
+          ("*magit-dispatch-popup*"           :align below              :select t)
+          ;; Plugins
+          ;; (" *undo-tree*"                     :align right :ratio 0.10  :select t)
+          ;; (" *command-log*"                   :align right :ratio 0.20)
+          ;; Org-mode
+          (" *Org todo*"                      :align below :ratio 10    :select t)
+          ("*Org Note*"                       :align below :ratio 10    :select t)
+          ("CAPTURE.*"              :regexp t :align below :ratio 20)
+          ("*Org Select*"                     :align below :ratio 20)
+          ("*Org Links*"                      :align below :ratio 10)
+          (" *Agenda Commands*"               :align below)
+          ("*Org Clock*"                      :align below)
+          ("*Edit Formulas*"                  :align below :ratio 10    :select t)
+          ("\\*Org Src.*"           :regexp t :align below :ratio 30    :select t)
+          ("*Org Attach*"                     :align below              :select t)
+          ("*Org Export Dispatcher*"          :align below              :select t)
+          ("*Select Link*"                    :align below              :select t)
+          ;; PDF Tools
+          ("*PDF-Occur*"                      :align below :ratio 0.20  :select t)
+          ("\\*Edit Annotation.*\\*":regexp t :align below :ratio 0.10  :select t)
+          ("*Contents*"                       :align below :ratio 0.10)
+          ("\\*.* annots\\*"        :regexp t :align below :ratio 0.20  :select t))))
 
    #+end_src
 
@@ -455,68 +458,68 @@
      (use-package treemacs
        :init
        (with-eval-after-load 'winum
-	 (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+         (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
        (defvar treemacs-no-load-time-warnings t)
        :config
        (progn
-	 (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-	       treemacs-deferred-git-apply-delay      0.5
-	       treemacs-directory-name-transformer    #'identity
-	       treemacs-display-in-side-window        t
-	       treemacs-eldoc-display                 t
-	       treemacs-file-event-delay              5000
-	       treemacs-file-extension-regex          treemacs-last-period-regex-value
-	       treemacs-file-follow-delay             0.2
-	       treemacs-file-name-transformer         #'identity
-	       treemacs-follow-after-init             t
-	       treemacs-git-command-pipe              ""
-	       treemacs-goto-tag-strategy             'refetch-index
-	       treemacs-indentation                   2
-	       treemacs-indentation-string            " "
-	       treemacs-is-never-other-window         nil
-	       treemacs-max-git-entries               5000
-	       treemacs-missing-project-action        'ask
-	       treemacs-move-forward-on-expand        nil
-	       treemacs-no-png-images                 nil
-	       treemacs-no-delete-other-windows       t
-	       treemacs-project-follow-cleanup        nil
-	       treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-	       treemacs-position                      'left
-	       treemacs-recenter-distance             0.1
-	       treemacs-recenter-after-file-follow    nil
-	       treemacs-recenter-after-tag-follow     nil
-	       treemacs-recenter-after-project-jump   'always
-	       treemacs-recenter-after-project-expand 'on-distance
-	       treemacs-show-cursor                   nil
-	       treemacs-show-hidden-files             t
-	       treemacs-silent-filewatch              nil
-	       treemacs-silent-refresh                nil
-	       treemacs-sorting                       'alphabetic-asc
-	       treemacs-space-between-root-nodes      t
-	       treemacs-tag-follow-cleanup            t
-	       treemacs-tag-follow-delay              1.5
-	       treemacs-user-mode-line-format         nil
-	       treemacs-user-header-line-format       nil
-	       treemacs-width                         35
-	       treemacs-workspace-switch-cleanup      nil)
+         (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
+               treemacs-deferred-git-apply-delay      0.5
+               treemacs-directory-name-transformer    #'identity
+               treemacs-display-in-side-window        t
+               treemacs-eldoc-display                 t
+               treemacs-file-event-delay              5000
+               treemacs-file-extension-regex          treemacs-last-period-regex-value
+               treemacs-file-follow-delay             0.2
+               treemacs-file-name-transformer         #'identity
+               treemacs-follow-after-init             t
+               treemacs-git-command-pipe              ""
+               treemacs-goto-tag-strategy             'refetch-index
+               treemacs-indentation                   2
+               treemacs-indentation-string            " "
+               treemacs-is-never-other-window         nil
+               treemacs-max-git-entries               5000
+               treemacs-missing-project-action        'ask
+               treemacs-move-forward-on-expand        nil
+               treemacs-no-png-images                 nil
+               treemacs-no-delete-other-windows       t
+               treemacs-project-follow-cleanup        nil
+               treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+               treemacs-position                      'left
+               treemacs-recenter-distance             0.1
+               treemacs-recenter-after-file-follow    nil
+               treemacs-recenter-after-tag-follow     nil
+               treemacs-recenter-after-project-jump   'always
+               treemacs-recenter-after-project-expand 'on-distance
+               treemacs-show-cursor                   nil
+               treemacs-show-hidden-files             t
+               treemacs-silent-filewatch              nil
+               treemacs-silent-refresh                nil
+               treemacs-sorting                       'alphabetic-asc
+               treemacs-space-between-root-nodes      t
+               treemacs-tag-follow-cleanup            t
+               treemacs-tag-follow-delay              1.5
+               treemacs-user-mode-line-format         nil
+               treemacs-user-header-line-format       nil
+               treemacs-width                         30
+               treemacs-workspace-switch-cleanup      nil)
 
-	 (treemacs-follow-mode t)
-	 (treemacs-filewatch-mode t)
-	 (treemacs-fringe-indicator-mode t)
-	 (pcase (cons (not (null (executable-find "git")))
-		      (not (null treemacs-python-executable)))
-	   (`(t . t)
-	    (treemacs-git-mode 'deferred))
-	   (`(t . _)
-	    (treemacs-git-mode 'simple))))
+         (treemacs-follow-mode t)
+         (treemacs-filewatch-mode t)
+         (treemacs-fringe-indicator-mode t)
+         (pcase (cons (not (null (executable-find "git")))
+                      (not (null treemacs-python-executable)))
+           (`(t . t)
+            (treemacs-git-mode 'deferred))
+           (`(t . _)
+            (treemacs-git-mode 'simple))))
        :bind
        (:map global-map
-	     ("M-0"       . treemacs-select-window)
-	     ("C-c t 1"   . treemacs-delete-other-windows)
-	     ("C-c t t"   . treemacs)
-	     ("C-c t B"   . treemacs-bookmark)
-	     ("C-c t C-t" . treemacs-find-file)
-	     ("C-c t M-t" . treemacs-find-tag)))
+             ("M-0"       . treemacs-select-window)
+             ("C-c t 1"   . treemacs-delete-other-windows)
+             ("C-c t t"   . treemacs)
+             ("C-c t B"   . treemacs-bookmark)
+             ("C-c t C-t" . treemacs-find-file)
+             ("C-c t M-t" . treemacs-find-tag)))
 
      (use-package treemacs-projectile
        :after treemacs projectile)
@@ -556,18 +559,10 @@
 
    #+begin_src emacs-lisp
 
-     (use-package lsp-ui)
-
-     ;; :custom
-     ;; (lsp-ui-doc-enable nil)
-     ;; (lsp-ui-doc-delay .1)
-     ;; (lsp-ui-doc-header nil)
-     ;; (lsp-ui-doc-max-height 16)
-     ;; (lsp-ui-doc-max-width 80)
-     ;; (lsp-ui-doc-position 'top)
-     ;; (lsp-ui-imenu-enable nil)
-     ;; (lsp-ui-peek-enable nil)
-     ;; (lsp-ui-sideline-enable nil))
+     (use-package lsp-ui
+       :hook (lsp-mode . lsp-ui-mode)
+       :custom
+       (lsp-ui-doc-enable nil))
 
    #+end_src
 
@@ -615,15 +610,6 @@
 
    #+end_src
 
-** Vue
-
-   #+begin_src emacs-lisp
-
-     (use-package vue-mode
-       :hook (vue-mode . lsp))
-
-   #+end_src
-
 
 * Org mode
 
@@ -634,8 +620,10 @@
      (use-package org
        :bind
        (("C-c o a" . org-agenda)
-	("C-c o c" . org-capture)
-	("C-c o l" . org-store-link))
+        ("C-c o c" . org-capture)
+        ("C-c o l" . org-store-link)
+        ("C-c o j" . org-goto-calendar)
+        ("C-c o k" . org-date-from-calendar))
 
        :custom
        (org-directory "~/Desktop/insanya/org")
@@ -652,24 +640,24 @@
        (org-agenda-compact-blocks t)
 
        (org-todo-keywords
-	'((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
+        '((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
 
        (org-todo-keyword-faces '(("WORKING" . "purple")
-				 ("WAITING" . "yellow")
-				 ("MEETING" . "orange")
-				 ("CANCELED" . "black")))
+                                 ("WAITING" . "yellow")
+                                 ("MEETING" . "orange")
+                                 ("CANCELED" . "black")))
 
        (org-capture-templates
-	'(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
-	   "** TODO %?\n%T \n")
-	  ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
-	   "** MEETING %?\n%T \n")
-	  ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
-	   "** TODO %?\n%T \n :Personal:")))
+        '(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
+           "** TODO %?\n%T \n")
+          ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
+           "** MEETING %?\n%T \n")
+          ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
+           "** TODO %?\n%T \n :Personal:")))
 
        :config
        (defun org-switch-to-buffer-other-window (args)
-	 (switch-to-buffer-other-window args)))
+         (switch-to-buffer-other-window args)))
 
    #+end_src
 
@@ -682,31 +670,31 @@
        :init (org-super-agenda-mode t)
        :custom
        (org-agenda-custom-commands
-	(list(quote
-	      ("i" "Super Insa View"
-	       (
-		(agenda "" ((org-agenda-span 'day)
-			    (org-agenda-property-position 'where-it-fits)
-			    (org-agenda-property-separator "|" )
-			    (org-super-agenda-groups
-			     '(
-			       (:name "Today" :time-grid t :date today :todo "TODAY" :scheduled today :order 1)
-			       (:name "Overdue" :deadline past :order 3)
-			       (:name "Due Soon" :deadline future :order 4)))))
+        (list(quote
+              ("i" "Super Insa View"
+               (
+                (agenda "" ((org-agenda-span 'day)
+                            (org-agenda-property-position 'where-it-fits)
+                            (org-agenda-property-separator "|" )
+                            (org-super-agenda-groups
+                             '(
+                               (:name "Today" :time-grid t :date today :todo "TODAY" :scheduled today :order 1)
+                               (:name "Overdue" :deadline past :order 3)
+                               (:name "Due Soon" :deadline future :order 4)))))
 
-		(alltodo "Insa" ((org-agenda-overriding-header "")
-				 (org-agenda-property-position 'where-it-fits)
-				 (org-agenda-property-separator "|" )
-				 (org-super-agenda-groups
-				  '(
-				    (:name "Working On" :todo "WORKING" :order 0)
-				    (:name "Waiting" :todo "WAITING" :order 1)
-				    (:name "Issues" :tag "Issue" :order 4)
-				    (:name "Meetings" :todo "MEETING" :order 6)
-				    (:name "Dissertation" :tag "THESIS" :order 8)
-				    (:name "PEI" :tag "PEI" :order 10)
-				    (:name "Overall" :todo "TODO" :order 12))))))
-	       )))))
+                (alltodo "Insa" ((org-agenda-overriding-header "")
+                                 (org-agenda-property-position 'where-it-fits)
+                                 (org-agenda-property-separator "|" )
+                                 (org-super-agenda-groups
+                                  '(
+                                    (:name "Working On" :todo "WORKING" :order 0)
+                                    (:name "Waiting" :todo "WAITING" :order 1)
+                                    (:name "Issues" :tag "Issue" :order 4)
+                                    (:name "Meetings" :todo "MEETING" :order 6)
+                                    (:name "Dissertation" :tag "THESIS" :order 8)
+                                    (:name "PEI" :tag "PEI" :order 10)
+                                    (:name "Overall" :todo "TODO" :order 12))))))
+               )))))
 
    #+end_src
 
@@ -726,10 +714,10 @@
 
   #+begin_src emacs-lisp
     (add-hook 'after-init-hook
-	      (lambda ()
-		(split-window-below)
-		(other-window 1)
-		(org-agenda nil "i")
-		(other-window 1)))
+              (lambda ()
+                (split-window-below)
+                (other-window 1)
+                (org-agenda nil "i")
+                (other-window 1)))
   #+end_src
 
