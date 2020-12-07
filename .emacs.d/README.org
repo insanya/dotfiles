@@ -15,13 +15,14 @@
      (blink-cursor-mode -1)
      (delete-selection-mode 1)
      (scroll-bar-mode 0)
+     (linum-mode 1)
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
 
      ;; revert buffers automatically when underlying files are changed externally
      (global-auto-revert-mode t)
 
-   #+end_src
+	  #+end_src
 
 ** Setq's
 
@@ -46,6 +47,8 @@
      (setq vc-follow-symlinks t)
      (setq auto-save-default nil)
      (setq make-backup-files nil)
+     (setq create-lockfiles nil)
+
 
      (setq indent-tabs-mode nil)
      (setq tab-width 2)
@@ -57,6 +60,9 @@
      (setq even-window-sizes nil)
      (setq cursor-in-non-selected-windows t)
 
+     (setq initial-scratch-message
+	   ";; Don't Complain!    <insanya@protonmail.com>")
+
    #+end_src
 
 ** Theme
@@ -64,15 +70,13 @@
    #+begin_src emacs-lisp
 
      (use-package all-the-icons)
-     (use-package gruvbox-theme :init (load-theme 'gruvbox-dark-medium t))
 
-     ;;(use-package powerline :init (powerline-default-theme))
+     (use-package gruvbox-theme
+       :init (load-theme 'gruvbox-dark-medium t))
 
      (use-package telephone-line
-       :after
-       (workgroups2)
-       :init
-       (telephone-line-mode 1)
+       :after (workgroups2)
+       :init (telephone-line-mode 1)
        :custom
        (telephone-line-lhs
 	'((accent . (telephone-line-vc-segment
@@ -91,27 +95,21 @@
 ** Font
 
    #+begin_src emacs-lisp
+
      (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-13.5")
+       (eq system-type 'gnu/linux) "Ubuntu Mono-15")
      (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
      (when (display-graphic-p)
        (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
+
    #+end_src
 
 ** Exec Path From Shell
 
    #+begin_src emacs-lisp
 
-     (use-package exec-path-from-shell :init (exec-path-from-shell-initialize))
-
-   #+end_src
-
-** Line Numbers
-
-   #+begin_src emacs-lisp
-
-     (use-package nlinum :config (global-nlinum-mode +1))
-     (use-package nlinum-hl)
+     (use-package exec-path-from-shell
+       :init (exec-path-from-shell-initialize))
 
    #+end_src
 
@@ -127,14 +125,15 @@
 ** Which-Key
 
    #+begin_src emacs-lisp
+
      (use-package which-key
        :diminish
-       :init
-       (which-key-mode)
+       :init (which-key-mode)
        :custom
        (which-key-show-early-on-C-h t)
        (which-key-idle-delay most-positive-fixnum)
        (which-key-idle-secondary-delay 1e-100))
+
    #+end_src
 
 ** Whitespace
@@ -162,32 +161,18 @@
 
      (use-package company
        :diminish
-       :hook
-       (after-init . global-company-mode)
-       :bind
-       (:map company-active-map
-	     ("RET" . nil) ([return] . nil)
-	     ("TAB" . company-complete-selection) ([tab] . company-complete-selection))
-       :custom
-       (company-idle-delay 0)
-       (company-minimum-prefix-length 3)
-       (company-selection-wrap-around t)
-       (company-dabbrev-downcase nil)
-       (company-require-match nil)
-       (company-tooltip-align-annotations t)
-       (company-box-doc-enable nil))
+       :init (global-company-mode))
 
      (use-package company-box
        :diminish
-       :hook
-       (company-mode . company-box-mode))
+       :hook (company-mode . company-box-mode))
 
    #+end_src
 
 ** Crux
 
-   [[https://github.com/bbatsov/crux][Crux Github Source]]
    #+begin_src emacs-lisp
+
      (use-package crux
        :bind
        ("C-a" . crux-move-beginning-of-line)
@@ -198,67 +183,47 @@
        ("C-c c r" . crux-rename-file-and-buffer)
        ("C-c c k" . crux-kill-other-buffers)
        ("C-c c c" . crux-cleanup-buffer-or-region))
+
    #+end_src
 
 ** Expand
-*** Emmet Mode
-
-    [[https://emmet.io/][Emmet Website]]
-    #+begin_src emacs-lisp
-      (use-package emmet-mode
-	:bind
-	(:map
-	 emmet-mode-keymap
-	 ("<C-return>" . nil))
-	:custom
-	(emmet-insert-flash-time .1)
-	(emmet-move-cursor-between-quote t))
-    #+end_src
-
 *** Region
 
     #+begin_src emacs-lisp
+
       (use-package expand-region
-	:bind
-	("C-=" . er/expand-region))
+	:bind ("C-=" . er/expand-region))
+
     #+end_src
 
 *** YaSnippets
 
     #+begin_src emacs-lisp
+
       (use-package yasnippet
 	:diminish
-	:init
-	(yas-global-mode)
-	:config
-	(diminish 'yas-minor-mode))
+	:init (yas-global-mode)
+	:config (diminish 'yas-minor-mode))
 
       (use-package yasnippet-snippets
 	:diminish)
+
     #+end_src
 
 ** FlyCheck
 
-   [[https://www.flycheck.org/en/latest/][Flycheck Website]]
    #+begin_src emacs-lisp
 
      (use-package flycheck
        :diminish
-       :init
-       (global-flycheck-mode)
-       :custom
-       (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-       (flycheck-display-errors-delay 0)
-       (flycheck-gcc-openmp t)
-       (flycheck-display-errors-function t))
+       :init (global-flycheck-mode))
 
    #+end_src
 
 ** IBuffer
 
-   [[https://github.com/purcell/ibuffer-projectile][Github Source 1]]
-   [[https://github.com/purcell/ibuffer-vc][Github Source 2]]
    #+begin_src emacs-lisp
+
      (use-package ibuffer-vc)
 
      (use-package ibuffer-projectile
@@ -267,12 +232,10 @@
 	 (ibuffer-vc-set-filter-groups-by-vc-root)
 	 (unless (eq ibuffer-sorting-mode 'filename/process)
 	   (ibuffer-do-sort-by-filename/process)))
-       :hook
-       (ibuffer . ibuffer-set-up-preferred-filters)
-       :bind
-       ("C-x C-b" . ibuffer)
-       :custom
-       (ibuffer-show-empty-filter-groups nil))
+       :hook (ibuffer . ibuffer-set-up-preferred-filters)
+       :bind ("C-x C-b" . ibuffer)
+       :custom (ibuffer-show-empty-filter-groups nil))
+
    #+end_src
 
 ** Indentation
@@ -281,27 +244,22 @@
 
      (use-package aggressive-indent
        :diminish
-       :init
-       (global-aggressive-indent-mode +1))
+       :init (global-aggressive-indent-mode +1))
 
    #+end_src
 
 ** Magit
 
-   [[https://magit.vc/][Magit Website]]
    #+begin_src emacs-lisp
 
      (use-package magit
-       :bind
-       ("C-x g" . magit-status)
-       :custom
-       (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+       :bind ("C-c m" . magit-status)
+       :custom (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
 
      (use-package git-timemachine)
 
      (use-package diff-hl
-       :init
-       (global-diff-hl-mode))
+       :init (global-diff-hl-mode))
 
    #+end_src
 
@@ -312,14 +270,12 @@
 
       (use-package rainbow-delimiters
 	:diminish
-	:hook
-	(prog-mode . rainbow-delimiters-mode))
+	:hook (prog-mode . rainbow-delimiters-mode))
 
     #+end_src
 
 *** Smartparens
 
-    [[https://ebzzry.io/en/emacs-pairs/][Useful Smartparens Funcs/Keybind]]
     #+begin_src emacs-lisp
 
       (use-package smartparens
@@ -334,19 +290,14 @@
 	("C-M-f" . sp-forward-sexp)
 	("C-M-n" . sp-next-sexp)
 	("C-M-p" . sp-previous-sexp)
-	("M-<backspace>" . backward-kill-word)
-	("C-<backspace>" . sp-backward-kill-word)
-	([remap sp-backward-kill-word] . backward-kill-word))
+	("M-<backspace>" . sp-backward-kill-word)
+	("C-<backspace>" . backward-kill-word))
 
     #+end_src
 
 ** Pdf Reader
 
-   [[https://github.com/politza/pdf-tools][Github Source]]
-   Dependencies:
-   libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev
-   Optional:
-   sudo apt install imagemagick
+   **Dependencies**: libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev
 
    #+begin_src emacs-lisp
 
@@ -356,45 +307,37 @@
 
 ** Projectile
 
-   [[https://projectile.mx/][Projectile Website]]
    #+begin_src emacs-lisp
 
      (use-package projectile
-       :init
-       (projectile-global-mode)
-       :bind
-       ("C-c p" . projectile-command-map)
-       :config
-       (setq-default projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
-		     projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)))
+       :init (projectile-global-mode)
+       :bind ("C-c p" . projectile-command-map)
+       :custom
+       (projectile-known-projects-file
+	(expand-file-name ".projectile-bookmarks" user-emacs-directory)))
 
    #+end_src
 
 ** Recent Files
 
-   [[https://www.emacswiki.org/emacs/RecentFiles][Recentf Emacs Wiki]]
    #+begin_src emacs-lisp
 
      (use-package recentf
-       :init
-       (recentf-mode)
        :diminish
-       :config
-       (setq recentf-save-file (concat user-emacs-directory "recentf")
-	     recentf-max-saved-items 100
-	     recentf-exclude
-	     '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa")))
+       :init (recentf-mode)
+       :custom
+       (recentf-save-file (concat user-emacs-directory "recentf"))
+       (recentf-max-saved-items 100)
+       (recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa")))
 
    #+end_src
 
 ** Selectrum
 
-   [[https://github.com/raxod502/selectrum][Github Source]]
    #+begin_src emacs-lisp
 
      (use-package selectrum
-       :init
-       (selectrum-mode))
+       :init (selectrum-mode))
 
      (use-package selectrum-prescient
        :init
@@ -405,11 +348,11 @@
 
 ** Search Buffer
 
-   [[https://github.com/raxod502/ctrlf][Github Source]]
    #+begin_src emacs-lisp
+
      (use-package ctrlf
-       :init
-       (ctrlf-mode))
+       :init (ctrlf-mode))
+
    #+end_src
 
 ** Shackle
@@ -427,7 +370,7 @@
        (setq
 	shackle-rules
 	'(;; Built-in
-	  (compilation-mode                   :align below :ratio 0.20)
+	  (compilation-mode                   :align below :ratio 0.30)
 	  ;;("*Calendar*"                       :align below :ratio 10    :select t)
 	  (" *Deletions*"                     :align below)
 	  ("*Occur*"                          :align below :ratio 0.20)
@@ -476,7 +419,6 @@
 
 ** Switch Window
 
-   [[https://github.com/dimitri/switch-window][Github Source]]
    #+begin_src emacs-lisp
 
      (use-package switch-window
@@ -497,7 +439,6 @@
 
 ** Treemacs
 
-   [[https://github.com/Alexander-Miller/treemacs][Github Source]]
    #+begin_src emacs-lisp
 
      (use-package treemacs
@@ -567,11 +508,9 @@
 	     ("C-c t M-t" . treemacs-find-tag)))
 
      (use-package treemacs-projectile
-       :defer t
        :after treemacs projectile)
 
      (use-package treemacs-magit
-       :defer t
        :after treemacs magit)
 
    #+end_src
@@ -580,7 +519,9 @@
 * Language Server Protocol
 
 ** LSP Mode
+
    #+begin_src emacs-lisp
+
      (use-package lsp-mode
        :preface
        (defun me/lsp-optimize ()
@@ -590,50 +531,56 @@
        :hook
        (lsp-mode . me/lsp-optimize)
        (lsp-mode . lsp-enable-which-key-integration)
-       :commands
-       lsp
-       :bind
-       ("C-c l" . lsp-keymap-prefix)
+       :commands lsp
+       :bind ("C-c l" . lsp-keymap-prefix)
        :custom
        (lsp-eldoc-hook nil)
        (lsp-idle-delay .01)
        (lsp-auto-guess-root t)
-       (lsp-diagnostics-provider :none)
-       (lsp-eslint-server-command '("node" "/home/insanya/.nvm/versions/node/v15.2.0/bin/eslint" "--stdin"))
        (lsp-session-file (expand-file-name ".lsp" user-emacs-directory)))
+
    #+end_src
 
 ** LSP Ui
+
    #+begin_src emacs-lisp
-     (use-package lsp-ui
-       :custom
-       (lsp-ui-doc-enable nil)
-       (lsp-ui-doc-delay .1)
-       (lsp-ui-doc-header nil)
-       (lsp-ui-doc-max-height 16)
-       (lsp-ui-doc-max-width 80)
-       (lsp-ui-doc-position 'top)
-       (lsp-ui-imenu-enable nil)
-       (lsp-ui-peek-enable nil)
-       (lsp-ui-sideline-enable nil))
+
+     (use-package lsp-ui)
+
+       ;; :custom
+       ;; (lsp-ui-doc-enable nil)
+       ;; (lsp-ui-doc-delay .1)
+       ;; (lsp-ui-doc-header nil)
+       ;; (lsp-ui-doc-max-height 16)
+       ;; (lsp-ui-doc-max-width 80)
+       ;; (lsp-ui-doc-position 'top)
+       ;; (lsp-ui-imenu-enable nil)
+       ;; (lsp-ui-peek-enable nil)
+       ;; (lsp-ui-sideline-enable nil))
+
    #+end_src
 
 ** LSP Treemacs
 
    #+begin_src emacs-lisp
+
      (use-package lsp-treemacs
-       :init
-       (lsp-treemacs-sync-mode))
+       :init (lsp-treemacs-sync-mode))
+
    #+end_src
 
-** DAP Mode
 
-   [[https://emacs-lsp.github.io/dap-mode/][DAP Website]]
+* Misc
+
+** Skewer
+
    #+begin_src emacs-lisp
-     (use-package dap-mode
-       :init
-       (dap-mode)
-       (dap-ui-mode))
+
+     (use-package simple-httpd)
+
+     (use-package skewer-mode
+       :diminish "Skewer")
+
    #+end_src
 
 
@@ -642,97 +589,29 @@
 ** Docker
 
    #+begin_src emacs-lisp
+
      (use-package dockerfile-mode
-       :hook
-       (dockerfile-mode . lsp))
+       :hook (dockerfile-mode . lsp))
+
    #+end_src
-
-** JavaScript
-*** Skewer
-
-    [[https://github.com/skeeto/skewer-mode][Github Source]]
-    #+begin_src emacs-lisp
-      (use-package simple-httpd)
-
-      (use-package skewer-mode
-	:diminish "Skewer")
-    #+end_src
-
-*** JS Mode
-
-    [[https://github.com/mooz/js2-mode][Github Source]]
-    [[https://github.com/mooz/js2-mode/blob/bb73461c2c7048d811b38e6b533a30fb5fdcea93/js2-mode.el#L57][Important Fix]]
-    #+begin_src emacs-lisp
-      (use-package js2-mode
-	:hook
-	(js-mode . js2-minor-mode)
-	(js-mode . lsp)
-	(js-mode . whitespace-mode)
-	(js-mode . skewer-mode)
-	:interpreter "node"
-	:custom
-	(js-indent-level 2)
-	(js-switch-indent-offset 2)
-	(js2-highlight-level 3)
-	(js2-idle-timer-delay 0))
-
-      (use-package js2-refactor
-	:diminish
-	:hook
-	(jss-mode . js2-refactor-mode)
-	:commands js2-refactor-mode
-	:config
-	(js2r-add-keybindings-with-prefix "C-c C-m"))
-    #+end_src
 
 ** Json
 
-   [[https://github.com/joshwnj/json-mode][Github Source]]
    #+begin_src emacs-lisp
+
      (use-package json-mode
-       :mode "\\.json\\'")
+       :hook (json-mode . lsp))
+
    #+end_src
 
 ** Vue
 
-   [[https://github.com/AdamNiederer/vue-mode][Github Source]]
    #+begin_src emacs-lisp
+
      (use-package vue-mode
-       :mode "\\.vue\\'"
-       :hook
-       (vue-mode . lsp))
+       :hook (vue-mode . lsp))
+
    #+end_src
-
-** Web Mode
-*** HTML
-
-    [[https://web-mode.org/][Web Mode Website]]
-    #+begin_src emacs-lisp
-      (use-package web-mode
-	:mode ("\\.html?\\'")
-	:hook
-	(web-mode . emmet-mode)
-	(web-mode . whitespace-mode)
-	;;(web-mode . skewer-html-mode)
-	:custom
-	(web-mode-code-indent-offset 2)
-	(web-mode-css-indent-offset 2)
-	(web-mode-markup-indent-offset 2)
-	(web-mode-enable-auto-quoting nil)
-	(web-mode-enable-auto-indentation nil))
-    #+end_src
-
-*** CSS
-
-    #+begin_src emacs-lisp
-      (use-package css-mode
-	:hook
-	(css-mode . skewer-css-mode)
-	(css-mode . whitespace-mode)
-	:custom
-	(css-indent-offset 2))
-    #+end_src
-
 
 
 * Org mode
@@ -746,6 +625,7 @@
        (("C-c o a" . org-agenda)
 	("C-c o c" . org-capture)
 	("C-c o l" . org-store-link))
+
        :custom
        (org-directory "~/Desktop/insanya/org")
 
@@ -758,31 +638,25 @@
        (org-agenda-files (list org-directory))
        (org-agenda-window-setup 'current-window)
        (org-agenda-time-grid '((daily today require-timed) () "......" ""))
-       (org-agenda-skip-scheduled-if-done t)
-       (org-agenda-skip-deadline-if-done t)
        (org-agenda-include-deadlines t)
        (org-agenda-block-separator nil)
        (org-agenda-compact-blocks t)
-       (org-agenda-start-with-log-mode t)
 
-       (org-todo-keywords '((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
+       (org-todo-keywords
+	'((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
 
-       (org-todo-keyword-faces '(
-				 ("WORKING" . "purple")
+       (org-todo-keyword-faces '(("WORKING" . "purple")
 				 ("WAITING" . "yellow")
 				 ("MEETING" . "orange")
 				 ("CANCELED" . "black")))
 
        (org-capture-templates
-	'(
-	  ("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
+	'(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
 	   "** TODO %?\n%T \n")
 	  ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
 	   "** MEETING %?\n%T \n")
 	  ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
-	   "** TODO %?\n%T \n :Personal:")
-	  )
-	)
+	   "** TODO %?\n%T \n :Personal:")))
 
        :config
        (defun org-switch-to-buffer-other-window (args)
@@ -796,12 +670,11 @@
 
      (use-package org-super-agenda
        :diminish
-       :init
-       (org-super-agenda-mode t)
+       :init (org-super-agenda-mode t)
        :custom
        (org-agenda-custom-commands
 	(list(quote
-	      ("i" "Super Insanya View"
+	      ("i" "Super Insa View"
 	       (
 		(agenda "" ((org-agenda-span 'day)
 			    (org-agenda-property-position 'where-it-fits)
@@ -834,36 +707,8 @@
 
      (use-package org-bullets
        :diminish
-       :hook
-       (org-mode . org-bullets-mode)
-       :custom
-       (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
+       :hook (org-mode . org-bullets-mode)
+       :custom (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
 
    #+end_src
-
-
-* Workgroups2
-
-** Mode
-  #+begin_src emacs-lisp
-
-    (use-package workgroups2
-      :init
-      (workgroups-mode 1)
-      :custom
-      (wg-prefix-key (kbd "C-c w"))
-      (wg-session-file (concat user-emacs-directory ".emacs.workgroups2"))
-
-      (wg-emacs-exit-save-behavior           'nil)
-      (wg-workgroups-mode-exit-save-behavior 'nil)
-
-      (wg-mode-line-display-on t)
-      (wg-flag-modified t)
-      (wg-mode-line-decor-left-brace "[")
-      (wg-mode-line-decor-right-brace "]")
-      (wg-mode-line-decor-divider ":"))
-
-    (diminish 'workgroups-mode)
-
-  #+end_src
 
