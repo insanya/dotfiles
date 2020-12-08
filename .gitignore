@@ -9,3 +9,4 @@
 /.emacs.d/.lsp
 /.emacs.d/auto-save-list/
 /.emacs.d/bookmarks
+/.emacs.d/eln-cache/

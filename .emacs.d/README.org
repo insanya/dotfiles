@@ -4,7 +4,7 @@
 
 * Core
 
-** Funtions
+** Functions
 
    #+begin_src emacs-lisp
 
@@ -403,27 +403,17 @@
           ("*Dired Log*"                      :align below :ratio 0.20  :select t)
           ("*Register Preview*"               :align below              :select t)
           ("*Process List*"                   :align below :ratio 0.20  :select t)
-          ;; Terminal
 
-          ;; Magit
-          ("*magit-commit-popup*"             :align below              :select t)
-          ("*magit-dispatch-popup*"           :align below              :select t)
-          ;; Plugins
-          ;; (" *undo-tree*"                     :align right :ratio 0.10  :select t)
-          ;; (" *command-log*"                   :align right :ratio 0.20)
           ;; Org-mode
           (" *Org todo*"                      :align below :ratio 10    :select t)
-          ("*Org Note*"                       :align below :ratio 10    :select t)
           ("CAPTURE.*"              :regexp t :align below :ratio 20)
-          ("*Org Select*"                     :align below :ratio 20)
           ("*Org Links*"                      :align below :ratio 10)
           (" *Agenda Commands*"               :align below)
-          ("*Org Clock*"                      :align below)
-          ("*Edit Formulas*"                  :align below :ratio 10    :select t)
           ("\\*Org Src.*"           :regexp t :align below :ratio 30    :select t)
           ("*Org Attach*"                     :align below              :select t)
           ("*Org Export Dispatcher*"          :align below              :select t)
           ("*Select Link*"                    :align below              :select t)
+
           ;; PDF Tools
           ("*PDF-Occur*"                      :align below :ratio 0.20  :select t)
           ("\\*Edit Annotation.*\\*":regexp t :align below :ratio 0.10  :select t)
@@ -625,25 +615,23 @@
    #+end_src
 
 
-* org mode
+* Org mode
 
-** main
+** Main
 
    #+begin_src emacs-lisp
 
      (use-package org
        :bind
-       (("C-c o a" . org-agenda)
-        ("C-c o c" . org-capture)
-        ("C-c o l" . org-store-link)
-        ("C-c o j" . org-goto-calendar)
-        ("C-c o k" . org-date-from-calendar))
+       (("C-c o c" . org-capture)
+	("C-c o l" . org-store-link)
+	("C-c o j" . org-goto-calendar)
+	("C-c o k" . org-date-from-calendar))
 
        :custom
        (org-directory "~/Desktop/insanya/org")
 
        (org-src-fontify-natively t)
-       ;;(org-src-tab-acts-natively t)
        (org-startup-with-inline-images t)
 
        (org-agenda-files (list org-directory))
@@ -654,24 +642,30 @@
        (org-agenda-compact-blocks t)
 
        (org-todo-keywords
-        '((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
+	'((sequence "TODO(t)" "WORKING(s)" "WAITING(w)" "MEETING(m)" "|" "DONE(d)" "CANCELED(c)")))
 
        (org-todo-keyword-faces '(("WORKING" . "purple")
-                                 ("WAITING" . "yellow")
-                                 ("MEETING" . "orange")
-                                 ("CANCELED" . "black")))
+				 ("WAITING" . "yellow")
+				 ("MEETING" . "orange")
+				 ("CANCELED" . "black")))
 
        (org-capture-templates
-        '(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
-           "** TODO %?\n%T \n")
-          ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
-           "** MEETING %?\n%T \n")
-          ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
-           "** TODO %?\n%T \n :Personal:")))
+	'(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
+	   "** TODO %?\n%T \n")
+	  ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
+	   "** MEETING %?\n%T \n")
+	  ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
+	   "** TODO %?\n%T \n :Personal:")))
 
        :config
+       (defun org-super-agenda-insa-view ()
+         (interactive)
+         (org-agenda nil "i"))
+
+       (global-set-key (kbd "C-c o a") 'org-super-agenda-insa-view)
+
        (defun org-switch-to-buffer-other-window (args)
-         (switch-to-buffer-other-window args)))
+	 (switch-to-buffer-other-window args)))
 
    #+end_src
 
@@ -722,16 +716,4 @@
        :custom (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
 
    #+end_src
-
-
-* My Dashboard
-
-  #+begin_src emacs-lisp
-    (add-hook 'after-init-hook
-              (lambda ()
-                (split-window-below)
-                (other-window 1)
-                (org-agenda nil "i")
-                (other-window 1)))
-  #+end_src
 
