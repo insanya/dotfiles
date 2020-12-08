@@ -173,7 +173,8 @@
        :init (global-company-mode)
        :custom
        (company-idle-delay .1)
-       (company-minimum-prefix-length 2))
+       (company-minimum-prefix-length 2)
+       (company-box-doc-enable nil))
 
      (use-package company-box
        :diminish
@@ -546,9 +547,8 @@
        (lsp-mode . me/lsp-optimize)
        (lsp-mode . lsp-enable-which-key-integration)
        :commands lsp
-       :bind ("C-c l" . lsp-keymap-prefix)
+       :bind-keymap ("C-c l" . lsp-command-map)
        :custom
-       (lsp-eldoc-hook nil)
        (lsp-idle-delay .01)
        (lsp-auto-guess-root t)
        (lsp-session-file (expand-file-name ".lsp" user-emacs-directory)))
@@ -562,7 +562,15 @@
      (use-package lsp-ui
        :hook (lsp-mode . lsp-ui-mode)
        :custom
-       (lsp-ui-doc-enable nil))
+       (lsp-ui-doc-enable nil)
+       (lsp-ui-sideline-ignore-duplicate t)
+       (lsp-ui-sideline-enable nil)
+       (lsp-ui-flycheck-enable t)
+       (lsp-ui-flycheck-list-position 'right)
+       (lsp-ui-flycheck-live-reporting t)
+       (lsp-ui-peek-enable t)
+       (lsp-ui-peek-list-width 60)
+       (lsp-ui-peek-peek-height 25))
 
    #+end_src
 
@@ -571,7 +579,8 @@
    #+begin_src emacs-lisp
 
      (use-package lsp-treemacs
-       :init (lsp-treemacs-sync-mode))
+       :init (lsp-treemacs-sync-mode)
+       :commands lsp-treemacs-errors-list)
 
    #+end_src
 
@@ -601,19 +610,24 @@
 
    #+end_src
 
+** JS
+
+   #+begin_src emacs-lisp
+     (setq js-indent-level 2)
+   #+end_src
+
 ** Json
 
    #+begin_src emacs-lisp
 
-     (use-package json-mode
-       :hook (json-mode . lsp))
+     (use-package json-mode)
 
    #+end_src
 
 
-* Org mode
+* org mode
 
-** Main
+** main
 
    #+begin_src emacs-lisp
 

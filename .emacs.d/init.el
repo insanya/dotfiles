@@ -3,12 +3,6 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
-
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
 ;; Make all commands of the “package” module present.
 (require 'package)
 (add-to-list 'package-archives
