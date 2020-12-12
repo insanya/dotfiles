@@ -8,33 +8,32 @@
 
    #+begin_src emacs-lisp
 
-     (tool-bar-mode -1)
-     (menu-bar-mode -1)
      (tooltip-mode 0)
+     (menu-bar-mode 1)
+     (tool-bar-mode -1)
+     (scroll-bar-mode 0)
      (show-paren-mode 1)
      (blink-cursor-mode -1)
      (delete-selection-mode 1)
-     (scroll-bar-mode 0)
-     (linum-mode 1)
+
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
 
-     ;; revert buffers automatically when underlying files are changed externally
+     (global-linum-mode)
      (global-auto-revert-mode t)
-
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
    #+end_src
 
-** Setq's
+** Setq
 
    #+begin_src emacs-lisp
 
-     (setq ring-bell-function 'ignore)
-     (setq inhibit-startup-screen t)
-     (setq confirm-kill-emacs 'yes-or-no-p)
      (setq mouse-yank-at-point t)
+     (setq inhibit-startup-screen t)
      (setq select-enable-clipboard t)
+     (setq ring-bell-function 'ignore)
+     (setq confirm-kill-emacs 'yes-or-no-p)
 
      (setq show-help-function nil)
      (setq help-window-select t)
@@ -80,25 +79,12 @@
 
      (use-package all-the-icons)
 
-     (use-package gruvbox-theme
-       :init (load-theme 'gruvbox-dark-medium t))
+     (use-package gruvbox-theme)
+     (use-package soothe-theme
+       :init (load-theme 'soothe' t))
 
-     (set-cursor-color "#ffd800")
-
-     (use-package telephone-line
-       :init (telephone-line-mode 1)
-       :custom
-       (telephone-line-lhs
-        '((accent . (telephone-line-vc-segment
-                     telephone-line-erc-modified-channels-segment
-                     telephone-line-process-segment))
-          (nil    . (telephone-line-workgroups2-segment
-                     telephone-line-minor-mode-segment
-                     telephone-line-buffer-segment))))
-       (telephone-line-rhs
-        '((nil    . (telephone-line-misc-info-segment))
-          (accent . (telephone-line-major-mode-segment))
-          (evil   . (telephone-line-airline-position-segment)))))
+     (use-package powerline
+       :init (powerline-center-theme))
 
    #+end_src
 
@@ -326,6 +312,7 @@
    #+begin_src emacs-lisp
 
      (use-package projectile
+       :diminish
        :init (projectile-global-mode)
        :bind ("C-c p" . projectile-command-map)
        :custom
@@ -519,6 +506,30 @@
 
      (use-package treemacs-magit
        :after treemacs magit)
+
+   #+end_src
+
+
+* Writing
+
+** AucTeX
+
+   #+begin_src emacs-lisp
+
+     (use-package auctex
+       :hook
+       (LaTeX-mode . visual-line-mode)
+       (LaTeX-mode . flyspell-mode)
+       (LaTeX-mode . LaTeX-math-mode)
+       (LaTeX-mode . turn-on-reftex)
+       (LaTeX-mode . lsp)
+       ;;(bibtex-mode . lsp)
+       :custom
+       (TeX-auto-save t)
+       (TeX-parse-self t)
+       (TeX-master nil)
+       (TeX-PDF-mode t)
+       (reftex-plug-into-AUCTeX t))
 
    #+end_src
 

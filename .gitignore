@@ -5,3 +5,9 @@
 /dotemacs/custom.el
 /dotemacs/README.el
 /dotemacs/.projectile-bookmarks
+/dotemacs/.cache/
+/dotemacs/.lsp
+/dotemacs/bookmarks
+/dotemacs/recentf
+/dotemacs/transient/
+/dotemacs/var/
