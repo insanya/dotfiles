@@ -17,9 +17,6 @@ source $ZSH/oh-my-zsh.sh
 alias l='ls --group-directories-first -hlX'
 alias ll='ls --group-directories-first -hlAX'
 
-export MonetDB_rel=Oct2020-SP1
-export MonetDB_ver=11.39.7
-export MonetDB_base_dir=$HOME/Desktop/bin/MonetDB-$MonetDB_rel
-export MonetDB_source_dir=$MonetDB_base_dir/MonetDB-$MonetDB_ver
-export MonetDB_build_dir=$MonetDB_base_dir/BUILD
-export MonetDB_prefix_dir=$MonetDB_base_dir
+# MonetDB and .local/bin
+export MONETDB="$HOME/Desktop/local-bin/MonetDB"
+export PATH=$MONETDB/bin:$HOME/.local/bin:$PATH

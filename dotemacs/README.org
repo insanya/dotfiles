@@ -55,7 +55,8 @@
 
      (setq initial-scratch-message
            ";; 
-     ;; “The first principle is that you must not fool yourself and you are the easiest person to fool.”
+     ;; “The first principle is that you must not fool yourself
+     ;;  and you are the easiest person to fool.”
      ;; - Richard P. Feynman
      ;; 
      ;; https://github.com/insanya
@@ -71,9 +72,8 @@
 
      (use-package all-the-icons)
 
-     (use-package gruvbox-theme)
-     (use-package soothe-theme
-       :init (load-theme 'soothe' t))
+     (use-package gruvbox-theme
+       :init (load-theme 'gruvbox-light-hard t))
 
      (use-package powerline
        :init (powerline-center-theme))
@@ -85,7 +85,7 @@
    #+begin_src emacs-lisp
 
      (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-14")
+       (eq system-type 'gnu/linux) "Ubuntu Mono-15")
      (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
      (when (display-graphic-p)
        (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
@@ -201,6 +201,14 @@
         :diminish)
 
     #+end_src
+
+** Editorconfig
+
+   #+begin_src emacs-lisp
+     (use-package editorconfig
+       :diminish
+       :init (editorconfig-mode 1))
+   #+end_src
 
 ** FlyCheck
 
@@ -595,6 +603,13 @@
 
 
 * Languages
+
+** C/C++
+
+   #+begin_src emacs-lisp
+     (add-hook 'c-mode-hook 'lsp-mode-hook)
+     (add-hook 'c++-mode-hook 'lsp-mode-hook)
+   #+end_src
 
 ** Docker
 
