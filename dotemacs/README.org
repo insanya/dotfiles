@@ -623,7 +623,9 @@
 ** JS
 
    #+begin_src emacs-lisp
+
      (setq js-indent-level 2)
+
    #+end_src
 
 ** Json
@@ -652,6 +654,7 @@
        (org-directory "~/Desktop/insanya/org")
 
        (org-src-fontify-natively t)
+       (org-confirm-babel-evaluate nil)
        (org-startup-with-inline-images t)
 
        (org-agenda-files (list org-directory))
@@ -679,14 +682,17 @@
 
        :config
        (defun org-super-agenda-insa-view ()
-         (interactive)
-         (org-agenda nil "i"))
+	 (interactive)
+	 (org-agenda nil "i"))
 
        (global-set-key (kbd "C-c o a") 'org-super-agenda-insa-view)
 
        (defun org-switch-to-buffer-other-window (args)
-	 (switch-to-buffer-other-window args)))
+	 (switch-to-buffer-other-window args))
 
+       (org-babel-do-load-languages
+	'org-babel-load-languages
+	'((sql . t))))
    #+end_src
 
 ** Super Agenda

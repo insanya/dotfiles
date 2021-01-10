@@ -8,7 +8,7 @@ export ZSH="/home/insanya/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 
 # Plugins
-plugins=(git nvm npm emacs)
+plugins=(git nvm npm)
 
 source $ZSH/oh-my-zsh.sh
 
