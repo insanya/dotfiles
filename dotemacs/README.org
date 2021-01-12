@@ -9,7 +9,7 @@
    #+begin_src emacs-lisp
 
      (tooltip-mode 0)
-     (menu-bar-mode 1)
+     (menu-bar-mode -1)
      (tool-bar-mode -1)
      (scroll-bar-mode 0)
      (show-paren-mode 1)
@@ -202,14 +202,6 @@
 
     #+end_src
 
-** Editorconfig
-
-   #+begin_src emacs-lisp
-     (use-package editorconfig
-       :diminish
-       :init (editorconfig-mode 1))
-   #+end_src
-
 ** FlyCheck
 
    #+begin_src emacs-lisp
@@ -296,16 +288,6 @@
         ("C-<backspace>" . backward-kill-word))
 
     #+end_src
-
-** Pdf Reader
-
-   **Dependencies**: libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev
-
-   #+begin_src emacs-lisp
-
-     (use-package pdf-tools)
-
-   #+end_src
 
 ** Projectile
 
@@ -633,6 +615,20 @@
    #+begin_src emacs-lisp
 
      (use-package json-mode)
+
+   #+end_src
+
+** Web-mode
+
+   #+begin_src emacs-lisp
+
+     (use-package web-mode
+       :hook (web-mode . lsp)
+       :mode ("\\.html?\\'" "\\.css?\\'" "\\.vue\\'")
+       :custom
+       (web-mode-markup-indent-offset 2)
+       (web-mode-css-indent-offset 2)
+       (web-mode-code-indent-offset 2))
 
    #+end_src
 
