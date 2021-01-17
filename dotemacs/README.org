@@ -73,7 +73,7 @@
      (use-package all-the-icons)
 
      (use-package gruvbox-theme
-       :init (load-theme 'gruvbox-light-hard t))
+       :init (load-theme 'gruvbox-dark-hard t))
 
      (use-package powerline
        :init (powerline-center-theme))
@@ -461,7 +461,7 @@
                treemacs-tag-follow-delay              1.5
                treemacs-user-mode-line-format         nil
                treemacs-user-header-line-format       nil
-               treemacs-width                         30
+               treemacs-width                         26
                treemacs-workspace-switch-cleanup      nil
 	       treemacs-load-all-the-icons-with-workaround-font "Hermit")
 
