@@ -1,6 +1,6 @@
 #+TITLE: GNU EMACS 27.1 Configuration
 #+AUTHOR: Lucas Pereira <insanya@protonmail.com>
-#+STARTUP: showeverything
+#+STARTUP: content
 
 * core
 
@@ -344,12 +344,9 @@
    #+end_src
 
 
-* Language Server Protocol
-
-** LSP Mode
-
+* lsp
+** core
    #+begin_src emacs-lisp
-
      (use-package lsp-mode
        :preface
        (defun me/lsp-optimize ()
@@ -365,13 +362,10 @@
        (lsp-idle-delay .01)
        (lsp-auto-guess-root t)
        (lsp-session-file (expand-file-name ".lsp" user-emacs-directory)))
-
    #+end_src
 
-** LSP Ui
-
+** ui
    #+begin_src emacs-lisp
-
      (use-package lsp-ui
        :hook (lsp-mode . lsp-ui-mode)
        :custom
@@ -384,36 +378,26 @@
        (lsp-ui-peek-enable t)
        (lsp-ui-peek-list-width 60)
        (lsp-ui-peek-peek-height 25))
-
    #+end_src
 
-** LSP Treemacs
-
+** lsp-treemacs
    #+begin_src emacs-lisp
-
      (use-package lsp-treemacs
        :init (lsp-treemacs-sync-mode)
        :commands lsp-treemacs-errors-list)
-
    #+end_src
 
 
-* Misc
-
-** Skewer
-
+* misc
+** skewer
    #+begin_src emacs-lisp
-
      (use-package simple-httpd)
-
      (use-package skewer-mode
        :diminish "Skewer")
-
    #+end_src
 
 
-* Languages
-
+* langs
 ** c/c++
    #+begin_src emacs-lisp
      (add-hook 'c-mode-hook 'lsp-mode-hook)
