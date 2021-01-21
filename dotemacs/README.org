@@ -13,39 +13,30 @@
      (show-paren-mode 1)
      (blink-cursor-mode -1)
      (delete-selection-mode 1)
-     ;;
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
-     ;;
      (global-linum-mode)
      (global-auto-revert-mode t)
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
-     ;;
-     (setq mouse-yank-at-point t)
-     (setq inhibit-startup-screen t)
-     (setq select-enable-clipboard t)
-     (setq ring-bell-function 'ignore)
-     (setq confirm-kill-emacs 'yes-or-no-p)
-     ;;
-     (setq show-help-function nil)
+
      (setq help-window-select t)
-     ;;
      (setq vc-follow-symlinks t)
+     (setq create-lockfiles nil)
+     (setq indent-tabs-mode nil)
      (setq auto-save-default nil)
      (setq make-backup-files nil)
-     (setq create-lockfiles nil)
-     ;;
-     (setq indent-tabs-mode nil)
-     (setq tab-width 2)
-     ;; Reuse windows
-     (setq display-buffer-alist
-           '((".*" (display-buffer-reuse-window display-buffer-same-window))))
-     (setq display-buffer-reuse-frames t)
-     (setq even-window-sizes nil)
+     (setq inhibit-startup-screen t)
+     (setq select-enable-clipboard t)
+     (setq confirm-kill-emacs 'yes-or-no-p)
      (setq cursor-in-non-selected-windows nil)
-     ;;
+
+     (setq font-use-system-font t)
+
+     (setq display-buffer-alist
+	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+
      (setq initial-scratch-message
-           ";; 
+	   ";; 
      ;; “The first principle is that you must not fool yourself
      ;;  and you are the easiest person to fool.”
      ;; - Richard P. Feynman
@@ -58,20 +49,13 @@
 
 ** ui
    #+begin_src emacs-lisp
-     ;; icons
      (use-package all-the-icons)
-     ;; theme
-     (use-package gruvbox-theme
-       :init (load-theme 'gruvbox-dark-hard t))
-     ;; modeline
+     (use-package spacemacs-theme
+       :init (load-theme 'spacemacs-dark t)
+       :custom
+       (spacemacs-theme-org-height nil))
      (use-package powerline
-       :init (powerline-center-theme))
-     ;; font
-     (defun insanya/get-default-font ()
-       (eq system-type 'gnu/linux) "Ubuntu Mono-15")
-     (add-to-list 'default-frame-alist `(font . ,(insanya/get-default-font)))
-     (when (display-graphic-p)
-       (set-face-attribute 'fixed-pitch nil :font (insanya/get-default-font)))
+       :init (powerline-default-theme))
    #+end_src
 
 ** load executables
@@ -100,7 +84,7 @@
 ** show whitespace
    #+begin_src emacs-lisp
      (require 'whitespace)
-     (global-whitespace-mode +1)
+     ;; (global-whitespace-mode +1)
      (diminish 'global-whitespace-mode)
      (setq whitespace-line-column 80)
      (progn
@@ -132,9 +116,9 @@
        :bind
        ("C-a" . crux-move-beginning-of-line)
        ("C-k" . crux-smart-kill-line)
+       ("C-x C-r" . crux-recentf-find-file)
        ("C-c c d" . crux-duplicate-current-line-or-region)
        ("C-c c D" . crux-delete-file-and-buffer)
-       ("C-c c f" . crux-recentf-find-file)
        ("C-c c r" . crux-rename-file-and-buffer)
        ("C-c c k" . crux-kill-other-buffers)
        ("C-c c c" . crux-cleanup-buffer-or-region))
@@ -144,11 +128,11 @@
 *** region
     #+begin_src emacs-lisp
       (use-package expand-region
-        :bind ("C-=" . er/expand-region))
+	:bind
+	("C-+" . er/expand-region))
     #+end_src
 
 *** yasnippets
-
     #+begin_src emacs-lisp
       (use-package yasnippet
         :diminish
@@ -190,8 +174,8 @@
    #+begin_src emacs-lisp
      (use-package magit
        :bind
-       ("C-c m s" . magit-status)
-       ("C-c m d" . magit-diff)
+       ("C-c m" . magit-status)
+       ("C-c d" . magit-diff)
        :custom (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
      (use-package git-timemachine)
      (use-package diff-hl
