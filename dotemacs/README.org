@@ -3,7 +3,6 @@
 #+STARTUP: content
 
 * core
-
 ** better-defaults
    #+begin_src emacs-lisp
      (tooltip-mode 0)
@@ -15,7 +14,7 @@
      (delete-selection-mode 1)
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
-     (global-linum-mode)
+     (global-linum-mode 0)
      (global-auto-revert-mode t)
      (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
@@ -36,13 +35,9 @@
 	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
 
      (setq initial-scratch-message
-	   ";; 
-     ;; “The first principle is that you must not fool yourself
-     ;;  and you are the easiest person to fool.”
-     ;; - Richard P. Feynman
+	   ";; https://github.com/insanya
      ;; 
-     ;; https://github.com/insanya
-     ;;
+     ;; 
 
      ")
    #+end_src
@@ -50,12 +45,17 @@
 ** ui
    #+begin_src emacs-lisp
      (use-package all-the-icons)
+
      (use-package spacemacs-theme
        :init (load-theme 'spacemacs-dark t)
        :custom
        (spacemacs-theme-org-height nil))
+
      (use-package powerline
        :init (powerline-default-theme))
+
+     (use-package vi-tilde-fringe
+       :init (global-vi-tilde-fringe-mode))
    #+end_src
 
 ** load executables
@@ -86,7 +86,9 @@
      (require 'whitespace)
      ;; (global-whitespace-mode +1)
      (diminish 'global-whitespace-mode)
+
      (setq whitespace-line-column 80)
+
      (progn
        (setq whitespace-style (quote (face spaces tabs newline-mark tab-mark)))
        (setq whitespace-display-mappings
@@ -105,6 +107,7 @@
        (company-idle-delay .1)
        (company-minimum-prefix-length 2)
        (company-box-doc-enable nil))
+
      (use-package company-box
        :diminish
        :hook (company-mode . company-box-mode))
@@ -138,6 +141,7 @@
         :diminish
         :init (yas-global-mode)
         :config (diminish 'yas-minor-mode))
+
       (use-package yasnippet-snippets
         :diminish)
     #+end_src
@@ -152,6 +156,7 @@
 ** ibuffer
    #+begin_src emacs-lisp
      (use-package ibuffer-vc)
+
      (use-package ibuffer-projectile
        :preface
        (defun ibuffer-set-up-preferred-filters ()
@@ -176,8 +181,12 @@
        :bind
        ("C-c m" . magit-status)
        ("C-c d" . magit-diff)
-       :custom (magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1))
+       :custom
+       (magit-display-buffer-function
+	'magit-display-buffer-same-window-except-diff-v1))
+
      (use-package git-timemachine)
+
      (use-package diff-hl
        :init (global-diff-hl-mode))
    #+end_src
@@ -208,6 +217,12 @@
         ("C-<backspace>" . backward-kill-word))
     #+end_src
 
+** pdf's
+   #+begin_src emacs-lisp
+     (use-package pdf-tools
+       :init (pdf-tools-install))
+   #+end_src
+
 ** projectile
    #+begin_src emacs-lisp
      (use-package projectile
@@ -234,6 +249,7 @@
    #+begin_src emacs-lisp
      (use-package selectrum
        :init (selectrum-mode))
+
      (use-package selectrum-prescient
        :init
        (selectrum-prescient-mode)
@@ -312,7 +328,7 @@
        :init
        (defvar treemacs-no-load-time-warnings t)
        :custom
-       (treemacs-width 26)
+       (treemacs-width 24)
        :bind
        (:map global-map
              ("M-0"       . treemacs-select-window)
@@ -321,8 +337,10 @@
              ("C-c t B"   . treemacs-bookmark)
              ("C-c t C-t" . treemacs-find-file)
              ("C-c t M-t" . treemacs-find-tag)))
+
      (use-package treemacs-projectile
        :after treemacs projectile)
+
      (use-package treemacs-magit
        :after treemacs magit)
    #+end_src
@@ -376,6 +394,7 @@
 ** skewer
    #+begin_src emacs-lisp
      (use-package simple-httpd)
+
      (use-package skewer-mode
        :diminish "Skewer")
    #+end_src
@@ -478,6 +497,7 @@
        (org-babel-do-load-languages
 	'org-babel-load-languages
 	'((sql . t))))
+
      (use-package org-bullets
        :diminish
        :hook (org-mode . org-bullets-mode)
