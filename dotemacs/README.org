@@ -29,6 +29,12 @@
      (setq cursor-in-non-selected-windows nil)
      (setq display-buffer-alist
 	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+     (setq initial-scratch-message
+	   ";; https://github.com/insanya
+      ;; 
+      ;; 
+
+      ")
    #+end_src
 
 ** ui
