@@ -1,6 +1,6 @@
 #+TITLE: GNU EMACS 27.1 Configuration
 #+AUTHOR: Lucas Pereira <insanya@protonmail.com>
-#+STARTUP: content
+#+STARTUP: showeverything
 
 * core
 ** better-defaults
@@ -17,6 +17,7 @@
      (global-auto-revert-mode t)
 
      (setq font-use-system-font t)
+
      (setq help-window-select t)
      (setq vc-follow-symlinks t)
      (setq create-lockfiles nil)
@@ -43,9 +44,6 @@
 
      (use-package gruber-darker-theme
        :init (load-theme 'gruber-darker t))
-     ;; (use-package spacemacs-theme
-     ;;   :init (load-theme 'spacemacs-dark t)
-     ;;   :custom (spacemacs-theme-org-height nil))
 
      (use-package linum-relative
        :hook (prog-mode . linum-relative-mode))
@@ -118,6 +116,14 @@
        ("C-c c r" . crux-rename-file-and-buffer)
        ("C-c c k" . crux-kill-other-buffers)
        ("C-c c c" . crux-cleanup-buffer-or-region))
+   #+end_src
+
+** dired
+   #+begin_src emacs-lisp
+     (require 'dired-x)
+     (setq-default dired-dwim-target t)
+     (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+     (setq dired-listing-switches "-hlX --group-directories-first")
    #+end_src
 
 ** expand
