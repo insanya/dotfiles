@@ -14,10 +14,9 @@
      (delete-selection-mode 1)
      (fset 'yes-or-no-p 'y-or-n-p)
      (set-default-coding-systems 'utf-8)
-     (global-linum-mode 0)
      (global-auto-revert-mode t)
-     (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
+     (setq font-use-system-font t)
      (setq help-window-select t)
      (setq vc-follow-symlinks t)
      (setq create-lockfiles nil)
@@ -28,18 +27,8 @@
      (setq select-enable-clipboard t)
      (setq confirm-kill-emacs 'yes-or-no-p)
      (setq cursor-in-non-selected-windows nil)
-
-     (setq font-use-system-font t)
-
      (setq display-buffer-alist
 	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
-
-     (setq initial-scratch-message
-	   ";; https://github.com/insanya
-     ;; 
-     ;; 
-
-     ")
    #+end_src
 
 ** ui
@@ -48,14 +37,10 @@
 
      (use-package spacemacs-theme
        :init (load-theme 'spacemacs-dark t)
-       :custom
-       (spacemacs-theme-org-height nil))
+       :custom (spacemacs-theme-org-height nil))
 
-     (use-package powerline
-       :init (powerline-default-theme))
-
-     (use-package vi-tilde-fringe
-       :init (global-vi-tilde-fringe-mode))
+     (use-package linum-relative
+       :hook (prog-mode . linum-relative-mode))
    #+end_src
 
 ** load executables
@@ -217,12 +202,6 @@
         ("C-<backspace>" . backward-kill-word))
     #+end_src
 
-** pdf's
-   #+begin_src emacs-lisp
-     (use-package pdf-tools
-       :init (pdf-tools-install))
-   #+end_src
-
 ** projectile
    #+begin_src emacs-lisp
      (use-package projectile
@@ -256,7 +235,7 @@
        (prescient-persist-mode))
    #+end_src
 
-** buffer search
+** search buffer
    #+begin_src emacs-lisp
      (use-package ctrlf
        :init (ctrlf-mode))
@@ -390,27 +369,11 @@
    #+end_src
 
 
-* misc
-** skewer
-   #+begin_src emacs-lisp
-     (use-package simple-httpd)
-
-     (use-package skewer-mode
-       :diminish "Skewer")
-   #+end_src
-
-
 * langs
 ** c/c++
    #+begin_src emacs-lisp
      (add-hook 'c-mode-hook 'lsp-mode-hook)
      (add-hook 'c++-mode-hook 'lsp-mode-hook)
-   #+end_src
-
-** docker
-   #+begin_src emacs-lisp
-     (use-package dockerfile-mode
-       :hook (dockerfile-mode . lsp))
    #+end_src
 
 ** js
