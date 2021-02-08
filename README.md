@@ -1,6 +1,5 @@
 # dotfiles
 
 Emacs
-Zsh
-
-Some assets for Github Profile
+Bash (With bash-it)
+Regolith
