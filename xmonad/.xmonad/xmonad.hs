@@ -114,6 +114,7 @@ myLogHook = return ()
 {-- Startup actions hooks --}
 myStartupHook = do
     setDefaultCursor xC_left_ptr
+    spawnOnce "~/Desktop/dotfiles/scripts/1080.sh"
     spawnOnce "nitrogen --restore &"
     spawnOnce "compton &"
     spawnOnce "trayer --edge top --align right --widthtype request --expand true --tint 0x000000 --height 22 &"
