@@ -1,0 +1,49 @@
+env:
+  TERM: xterm-256color
+
+# Font configuration
+font:
+  normal:
+    family: UbuntuMono
+    style: Regular
+
+  bold:
+    family: UbuntuMono
+    style: Bold
+
+  italic:
+    family: UbuntuMono
+    style: Italic
+
+  bold_italic:
+    family: UbuntuMono
+    style: Bold Italic
+
+  size: 15.0
+colors:
+  name: jmbi
+  author: jmbi
+  primary:
+    background: "#1e1e1e"
+    foreground: "#ffffff"
+  cursor:
+    text: "#1e1e1e"
+    cursor: "#ffffff"
+  normal:
+    black: "#5A7260"
+    red: "#8F423C"
+    green: "#BBBB88"
+    yellow: "#F9D25B"
+    blue: "#E0BA69"
+    magenta: "#709289"
+    cyan: "#D13516"
+    white: "#EFE2E0"
+  bright:
+    black: "#8DA691"
+    red: "#EEAA88"
+    green: "#CCC68D"
+    yellow: "#EEDD99"
+    blue: "#C9B957"
+    magenta: "#FFCBAB"
+    cyan: "#C25431"
+    white: "#F9F1ED"
