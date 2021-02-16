@@ -44,9 +44,6 @@
 
      (use-package gruber-darker-theme
        :init (load-theme 'gruber-darker t))
-
-     (use-package linum-relative
-       :hook (prog-mode . linum-relative-mode))
    #+end_src
 
 ** load executables
@@ -388,11 +385,11 @@
      (add-hook 'c-mode-hook 'lsp-mode-hook)
      (add-hook 'c++-mode-hook 'lsp-mode-hook)
    #+end_src
+   
 ** haskell
    #+begin_src emacs-lisp
    (use-package haskell-mode)
    #+end_src
-
 
 ** js
    #+begin_src emacs-lisp
@@ -413,7 +410,7 @@
        (LaTeX-mode . LaTeX-math-mode)
        (LaTeX-mode . turn-on-reftex)
        (LaTeX-mode . lsp)
-       ;; (bibtex-mode . lsp)
+       (bibtex-mode . lsp)
        :custom
        (TeX-auto-save t)
        (TeX-parse-self t)
