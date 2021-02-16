@@ -29,8 +29,6 @@ import XMonad.Hooks.SetWMName
 import XMonad.Layout.Tabbed
 
 
-
-
 {-- Settings --}
 myModMask            = mod4Mask
 myTerminal           = "gnome-terminal"

@@ -1,6 +1,6 @@
 #+TITLE: GNU EMACS 27.1 Configuration
 #+AUTHOR: Lucas Pereira <insanya@protonmail.com>
-#+STARTUP: showeverything
+#+STARTUP: content
 
 * core
 ** better-defaults
@@ -388,6 +388,11 @@
      (add-hook 'c-mode-hook 'lsp-mode-hook)
      (add-hook 'c++-mode-hook 'lsp-mode-hook)
    #+end_src
+** haskell
+   #+begin_src emacs-lisp
+   (use-package haskell-mode)
+   #+end_src
+
 
 ** js
    #+begin_src emacs-lisp
