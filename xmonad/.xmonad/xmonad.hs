@@ -35,8 +35,8 @@ myTerminal           = "gnome-terminal"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
 myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
 myBorderWidth        = 2
-myNormalBorderColor  = "#666666"
-myFocusedBorderColor = "#985C00"
+myNormalBorderColor  = "#F9AFFF"
+myFocusedBorderColor = "#B0ADFF"
 myClickJustFocuses   = False
 myFocusFollowsMouse  = True
 
@@ -145,7 +145,7 @@ main = do
                                 , ppHidden  = xmobarColor "#FDE2FF" "" . wrap "(" ")" -- Hidden workspaces in xmobar
                                 , ppVisible = xmobarColor "#FDE2FF" ""                -- Visible but not current workspace
                                 , ppHiddenNoWindows = xmobarColor "#FDE2FF" ""        -- Hidden workspaces (no windows)
-                                , ppTitle = xmobarColor "#FFFFFF" ""-- . shorten 60   -- Title of active window in xmobar
+                                , ppTitle = xmobarColor "#000000" ""                  -- Title of active window in xmobar
                                 , ppSep =  "<fc=#666666> | </fc>"                     -- Separators in xmobar
                                 , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"  -- Urgent workspace
                                 , ppLayout = xmobarColor "#B0ADFF" ""

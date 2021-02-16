@@ -12,3 +12,5 @@
 /dotemacs/transient/
 /dotemacs/var/
 /dotemacs/eshell/
+xmonad-x86_64-linux
+xmonad.o
