@@ -2,7 +2,7 @@ Config { font = "xft:Ubuntu Mono:pixelsize=20:antialias=true:hinting=true"
        , additionalFonts = [ "xft:FontAwesome:pixelsize=18" ]
        , bgColor = "#000000"
        , fgColor = "#FFFFFF"
-       , position = Top
+       , position = Bottom
        , lowerOnStart = True
        , hideOnStart = False
        , allDesktops = True

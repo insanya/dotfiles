@@ -33,7 +33,7 @@ import XMonad.Layout.Tabbed
 myModMask            = mod4Mask
 myTerminal           = "gnome-terminal"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
-myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ] -- ++ map show [4..9]
+myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
 myBorderWidth        = 2
 myNormalBorderColor  = "#666666"
 myFocusedBorderColor = "#985C00"
@@ -41,7 +41,7 @@ myClickJustFocuses   = False
 myFocusFollowsMouse  = True
 
 myLauncher           = "rofi -show run"
-myScreenlock         = "i3lock -i ~/Pictures/wallpapers/ubuntu.png"                              -- "i3lock -i /path/to/image"
+myScreenlock         = "i3lock -i ~/dotfiles/assets/wallpapers/ubuntu.png"
 myXmobarrc           = "~/.xmobar/xmobarrc"
 
 
@@ -112,10 +112,9 @@ myLogHook = return ()
 {-- Startup actions hooks --}
 myStartupHook = do
     setDefaultCursor xC_left_ptr
-    spawnOnce "~/Desktop/dotfiles/scripts/1080.sh"
-    spawnOnce "nitrogen --restore &"
-    spawnOnce "compton &"
-    spawnOnce "trayer --edge top --align right --widthtype request --expand true --tint 0x000000 --height 22 &"
+    -- spawnOnce "nitrogen --restore &"
+    -- spawnOnce "compton &"
+    spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --tint 0x000000 --height 22 &"
     spawnOnce "volumeicon &"
     spawnOnce "nm-applet &"
     setWMName "LG3D"
