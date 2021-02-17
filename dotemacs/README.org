@@ -42,8 +42,10 @@
    #+begin_src emacs-lisp
      (use-package all-the-icons)
 
-     (use-package gruber-darker-theme
-       :init (load-theme 'gruber-darker t))
+     (use-package spacemacs-theme
+       :init (load-theme 'spacemacs-dark t)
+       :custom
+       (spacemacs-theme-org-height nil))
    #+end_src
 
 ** load executables
@@ -51,7 +53,6 @@
      (use-package exec-path-from-shell
        :init (exec-path-from-shell-initialize))
    #+end_src
-
 
 ** diminish modes
    #+begin_src emacs-lisp
@@ -83,7 +84,6 @@
              '((space-mark 32 [183] [46])
                (tab-mark 9 [9655 9] [92 9]))))
    #+end_src
-
 
 
 ** company

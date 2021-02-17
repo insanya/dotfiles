@@ -32,7 +32,7 @@ myModMask            = mod4Mask
 myTerminal           = "alacritty"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
 myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
-myBorderWidth        = 2
+myBorderWidth        = 1
 myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#FFFFFF"
 myClickJustFocuses   = False
@@ -111,7 +111,7 @@ myLogHook = return ()
 myStartupHook = do
     setDefaultCursor xC_left_ptr
     -- spawnOnce "nitrogen --restore &"
-    -- spawnOnce "compton &"
+    spawnOnce "compton &"
     spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --tint 0x000000 --height 22 &"
     spawnOnce "volumeicon &"
     spawnOnce "nm-applet &"
