@@ -45,7 +45,8 @@
      (use-package spacemacs-theme
        :init (load-theme 'spacemacs-dark t)
        :custom
-       (spacemacs-theme-org-height nil))
+       (spacemacs-theme-org-height nil)
+       (spacemacs-theme-org-bold nil))
    #+end_src
 
 ** load executables
@@ -58,33 +59,6 @@
    #+begin_src emacs-lisp
      (use-package diminish)
    #+end_src
-
-** keybinds helper
-   #+begin_src emacs-lisp
-     (use-package which-key
-       :diminish
-       :init (which-key-mode)
-       :custom
-       (which-key-show-early-on-C-h t)
-       (which-key-idle-delay most-positive-fixnum)
-       (which-key-idle-secondary-delay 1e-100))
-   #+end_src
-
-** show whitespace
-   #+begin_src emacs-lisp
-     (require 'whitespace)
-     ;; (global-whitespace-mode +1)
-     (diminish 'global-whitespace-mode)
-
-     (setq whitespace-line-column 80)
-
-     (progn
-       (setq whitespace-style (quote (face spaces tabs newline-mark tab-mark)))
-       (setq whitespace-display-mappings
-             '((space-mark 32 [183] [46])
-               (tab-mark 9 [9655 9] [92 9]))))
-   #+end_src
-
 
 ** company
    #+begin_src emacs-lisp
@@ -122,25 +96,6 @@
      (setq dired-listing-switches "-hlAX --group-directories-first")
    #+end_src
 
-** expand
-*** region
-    #+begin_src emacs-lisp
-      (use-package expand-region
-	:bind
-	("C-+" . er/expand-region))
-    #+end_src
-
-*** yasnippets
-    #+begin_src emacs-lisp
-      (use-package yasnippet
-        :diminish
-        :init (yas-global-mode)
-        :config (diminish 'yas-minor-mode))
-
-      (use-package yasnippet-snippets
-        :diminish)
-    #+end_src
-
 ** flycheck
    #+begin_src emacs-lisp
      (use-package flycheck
@@ -148,26 +103,11 @@
        :init (global-flycheck-mode))
    #+end_src
 
-** ibuffer
-   #+begin_src emacs-lisp
-     (use-package ibuffer-vc)
-
-     (use-package ibuffer-projectile
-       :preface
-       (defun ibuffer-set-up-preferred-filters ()
-         (ibuffer-vc-set-filter-groups-by-vc-root)
-         (unless (eq ibuffer-sorting-mode 'filename/process)
-           (ibuffer-do-sort-by-filename/process)))
-       :hook (ibuffer . ibuffer-set-up-preferred-filters)
-       :bind ("C-x C-b" . ibuffer)
-       :custom (ibuffer-show-empty-filter-groups nil))
-   #+end_src
-
 ** indentation
    #+begin_src emacs-lisp
      (use-package aggressive-indent
        :diminish
-       :init (global-aggressive-indent-mode +1))
+       :hook (prog-mode . aggressive-indent-mode))
    #+end_src
 
 ** magit
@@ -187,30 +127,30 @@
    #+end_src
 
 ** parentheses
-*** rainbow
-    #+begin_src emacs-lisp
-      (use-package rainbow-delimiters
-        :diminish
-        :hook (prog-mode . rainbow-delimiters-mode))
-    #+end_src
+** parentheses rainbow
+   #+begin_src emacs-lisp
+     (use-package rainbow-delimiters
+       :diminish
+       :hook (prog-mode . rainbow-delimiters-mode))
+   #+end_src
 
-*** smartparens
-    #+begin_src emacs-lisp
-      (use-package smartparens
-        :diminish
-        :init
-        (smartparens-mode)
-        (smartparens-global-mode t)
-        :bind
-        ("C-M-a" . sp-beginning-of-sexp)
-        ("C-M-e" . sp-end-of-sexp)
-        ("C-M-b" . sp-backward-sexp)
-        ("C-M-f" . sp-forward-sexp)
-        ("C-M-n" . sp-next-sexp)
-        ("C-M-p" . sp-previous-sexp)
-        ("M-<backspace>" . sp-backward-kill-word)
-        ("C-<backspace>" . backward-kill-word))
-    #+end_src
+** parentheses nav
+   #+begin_src emacs-lisp
+     (use-package smartparens
+       :diminish
+       :init
+       (smartparens-mode)
+       (smartparens-global-mode t)
+       :bind
+       ("C-M-a" . sp-beginning-of-sexp)
+       ("C-M-e" . sp-end-of-sexp)
+       ("C-M-b" . sp-backward-sexp)
+       ("C-M-f" . sp-forward-sexp)
+       ("C-M-n" . sp-next-sexp)
+       ("C-M-p" . sp-previous-sexp)
+       ("M-<backspace>" . sp-backward-kill-word)
+       ("C-<backspace>" . backward-kill-word))
+   #+end_src
 
 ** projectile
    #+begin_src emacs-lisp
@@ -294,23 +234,6 @@
           ("*Select Link*"                    :align below              :select t))))
    #+end_src
 
-** switch window
-   #+begin_src emacs-lisp
-     (use-package switch-window
-       :bind
-       ("C-x o" . switch-window)
-       ("C-x 1" . switch-window-then-maximize)
-       ("C-x 2" . switch-window-then-split-below)
-       ("C-x 3" . switch-window-then-split-right)
-       ("C-x 0" . switch-window-then-delete)
-       ("C-x 4 d" . switch-window-then-dired)
-       ("C-x 4 f" . switch-window-then-find-file)
-       ("C-x 4 r" . switch-window-then-find-file-read-only)
-       :custom
-       (switch-window-shortcut-style 'alphabet)
-       (switch-window-timeout nil))
-   #+end_src
-
 ** treemacs
    #+begin_src emacs-lisp
      (use-package treemacs
@@ -332,6 +255,17 @@
 
      (use-package treemacs-magit
        :after treemacs magit)
+   #+end_src
+
+** yasnippets
+   #+begin_src emacs-lisp
+     (use-package yasnippet
+       :diminish
+       :init (yas-global-mode)
+       :config (diminish 'yas-minor-mode))
+
+     (use-package yasnippet-snippets
+       :diminish)
    #+end_src
 
 

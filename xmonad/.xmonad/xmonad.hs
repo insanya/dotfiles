@@ -12,36 +12,29 @@ compton
 
 import XMonad
 import System.Exit
-
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Util.Cursor
-
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.SetWMName
-
 import XMonad.Layout.Tabbed
-
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
 
 {-- Settings --}
 myModMask            = mod4Mask
 myTerminal           = "alacritty"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
-myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
+myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "mail", "vbox", "sys" ]
 myBorderWidth        = 1
 myNormalBorderColor  = "#000000"
 myFocusedBorderColor = "#FFFFFF"
 myClickJustFocuses   = False
 myFocusFollowsMouse  = True
-
 myLauncher           = "rofi -show run"
 myScreenlock         = "i3lock -i ~/dotfiles/assets/wallpapers/ubuntu.png"
 myXmobarrc           = "~/.xmobar/xmobarrc"
-
 
 {-- Key bindings --}
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
@@ -74,7 +67,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 
-
 {-- Layouts --}
 myLayout = avoidStruts (tabbed shrinkText myTabTheme ||| tiled ||| Mirror tiled)
   where
@@ -98,14 +90,11 @@ myManageHook = composeAll
     , resource =? "desktop_window" --> doFloat
     , resource =? "kdesktop"       --> doFloat ]
 
-
 {-- Event handling --}
 myEventHook = mempty
 
-
 {-- Status bars and logging --}
 myLogHook = return ()
-
 
 {-- Startup actions hooks --}
 myStartupHook = do
@@ -116,7 +105,6 @@ myStartupHook = do
     spawnOnce "volumeicon &"
     spawnOnce "nm-applet &"
     setWMName "LG3D"
-
 
 {-- Run XMonad --}
 main = do
