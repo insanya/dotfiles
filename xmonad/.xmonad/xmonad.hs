@@ -11,16 +11,11 @@ compton
 --}
 
 import XMonad
-import Data.Monoid
 import System.Exit
-
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
 
 import XMonad.Util.SpawnOnce
 import XMonad.Util.Run
 import XMonad.Util.Cursor
-import XMonad.Util.Themes
 
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
@@ -28,10 +23,13 @@ import XMonad.Hooks.SetWMName
 
 import XMonad.Layout.Tabbed
 
+import qualified XMonad.StackSet as W
+import qualified Data.Map        as M
+
 
 {-- Settings --}
 myModMask            = mod4Mask
-myTerminal           = "gnome-terminal"
+myTerminal           = "alacritty"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
 myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
 myBorderWidth        = 2
