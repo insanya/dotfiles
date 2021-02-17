@@ -31,7 +31,9 @@
      (setq display-buffer-alist
 	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
      (setq initial-scratch-message
-	   ";; https://github.com/insanya
+	   ";;
+     ;;
+     ;; https://github.com/insanya
      ;; 
      ;; 
 

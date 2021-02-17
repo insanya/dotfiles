@@ -6,8 +6,7 @@ i3lock
 trayer
 volumeicon-alsa
 fonts-font-awesome
-nitrogen
-compton
+feg
 fdpowermon
 --}
 
@@ -34,13 +33,14 @@ myFocusedBorderColor = "#FFFFFF"
 myClickJustFocuses   = False
 myFocusFollowsMouse  = True
 myLauncher           = "rofi -show run"
-myScreenlock         = "i3lock -i ~/dotfiles/assets/wallpapers/ubuntu.png"
+myScreenlock         = "i3lock -i ~/Dotfiles/assets/wallpapers/insanya-bg.png"
 myXmobarrc           = "~/.xmobar/xmobarrc"
 
 {-- Key bindings --}
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)       -- Launch a terminal
+    , ((modm,               xK_e     ), spawn "emacsclient -c -a 'emacs' --eval '(dired nil)'") -- Launch emacsclient
     , ((modm,               xK_p     ), spawn myLauncher)                   -- Launch rofi
     , ((modm .|. shiftMask, xK_q     ), kill)                               -- Close focused window
     , ((modm .|. shiftMask, xK_0     ), spawn myScreenlock)                 -- Launch Screenlock
@@ -69,7 +69,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 
 {-- Layouts --}
-myLayout = avoidStruts (tabbed shrinkText myTabTheme ||| tiled ||| Mirror tiled)
+myLayout = avoidStruts (tiled ||| tabbed shrinkText myTabTheme ||| Mirror tiled)
   where
      tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
      nmaster = 1                        -- The default number of windows in the master pane
@@ -100,8 +100,8 @@ myLogHook = return ()
 {-- Startup actions hooks --}
 myStartupHook = do
     setDefaultCursor xC_left_ptr
-    -- spawnOnce "nitrogen --restore &"
-    spawnOnce "compton &"
+    spawnOnce "feh --bg-center ~/Dotfiles/assets/wallpapers/insanya-bg.png &"
+    spawnOnce "emacs --daemon &"
     spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --transparent true --alpha 0 --tint 0x000000 --height 22 &"
     spawnOnce "volumeicon &"
     spawnOnce "nm-applet &"
