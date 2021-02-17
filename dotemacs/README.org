@@ -49,6 +49,8 @@
        :custom
        (spacemacs-theme-org-height nil)
        (spacemacs-theme-org-bold nil))
+
+     (use-package centered-window)
    #+end_src
 
 ** load executables
