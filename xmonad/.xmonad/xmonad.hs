@@ -8,6 +8,7 @@ volumeicon-alsa
 fonts-font-awesome
 nitrogen
 compton
+fdpowermon
 --}
 
 import XMonad
@@ -101,15 +102,17 @@ myStartupHook = do
     setDefaultCursor xC_left_ptr
     -- spawnOnce "nitrogen --restore &"
     spawnOnce "compton &"
-    spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --tint 0x000000 --height 22 &"
+    spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --transparent true --alpha 0 --tint 0x000000 --height 22 &"
     spawnOnce "volumeicon &"
     spawnOnce "nm-applet &"
+    spawnOnce "fdpowermon &"
     setWMName "LG3D"
 
 {-- Run XMonad --}
+main :: IO()
 main = do
-    xmproc <- spawnPipe ("xmobar " ++ myXmobarrc)
-    xmonad $ docks def {
+  xmproc <- spawnPipe ("xmobar " ++ myXmobarrc)
+  xmonad $ docks def {
         terminal           = myTerminal,
         focusFollowsMouse  = myFocusFollowsMouse,
         clickJustFocuses   = myClickJustFocuses,

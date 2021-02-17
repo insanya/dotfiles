@@ -15,7 +15,7 @@ font:
   bold_italic:
     family: Ubuntu Mono
     style: Bold Italic
-  size: 15.0
+  size: 14.0
 
 colors:
   name: Ashes (dark)
