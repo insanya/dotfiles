@@ -33,8 +33,8 @@ myTerminal           = "alacritty"
 myFont               = "xft:Ubuntu Mono:regular:size=14:antialias=true:hinting=true"
 myWorkspaces         = ["home", "dev", "web1", "web2", "chat", "media", "vbox", "sys", "etc" ]
 myBorderWidth        = 2
-myNormalBorderColor  = "#F9AFFF"
-myFocusedBorderColor = "#B0ADFF"
+myNormalBorderColor  = "#000000"
+myFocusedBorderColor = "#FFFFFF"
 myClickJustFocuses   = False
 myFocusFollowsMouse  = True
 
@@ -76,7 +76,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 
 {-- Layouts --}
-myLayout = avoidStruts (tiled ||| Mirror tiled ||| tabbed shrinkText myTabTheme)
+myLayout = avoidStruts (tabbed shrinkText myTabTheme ||| tiled ||| Mirror tiled)
   where
      tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
      nmaster = 1                        -- The default number of windows in the master pane
@@ -140,12 +140,12 @@ main = do
         logHook            = myLogHook <+> dynamicLogWithPP xmobarPP {
                                 ppOutput = hPutStrLn xmproc
                                 , ppCurrent = xmobarColor "#8884FF" "" . wrap "[" "]" -- Current workspace in xmobar
-                                , ppHidden  = xmobarColor "#FDE2FF" "" . wrap "(" ")" -- Hidden workspaces in xmobar
-                                , ppVisible = xmobarColor "#FDE2FF" ""                -- Visible but not current workspace
-                                , ppHiddenNoWindows = xmobarColor "#FDE2FF" ""        -- Hidden workspaces (no windows)
+                                , ppHidden  = xmobarColor "#F9AFFF" "" . wrap "(" ")" -- Hidden workspaces in xmobar
+                                , ppVisible = xmobarColor "#F9AFFF" ""                -- Visible but not current workspace
+                                , ppHiddenNoWindows = xmobarColor "#F9AFFF" ""        -- Hidden workspaces (no windows)
                                 , ppTitle = xmobarColor "#000000" ""                  -- Title of active window in xmobar
                                 , ppSep =  "<fc=#666666> | </fc>"                     -- Separators in xmobar
-                                , ppUrgent = xmobarColor "#C45500" "" . wrap "!" "!"  -- Urgent workspace
+                                , ppUrgent = xmobarColor "#0000FF" "" . wrap "!" "!"  -- Urgent workspace
                                 , ppLayout = xmobarColor "#B0ADFF" ""
                             }
     }

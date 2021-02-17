@@ -420,7 +420,6 @@
    #+end_src
 
 ** web-mode
-
    #+begin_src emacs-lisp
      (use-package web-mode
        :hook (web-mode . lsp)
