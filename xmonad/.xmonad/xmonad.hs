@@ -105,7 +105,7 @@ myLogHook = return ()
 {-- Startup actions hooks --}
 myStartupHook = do
   setDefaultCursor xC_left_ptr
-  spawnOnce "feh --bg-center ~/Dotfiles/assets/wallpapers/insanya-bg.png &"
+  spawnOnce "feh --bg-center ~/dotfiles/assets/wallpapers/insanya-bg.png &"
   spawnOnce "emacs --daemon &"
   spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --transparent true --alpha 0 --tint 0x000000 --height 22 &"
   spawnOnce "volumeicon &"

@@ -85,7 +85,7 @@
        :bind
        ("C-a" . crux-move-beginning-of-line)
        ("C-k" . crux-smart-kill-line)
-       ("C-x C-r" . crux-recentf-find-file)
+       ("C-x f" . crux-recentf-find-file)
        ("C-c c d" . crux-duplicate-current-line-or-region)
        ("C-c c D" . crux-delete-file-and-buffer)
        ("C-c c r" . crux-rename-file-and-buffer)
@@ -154,6 +154,12 @@
        ("C-M-p" . sp-previous-sexp)
        ("M-<backspace>" . sp-backward-kill-word)
        ("C-<backspace>" . backward-kill-word))
+   #+end_src
+
+** pdf-tools
+   #+begin_src emacs-lisp
+     (use-package pdf-tools
+       :init (pdf-tools-install))
    #+end_src
 
 ** projectile
@@ -396,11 +402,11 @@
 				 ("MEETING" . "orange")
 				 ("CANCELED" . "black")))
        (org-capture-templates
-	'(("t" "Task" entry (file+headline "~/Desktop/insanya/org/sched.org" "Tasks")
+	'(("t" "Task" entry (file+headline "~/work/schedule.org" "Tasks")
 	   "** TODO %?\n%T \n")
-	  ("m" "Meeting" entry (file+headline "~/Desktop/insanya/org/sched.org" "Meetings")
+	  ("m" "Meeting" entry (file+headline "~/work/schedule.org" "Meetings")
 	   "** MEETING %?\n%T \n")
-	  ("p" "Personal" entry (file+headline "~/Desktop/insanya/org/sched.org" "Personal")
+	  ("p" "Personal" entry (file+headline "~/work/schedule.org" "Personal")
 	   "** TODO %?\n%T \n :Personal:")))
        :config
        (defun org-super-agenda-insa-view ()
@@ -415,8 +421,7 @@
 
      (use-package org-bullets
        :diminish
-       :hook (org-mode . org-bullets-mode)
-       :custom (org-bullets-bullet-list '("■" "◆" "▲" "▶")))
+       :hook (org-mode . org-bullets-mode))
    #+end_src
 
 ** super agenda
