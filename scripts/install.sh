@@ -5,7 +5,7 @@ add-apt-repository -y ppa:kelleyk/emacs
 
 apt update
 
-apt install -y git xmonad libghc-xmonad-contrib-dev xmobar alacritty emacs27 curl llvm clang clangd texlive-base rofi i3lock trayer volumeicon-alsa fonts-font-awesome feg fdpowermon
+apt install -y git xmonad libghc-xmonad-contrib-dev xmobar alacritty emacs27 curl llvm clang clangd texlive-base rofi i3lock trayer volumeicon-alsa fonts-font-awesome feg fdpowermon pcmanfm
 
 git clone https://github.com/insanya/dotfiles.git ~/dotfiles
 git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it

@@ -58,7 +58,8 @@
        (spacemacs-theme-org-height nil)
        (spacemacs-theme-org-bold nil))
 
-     (use-package centered-window)
+     (use-package smooth-scrolling
+       :init (smooth-scrolling-mode 1))
    #+end_src
 
 ** load executables

@@ -79,8 +79,8 @@ myTabTheme = def {
 {-- Window rules: To find the property name associated with a program -> xprop | grep WM_CLASS --}
 myManageHook = composeAll
   [
-    resource =? "Navigator"      --> doShift ( myWorkspaces !! 2)
-  -- , resource =? "pcmanfm"        --> doShift ( myWorkspaces !! 8)
+    resource =? "Navigator"      --> doShift "web1"
+  , resource =? "pcmanfm"        --> doShift "sys"
   , resource =? "desktop_window" --> doFloat
   , resource =? "kdesktop"       --> doFloat
   ]
