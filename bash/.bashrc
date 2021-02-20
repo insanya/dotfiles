@@ -27,7 +27,7 @@ source "$BASH_IT"/bash_it.sh
 # Personal config
 alias l='ls --group-directories-first -hlX'
 alias ll='ls --group-directories-first -hlAX'
-alias em="emacsclient -c &"
+alias em="emacsclient -c"
 alias volu="amixer -q set Master 10%+"
 alias vold="amixer -q set Master 10%-"
 

@@ -1,15 +1,3 @@
-{--
-Xmonad Config
-Programs needed:
-rofi
-i3lock
-trayer
-volumeicon-alsa
-fonts-font-awesome
-feg
-fdpowermon
---}
-
 import XMonad
 import System.Exit
 import XMonad.Util.SpawnOnce
@@ -91,7 +79,8 @@ myTabTheme = def {
 {-- Window rules: To find the property name associated with a program -> xprop | grep WM_CLASS --}
 myManageHook = composeAll
   [
-    resource =? "Firefox"        --> doShift ( myWorkspaces !! 2)
+    resource =? "Navigator"      --> doShift ( myWorkspaces !! 2)
+  -- , resource =? "pcmanfm"        --> doShift ( myWorkspaces !! 8)
   , resource =? "desktop_window" --> doFloat
   , resource =? "kdesktop"       --> doFloat
   ]
