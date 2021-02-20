@@ -2,4 +2,5 @@
 
 Emacs
 Bash (With bash-it)
-Regolith
+Alacritty
+Xmonad
