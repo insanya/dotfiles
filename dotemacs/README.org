@@ -394,7 +394,7 @@
 	("C-c o j" . org-goto-calendar)
 	("C-c o k" . org-date-from-calendar))
        :custom
-       (org-directory "~/Desktop/insanya/org")
+       (org-directory "~/desktop/insanya/org")
        (org-src-fontify-natively t)
        (org-confirm-babel-evaluate nil)
        (org-startup-with-inline-images t)
