@@ -94,9 +94,9 @@ myLogHook = return ()
 {-- Startup actions hooks --}
 myStartupHook = do
   setDefaultCursor xC_left_ptr
-  spawnOnce "feh --bg-center ~/dotfiles/assets/wallpapers/insanya-bg.png &"
+  spawnOnce "feh --bg-fill --no-fehbg ~/dotfiles/assets/wallpapers/e2.png &"
   spawnOnce "emacs --daemon &"
-  spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --transparent true --alpha 0 --tint 0x000000 --height 22 &"
+  spawnOnce "trayer --edge bottom --align right --widthtype request --expand true --transparent true --alpha 0 --tint 0x1363b2 --height 22 &"
   spawnOnce "volumeicon &"
   spawnOnce "nm-applet &"
   spawnOnce "fdpowermon &"
@@ -122,13 +122,13 @@ main = do
     startupHook        = myStartupHook,
     logHook            = myLogHook <+> dynamicLogWithPP xmobarPP {
         ppOutput = hPutStrLn xmproc
-        , ppCurrent = xmobarColor "#F688FF" "" . wrap "[" "]" -- Current workspace in xmobar
-        , ppHidden  = xmobarColor "#F688FF" "" . wrap "(" ")" -- Hidden workspaces in xmobar
-        , ppVisible = xmobarColor "#FFFFFF" ""                -- Visible but not current workspace
-        , ppHiddenNoWindows = xmobarColor "#FFFFFF" ""        -- Hidden workspaces (no windows)
+        , ppCurrent = xmobarColor "#000000" "" . wrap "[" "]" -- Current workspace in xmobar
+        , ppHidden  = xmobarColor "#000000" "" . wrap "(" ")" -- Hidden workspaces in xmobar
+        , ppVisible = xmobarColor "#dfd9a5" ""                -- Visible but not current workspace
+        , ppHiddenNoWindows = xmobarColor "#dfd9a5" ""        -- Hidden workspaces (no windows)
         , ppTitle = xmobarColor "#000000" ""                  -- Title of active window in xmobar
         , ppSep =  "<fc=#666666> | </fc>"                     -- Separators in xmobar
-        , ppUrgent = xmobarColor "#0000FF" "" . wrap "!" "!"  -- Urgent workspace
-        , ppLayout = xmobarColor "#F688FF" ""
+        , ppUrgent = xmobarColor "#0000ff" "" . wrap "!" "!"  -- Urgent workspace
+        , ppLayout = xmobarColor "#000000" ""
         }
     }

@@ -6,9 +6,6 @@
 ** better-defaults
    #+begin_src emacs-lisp
      (tooltip-mode 0)
-     (menu-bar-mode -1)
-     (tool-bar-mode -1)
-     (scroll-bar-mode 0)
      (show-paren-mode 1)
      (blink-cursor-mode 1)
      (delete-selection-mode 1)
@@ -28,8 +25,10 @@
      (setq select-enable-clipboard t)
      (setq confirm-kill-emacs 'yes-or-no-p)
      (setq cursor-in-non-selected-windows nil)
+
      (setq display-buffer-alist
 	   '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+
      (setq initial-scratch-message
 	   ";;
      ;;
@@ -53,31 +52,28 @@
      (use-package all-the-icons)
 
      (use-package spacemacs-theme
-       :init (load-theme 'spacemacs-dark t)
+       :init
+       (load-theme 'spacemacs-dark t)
        :custom
        (spacemacs-theme-org-height nil)
        (spacemacs-theme-org-bold nil))
 
-     (use-package smooth-scrolling
-       :init (smooth-scrolling-mode 1))
+     (use-package diminish)
    #+end_src
 
 ** load executables
    #+begin_src emacs-lisp
      (use-package exec-path-from-shell
-       :init (exec-path-from-shell-initialize))
-   #+end_src
-
-** diminish modes
-   #+begin_src emacs-lisp
-     (use-package diminish)
+       :init
+       (exec-path-from-shell-initialize))
    #+end_src
 
 ** company
    #+begin_src emacs-lisp
      (use-package company
-       :diminish
-       :init (global-company-mode)
+       :diminish "Company"
+       :init
+       (global-company-mode)
        :custom
        (company-idle-delay .1)
        (company-minimum-prefix-length 2)
@@ -85,21 +81,26 @@
 
      (use-package company-box
        :diminish
-       :hook (company-mode . company-box-mode))
+       :after
+       (company)
+       :hook
+       (company-mode . company-box-mode))
    #+end_src
 
 ** crux
    #+begin_src emacs-lisp
      (use-package crux
+       :after
+       (recentf)
        :bind
-       ("C-a" . crux-move-beginning-of-line)
-       ("C-k" . crux-smart-kill-line)
-       ("C-x f" . crux-recentf-find-file)
-       ("C-c c d" . crux-duplicate-current-line-or-region)
-       ("C-c c D" . crux-delete-file-and-buffer)
-       ("C-c c r" . crux-rename-file-and-buffer)
-       ("C-c c k" . crux-kill-other-buffers)
-       ("C-c c c" . crux-cleanup-buffer-or-region))
+       (("C-a" . crux-move-beginning-of-line)
+	("C-k" . crux-smart-kill-line)
+	("C-x f" . crux-recentf-find-file)
+	("C-c c d" . crux-duplicate-current-line-or-region)
+	("C-c c D" . crux-delete-file-and-buffer)
+	("C-c c r" . crux-rename-file-and-buffer)
+	("C-c c k" . crux-kill-other-buffers)
+	("C-c c c" . crux-cleanup-buffer-or-region)))
    #+end_src
 
 ** dired
@@ -112,23 +113,23 @@
 ** flycheck
    #+begin_src emacs-lisp
      (use-package flycheck
-       :diminish
-       :init (global-flycheck-mode))
+       :init
+       (global-flycheck-mode))
    #+end_src
 
 ** indentation
    #+begin_src emacs-lisp
      (use-package aggressive-indent
-       :diminish
-       :hook (prog-mode . aggressive-indent-mode))
+       :hook
+       (prog-mode . aggressive-indent-mode))
    #+end_src
 
 ** magit
    #+begin_src emacs-lisp
      (use-package magit
        :bind
-       ("C-c m" . magit-status)
-       ("C-c d" . magit-diff)
+       (("C-c m" . magit-status)
+	("C-c d" . magit-diff))
        :custom
        (magit-display-buffer-function
 	'magit-display-buffer-same-window-except-diff-v1))
@@ -136,67 +137,66 @@
      (use-package git-timemachine)
 
      (use-package diff-hl
-       :init (global-diff-hl-mode))
+       :init
+       (global-diff-hl-mode))
    #+end_src
 
-** parentheses
 ** parentheses rainbow
    #+begin_src emacs-lisp
      (use-package rainbow-delimiters
-       :diminish
-       :hook (prog-mode . rainbow-delimiters-mode))
+       :hook
+       (prog-mode . rainbow-delimiters-mode))
    #+end_src
 
-** parentheses nav
+** parentheses navigation
    #+begin_src emacs-lisp
      (use-package smartparens
-       :diminish
        :init
        (smartparens-mode)
        (smartparens-global-mode t)
        :bind
-       ("C-M-a" . sp-beginning-of-sexp)
-       ("C-M-e" . sp-end-of-sexp)
-       ("C-M-b" . sp-backward-sexp)
-       ("C-M-f" . sp-forward-sexp)
-       ("C-M-n" . sp-next-sexp)
-       ("C-M-p" . sp-previous-sexp)
-       ("M-<backspace>" . sp-backward-kill-word)
-       ("C-<backspace>" . backward-kill-word))
+       (("C-M-a" . sp-beginning-of-sexp)
+	("C-M-e" . sp-end-of-sexp)
+	("C-M-b" . sp-backward-sexp)
+	("C-M-f" . sp-forward-sexp)
+	("C-M-n" . sp-next-sexp)
+	("C-M-p" . sp-previous-sexp)
+	("M-<backspace>" . sp-backward-kill-word)
+	("C-<backspace>" . backward-kill-word)))
    #+end_src
 
 ** pdf-tools
    #+begin_src emacs-lisp
      (use-package pdf-tools
-       :init (pdf-tools-install))
+       :init
+       (pdf-tools-install))
    #+end_src
 
 ** projectile
    #+begin_src emacs-lisp
      (use-package projectile
-       :diminish
-       :init (projectile-global-mode)
-       :bind ("C-c p" . projectile-command-map)
+       :init
+       (projectile-global-mode)
+       :bind-keymap
+       ("C-c p" . projectile-command-map)
        :custom
-       (projectile-known-projects-file
-        (expand-file-name ".projectile-bookmarks" user-emacs-directory)))
+       (projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory)))
    #+end_src
 
 ** recent files
    #+begin_src emacs-lisp
-     (use-package recentf
-       :diminish
-       :init (recentf-mode)
-       :custom
-       (recentf-save-file (concat user-emacs-directory "recentf"))
-       (recentf-max-saved-items 100)
-       (recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa")))
+     (require 'recentf)
+     (recentf-mode t)
+     (setq recentf-save-file (concat user-emacs-directory "recentf")
+	   recentf-max-saved-items 100
+	   recentf-exclude '("COMMIT_MSG" "COMMIT_EDITMSG" "/tmp/" "/ssh:" "/elpa"))
    #+end_src
 
 ** selectrum
    #+begin_src emacs-lisp
      (use-package selectrum
-       :init (selectrum-mode))
+       :init
+       (selectrum-mode))
 
      (use-package selectrum-prescient
        :init
@@ -207,50 +207,8 @@
 ** search buffer
    #+begin_src emacs-lisp
      (use-package ctrlf
-       :init (ctrlf-mode))
-   #+end_src
-
-** shackle
-   [[https://depp.brause.cc/shackle/][Shackle Source Website]]
-   [[https://github.com/sk8ingdom/.emacs.d/blob/master/general-config/general-plugins.el][Solution Savior (Github Source)!!]]
-   Function that needs a rework defined here [[Org]]
-   #+begin_src emacs-lisp
-     (use-package shackle
        :init
-       (shackle-mode)
-       :config
-       (setq shackle-default-rule nil)
-       (setq
-        shackle-rules
-        '(;; Built-in
-          (compilation-mode                   :align below :ratio 0.30)
-          ;;("*Calendar*"                       :align below :ratio 10    :select t)
-          (" *Deletions*"                     :align below)
-          ("*Occur*"                          :align below :ratio 0.20)
-          ("*Completions*"                    :align below :ratio 0.20)
-          ("*Help*"                           :align below :ratio 0.33  :select t)
-          (" *Metahelp*"                      :align below :ratio 0.20  :select t)
-          ("*Messages*"                       :align below :ratio 0.20  :select t)
-          ("*Warning*"                        :align below :ratio 0.20  :select t)
-          ("*Warnings*"                       :align below :ratio 0.20  :select t)
-          ("*Backtrace*"                      :align below :ratio 0.20  :select t)
-          ("*Compile-Log*"                    :align below :ratio 0.20)
-          ("*package update results*"         :align below :ratio 0.20)
-          ("*Ediff Control Panel*"            :align below              :select t)
-          ("*tex-shell*"                      :align below :ratio 0.20  :select t)
-          ("*Dired Log*"                      :align below :ratio 0.20  :select t)
-          ("*Register Preview*"               :align below              :select t)
-          ("*Process List*"                   :align below :ratio 0.20  :select t)
-
-          ;; Org-mode
-          (" *Org todo*"                      :align below :ratio 10    :select t)
-          ("CAPTURE.*"              :regexp t :align below :ratio 20)
-          ("*Org Links*"                      :align below :ratio 10)
-          (" *Agenda Commands*"               :align below)
-          ("\\*Org Src.*"           :regexp t :align below :ratio 20    :select t)
-          ("*Org Attach*"                     :align below              :select t)
-          ("*Org Export Dispatcher*"          :align below              :select t)
-          ("*Select Link*"                    :align below              :select t))))
+       (ctrlf-mode))
    #+end_src
 
 ** treemacs
@@ -261,30 +219,16 @@
        :custom
        (treemacs-width 24)
        :bind
-       (:map global-map
-             ("M-0"       . treemacs-select-window)
-             ("C-c t 1"   . treemacs-delete-other-windows)
-             ("C-c t t"   . treemacs)
-             ("C-c t B"   . treemacs-bookmark)
-             ("C-c t C-t" . treemacs-find-file)
-             ("C-c t M-t" . treemacs-find-tag)))
+       (("M-0"       . treemacs-select-window)
+	("C-c t 1"   . treemacs-delete-other-windows)
+	("C-c t t"   . treemacs)
+	("C-c t B"   . treemacs-bookmark)
+	("C-c t C-t" . treemacs-find-file)
+	("C-c t M-t" . treemacs-find-tag)))
 
-     (use-package treemacs-projectile
-       :after treemacs projectile)
+     (use-package treemacs-projectile)
 
-     (use-package treemacs-magit
-       :after treemacs magit)
-   #+end_src
-
-** yasnippets
-   #+begin_src emacs-lisp
-     (use-package yasnippet
-       :diminish
-       :init (yas-global-mode)
-       :config (diminish 'yas-minor-mode))
-
-     (use-package yasnippet-snippets
-       :diminish)
+     (use-package treemacs-magit)
    #+end_src
 
 
@@ -298,10 +242,12 @@
 	  gc-cons-threshold (* 100 1024 1024)
 	  read-process-output-max (* 1024 1024)))
        :hook
-       (lsp-mode . me/lsp-optimize)
-       (lsp-mode . lsp-enable-which-key-integration)
-       :commands lsp
-       :bind-keymap ("C-c l" . lsp-command-map)
+       ((lsp-mode . me/lsp-optimize)
+	(lsp-mode . lsp-enable-which-key-integration))
+       :commands
+       lsp
+       :bind-keymap
+       ("C-c l" . lsp-command-map)
        :custom
        (lsp-idle-delay .01)
        (lsp-auto-guess-root t)
@@ -311,7 +257,8 @@
 ** ui
    #+begin_src emacs-lisp
      (use-package lsp-ui
-       :hook (lsp-mode . lsp-ui-mode)
+       :hook
+       (lsp-mode . lsp-ui-mode)
        :custom
        (lsp-ui-doc-enable nil)
        (lsp-ui-sideline-ignore-duplicate t)
@@ -327,8 +274,10 @@
 ** lsp-treemacs
    #+begin_src emacs-lisp
      (use-package lsp-treemacs
-       :init (lsp-treemacs-sync-mode)
-       :commands lsp-treemacs-errors-list)
+       :init
+       (lsp-treemacs-sync-mode)
+       :commands
+       lsp-treemacs-errors-list)
    #+end_src
 
 
@@ -341,7 +290,7 @@
    
 ** haskell
    #+begin_src emacs-lisp
-   (use-package haskell-mode)
+     (use-package haskell-mode)
    #+end_src
 
 ** js
@@ -358,12 +307,12 @@
    #+begin_src emacs-lisp
      (use-package auctex
        :hook
-       (LaTeX-mode . visual-line-mode)
-       (LaTeX-mode . flyspell-mode)
-       (LaTeX-mode . LaTeX-math-mode)
-       (LaTeX-mode . turn-on-reftex)
-       (LaTeX-mode . lsp)
-       (bibtex-mode . lsp)
+       ((LaTeX-mode . visual-line-mode)
+	(LaTeX-mode . flyspell-mode)
+	(LaTeX-mode . LaTeX-math-mode)
+	(LaTeX-mode . turn-on-reftex)
+	(LaTeX-mode . lsp)
+	(bibtex-mode . lsp))
        :custom
        (TeX-auto-save t)
        (TeX-parse-self t)
@@ -375,8 +324,10 @@
 ** web-mode
    #+begin_src emacs-lisp
      (use-package web-mode
-       :hook (web-mode . lsp)
-       :mode ("\\.html?\\'" "\\.css?\\'" "\\.vue\\'")
+       :hook
+       (web-mode . lsp)
+       :mode
+       ("\\.html?\\'" "\\.css?\\'" "\\.vue\\'")
        :custom
        (web-mode-markup-indent-offset 2)
        (web-mode-css-indent-offset 2)
@@ -429,15 +380,15 @@
 	'((sql . t))))
 
      (use-package org-bullets
-       :diminish
-       :hook (org-mode . org-bullets-mode))
+       :hook
+       (org-mode . org-bullets-mode))
    #+end_src
 
 ** super agenda
    #+begin_src emacs-lisp
      (use-package org-super-agenda
-       :diminish
-       :init (org-super-agenda-mode t)
+       :init
+       (org-super-agenda-mode t)
        :custom
        (org-agenda-custom-commands
         (list(quote
@@ -459,7 +410,6 @@
                                     (:name "Issues" :tag "Issue" :order 4)
                                     (:name "Meetings" :todo "MEETING" :order 6)
                                     (:name "Dissertation" :tag "THESIS" :order 8)
-                                    (:name "PEI" :tag "PEI" :order 10)
                                     (:name "Overall" :todo "TODO" :order 12)))))))))))
    #+end_src
 
